@@ -22,7 +22,7 @@
                 pword: vm.password
             };
         // Posting data to node.js server
-        $http.post("http://localhost:3000/login", data, {headers: {'Content-Type': 'application/json'} })
+        $http.post("/login", data, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
         	
             window.location = response.data.redirect;
