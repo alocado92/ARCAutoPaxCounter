@@ -1,0 +1,1 @@
+"./bluetooth.obj" "./buzzer.obj" "./diagnosticButton.obj" "./ledController.obj" "./main.obj" "./messageToggle.obj" "./photodiode.obj" "./rfid.obj" "../lnk_msp430f5529.cmd" -l"libc.a" -l"libmath.a" 
