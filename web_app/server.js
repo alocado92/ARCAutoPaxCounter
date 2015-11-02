@@ -78,7 +78,7 @@ app.get('/', function(req,res){
 });
 app.post('/mobile',function(req,res){
 	var v = req.body[0].entry_date;
-	res.send('Me llego un entry date' + v);
+	res.send({response:'Me llego un entry date' + v});
 });
 app.get('/home', function(req,res){
 	
