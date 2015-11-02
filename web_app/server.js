@@ -76,9 +76,8 @@ app.get('/', function(req,res){
 	
 	res.sendFile("public/login.html", {"root": __dirname});
 });
-app.post('/mobile',function(req,res){
-	
-	res.send({response:'Me llego un call'});
+app.post('/mobile', function(req,res){
+	res.send({response: 'Me llego'});
 });
 app.get('/home', function(req,res){
 	
