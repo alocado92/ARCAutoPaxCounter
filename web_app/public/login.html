@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"> 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-resource.js"></script>
+    <script src="app.js"></script>
+    <script src="login.js"></script>
+    
+    
+    
+</head>
+<body ng-app="app">
+	
+<div class="container" ng-controller="postController as ctrl" >
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="page-header"><h1>Welcome to the ARC AutoPaxCounter Web Console</h1></div>
+    <!-- FORM -->
+    <form name="userForm" ng-submit="ctrl.submitForm()" novalidate>
+    <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" class="form-control" ng-model="ctrl.username">
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" ng-model="ctrl.password">
+        
+    </div>
+    {{ctrl.username}}
+    {{ctrl.password}}
+   <!-- <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" ng-model="user.email">
+        <span ng-show="errorEmail">{{errorEmail}}</span>
+    </div> -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</div>
+
+</body>
+</html>
