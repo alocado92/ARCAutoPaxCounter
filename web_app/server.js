@@ -69,7 +69,7 @@ app.post('/login', function(req, res){
 	var password = req.body.pword;
 	
 	console.log('User: '+username +'\n'+'PW: '+password);
-	res.send({redirect: 'arcinnovations.ece.uprm.edu:3000/home'});
+	res.send({redirect: '/home'});
 	
 });
 app.get('/', function(req,res){
