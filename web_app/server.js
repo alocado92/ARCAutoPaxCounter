@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var mysql      = require('mysql');
+
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : '< MySQL username >',
@@ -77,6 +78,7 @@ app.get('/', function(req,res){
 	res.sendFile("public/login.html", {"root": __dirname});
 });
 app.post('/mobile', function(req,res){
+	res.sendStatus(200);
 	res.send({response: 'Me llego'});
 });
 app.get('/home', function(req,res){
@@ -89,3 +91,4 @@ var server = app.listen(3000, function () {
   var port = server.address().port;
   console.log('Example app listening at http://%s:%s', host, port);
 });
+
