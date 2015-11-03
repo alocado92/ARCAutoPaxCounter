@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "md5": "^2.0.0",
     "mysql": "^2.9.0"
   }
 }

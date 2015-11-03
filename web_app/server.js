@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var mysql      = require('mysql');
+var md5 = require('md5');
 
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -68,8 +69,9 @@ app.post('/login', function(req, res){
 	console.log('wassap');
 	var username = req.body.uName;
 	var password = req.body.pword;
+	var hash = md5(password);
 	
-	console.log('User: '+username +'\n'+'PW: '+password);
+	console.log('User: '+username +'\n'+'PW: '+hash);
 	res.send({redirect: '/home'});
 	
 });
