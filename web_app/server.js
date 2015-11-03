@@ -4,12 +4,20 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var mysql      = require('mysql');
 var md5 = require('md5');
-
+//mysql create pool
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : '< MySQL username >',
   password : '< MySQL password >',
   database : '<your database name>'
+});
+var pool      =    mysql.createPool({
+    connectionLimit : 100, //important
+    host     : 'localhost',
+    user     : 'root',
+    password : 'Kie2iedu',
+    database : 'capstone',
+    debug    :  false
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
@@ -82,7 +90,7 @@ app.get('/', function(req,res){
 app.post('/mobile', function(req,res){
 	//res.sendStatus(200);
 	
-	console.log(req);
+	console.log(req.body);
 	// if(entry[0].entry_lat >18.0){
 	// res.end('OK');}
 });
