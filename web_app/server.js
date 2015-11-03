@@ -89,7 +89,7 @@ app.get('/', function(req,res){
 });
 app.post('/mobile', function(req,res){
 	
-	var obj = JSON.parse(JSON.stringify(req.body));
+	var obj = JSON.parse(req.body);
 	console.log(obj);
 	console.log("Received");
 	res.send('OK');
