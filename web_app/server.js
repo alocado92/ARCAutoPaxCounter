@@ -81,7 +81,8 @@ app.get('/', function(req,res){
 });
 app.post('/mobile', function(req,res){
 	//res.sendStatus(200);
-	if(req.body.entry_lat){
+	var entry = JSON.parse(req.body.Passengers);
+	if(entry[0].entry_lat >18.0){
 	res.end('OK');}
 });
 app.get('/home', function(req,res){
