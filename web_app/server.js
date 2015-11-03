@@ -80,8 +80,9 @@ app.get('/', function(req,res){
 	res.sendFile("public/login.html", {"root": __dirname});
 });
 app.post('/mobile', function(req,res){
-	res.sendStatus(200);
-	res.send({response: 'Me llego'});
+	//res.sendStatus(200);
+	if(req.body.entry_lat){
+	res.end('OK');}
 });
 app.get('/home', function(req,res){
 	
