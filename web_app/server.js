@@ -88,10 +88,11 @@ app.get('/', function(req,res){
 	res.sendFile("public/login.html", {"root": __dirname});
 });
 app.post('/mobile', function(req,res){
-	//res.sendStatus(200);
 	
-	console.log(req.body);
+	var obj = JSON.parse(req.body);
+	console.log(obj);
 	console.log("Received");
+	res.send('OK');
 	// if(entry[0].entry_lat >18.0){
 	// res.end('OK');}
 });
