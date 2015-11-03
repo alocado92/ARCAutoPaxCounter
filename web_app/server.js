@@ -90,7 +90,7 @@ app.get('/', function(req,res){
 app.post('/mobile', function(req,res){
 	//res.sendStatus(200);
 	
-	console.log(req.body);
+	console.log(JSON.stringify(req.body));
 	console.log("Received");
 	// if(entry[0].entry_lat >18.0){
 	// res.end('OK');}
