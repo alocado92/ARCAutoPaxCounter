@@ -81,10 +81,10 @@ app.get('/', function(req,res){
 });
 app.post('/mobile', function(req,res){
 	//res.sendStatus(200);
-	var entry = req.body.Passengers;
+	var entry = req.body;
 	console.log(entry);
-	if(entry[0].entry_lat >18.0){
-	res.end('OK');}
+	// if(entry[0].entry_lat >18.0){
+	// res.end('OK');}
 });
 app.get('/home', function(req,res){
 	
