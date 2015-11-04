@@ -4,6 +4,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var mysql      = require('mysql');
 var md5 = require('md5');
+var hash = require('./hashandmatch');
 //mysql create pool
 var connection = mysql.createConnection({
   host     : 'localhost',
