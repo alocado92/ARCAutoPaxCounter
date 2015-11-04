@@ -90,7 +90,7 @@ app.get('/', function(req,res){
 app.post('/mobile', function(req,res){
 	
 	
-	console.log(JSON.parse('[{"username":"xyz","password":"xyz"},{"test":"testing"}]'));
+	console.log(JSON.parse(req.body.toString()));
 	console.log("Received");
 	res.send('OK');
 	// if(entry[0].entry_lat >18.0){
