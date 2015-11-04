@@ -78,9 +78,9 @@ app.post('/login', function(req, res){
 	console.log('wassap');
 	var username = req.body.uName;
 	var password = req.body.pword;
-	var hash = md5(password);
+	var hashed = hash.Hash(password);
 	
-	console.log('User: '+username +'\n'+'PW: '+hash);
+	console.log('User: '+username +'\n'+'PW: '+hashed);
 	res.send({redirect: '/home'});
 	
 });
