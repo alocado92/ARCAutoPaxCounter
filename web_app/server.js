@@ -89,7 +89,9 @@ app.get('/', function(req,res){
 });
 app.post('/mobile', function(req,res){
 	
-	console.log(JSON.stringify(req.body));
+	console.log(req.body);
+	console.log(JSON.parse(req.body));
+	//console.log(JSON.stringify(req.body));
 	console.log("Received");
 	res.send('OK');
 	// if(entry[0].entry_lat >18.0){
