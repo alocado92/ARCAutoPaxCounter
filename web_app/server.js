@@ -78,7 +78,7 @@ app.post('/login', function (req, res){
 	var username = req.body.uName;
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
-	log.info({User: username,Pass: password},'successful login detected!');
+	log.info({User: username,Pass: hashed},'successful login detected!');
 	console.log('User: '+username +'\n'+'PW: '+hashed);
 	res.send({redirect: '/home'});
 	
