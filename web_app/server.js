@@ -92,7 +92,7 @@ app.get('/home', function (req,res){
 	res.send('<h1>Welcome Home </h1>');
 });
 app.get('/admins',function (req,res){
-		var query = '';
+		var query = 'Select * from User';
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
 	  		connection.query( query, function(err, rows) {
