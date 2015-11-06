@@ -17,8 +17,8 @@
 //	 	Global Defines
 //********************************
 #define	MESSAGESIZE		20
-#define RX				BIT3
-#define TX				BIT4
+#define TX				BIT3
+#define RX				BIT4
 #define LED1 			BIT0
 
 //********************************
@@ -30,5 +30,6 @@ extern uint8_t bluetoothMessage[MESSAGESIZE];
 //		Defines Functions
 //********************************
 void bluetoothInit();
+void sendMessage(uint8_t value);
 
 #endif /* BLUETOOTH_H_ */

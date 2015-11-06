@@ -37,6 +37,27 @@ void bluetoothInit(){
 	P1OUT &= ~LED1;
 }
 
+void sendMessage(uint8_t value){
+	char messageON[6] = "LED ON";
+	char messageOFF[7] = "LED OFF";
+
+	if(value == 0){
+		int i;
+		for(i=0; i<6; i++){
+			while(!(UCA0IFG & UCTXIFG));
+			UCA0TXBUF = messageON[i];
+		}
+	}
+	else if (value == 1){
+		int i;
+		for(i=0; i<7; i++){
+			while(!(UCA0IFG & UCTXIFG));
+			UCA0TXBUF = messageOFF[i];
+		}
+	}
+
+}
+
 //********************************
 //          Interrupt
 //********************************
@@ -47,9 +68,12 @@ __interrupt void USCI_A0_ISR(void){
 		case 2:
 			if (UCA0RXBUF == 't'){
 				P1OUT |= LED1;
+				sendMessage(0);
+
 			}
 			if (UCA0RXBUF == 'f'){
 				P1OUT &= ~LED1;
+				sendMessage(1);
 			}
 			break;
 		case 4: break;

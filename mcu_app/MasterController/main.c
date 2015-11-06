@@ -25,11 +25,11 @@ int main(void) {
 	
     //Modules Initialization
     bluetoothInit();
-    //buzzerInit();
-    //diagnosticButtonInit();
+    buzzerInit();
+    diagnosticButtonInit();
     //ledCtrlInit();
-    //photodiodeInit();
-    //rfidInit();
+    photodiodeInit();
+    rfidInit();
 
     //Start Message to Toggle
     //messageSwitchTimer();

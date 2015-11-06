@@ -7,6 +7,7 @@ CMD_SRCS += \
 ../lnk_msp430f5529.cmd 
 
 C_SRCS += \
+../arcLogic.c \
 ../bluetooth.c \
 ../buzzer.c \
 ../diagnosticButton.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 ../rfid.c 
 
 OBJS += \
+./arcLogic.obj \
 ./bluetooth.obj \
 ./buzzer.obj \
 ./diagnosticButton.obj \
@@ -27,6 +29,7 @@ OBJS += \
 ./rfid.obj 
 
 C_DEPS += \
+./arcLogic.pp \
 ./bluetooth.pp \
 ./buzzer.pp \
 ./diagnosticButton.pp \
@@ -37,6 +40,7 @@ C_DEPS += \
 ./rfid.pp 
 
 C_DEPS__QUOTED += \
+"arcLogic.pp" \
 "bluetooth.pp" \
 "buzzer.pp" \
 "diagnosticButton.pp" \
@@ -47,6 +51,7 @@ C_DEPS__QUOTED += \
 "rfid.pp" 
 
 OBJS__QUOTED += \
+"arcLogic.obj" \
 "bluetooth.obj" \
 "buzzer.obj" \
 "diagnosticButton.obj" \
@@ -57,6 +62,7 @@ OBJS__QUOTED += \
 "rfid.obj" 
 
 C_SRCS__QUOTED += \
+"../arcLogic.c" \
 "../bluetooth.c" \
 "../buzzer.c" \
 "../diagnosticButton.c" \

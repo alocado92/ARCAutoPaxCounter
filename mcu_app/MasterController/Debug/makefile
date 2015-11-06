@@ -8,6 +8,7 @@ CG_TOOL_ROOT := c:/ti/ccsv6/tools/compiler/msp430_4.3.3
 
 ORDERED_OBJS += \
 $(GEN_CMDS__FLAG) \
+"./arcLogic.obj" \
 "./bluetooth.obj" \
 "./buzzer.obj" \
 "./diagnosticButton.obj" \
@@ -148,8 +149,8 @@ MasterController.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "bluetooth.pp" "buzzer.pp" "diagnosticButton.pp" "ledController.pp" "main.pp" "messageToggle.pp" "photodiode.pp" "rfid.pp" 
-	-$(RM) "bluetooth.obj" "buzzer.obj" "diagnosticButton.obj" "ledController.obj" "main.obj" "messageToggle.obj" "photodiode.obj" "rfid.obj" 
+	-$(RM) "arcLogic.pp" "bluetooth.pp" "buzzer.pp" "diagnosticButton.pp" "ledController.pp" "main.pp" "messageToggle.pp" "photodiode.pp" "rfid.pp" 
+	-$(RM) "arcLogic.obj" "bluetooth.obj" "buzzer.obj" "diagnosticButton.obj" "ledController.obj" "main.obj" "messageToggle.obj" "photodiode.obj" "rfid.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
