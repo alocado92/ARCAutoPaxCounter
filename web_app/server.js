@@ -8,7 +8,13 @@ var hasher = require('./hashandmatch.js');
 var hash = new hasher();
 
 var bunyan = require('bunyan');
-var log = bunyan.createLogger({name: 'ARC AutoPaxCounter'});
+var log = bunyan.createLogger({
+	name: 'ARC AutoPaxCounter',
+	streams: [{
+        path: './log/login.log',
+        // `type: 'file'` is implied
+    }]
+});
 
 //mysql create pool
 
