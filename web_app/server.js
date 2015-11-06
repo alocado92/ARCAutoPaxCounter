@@ -6,6 +6,10 @@ var mysql      = require('./mysqlpool.js');
 var md5 = require('md5');
 var hasher = require('./hashandmatch.js');
 var hash = new hasher();
+
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({name: 'ARC AutoPaxCounter'});
+
 //mysql create pool
 
 var pool = mysql.pool;
@@ -68,7 +72,7 @@ app.post('/login', function (req, res){
 	var username = req.body.uName;
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
-	
+	log.info({User: username},{Pass: password},'successful login detected!');
 	console.log('User: '+username +'\n'+'PW: '+hashed);
 	res.send({redirect: '/home'});
 	
