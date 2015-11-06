@@ -101,7 +101,7 @@ app.get('/admins',function (req,res){
 	  		});
 	   		// And done with the connection.
 	    	connection.release();
-
+	    	res.sendStatus(200);
 	    	// Don't use the connection here, it has been returned to the pool.
 });
 });
