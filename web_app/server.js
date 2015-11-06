@@ -97,6 +97,7 @@ app.get('/admins',function (req,res){
 	  		// Use the connection
 	  		connection.query( 'Select * from User', function(err, rows) {
 	   			//manipulate rows
+	   			console.log("I'm in!");
 	  		});
 	   		// And done with the connection.
 	    	connection.release();
