@@ -2,25 +2,13 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
-var mysql      = require('mysql');
+var mysql      = require('./mysqlpool.js');
 var md5 = require('md5');
 var hasher = require('./hashandmatch.js');
 var hash = new hasher();
 //mysql create pool
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : '< MySQL username >',
-  password : '< MySQL password >',
-  database : '<your database name>'
-});
-var pool      =    mysql.createPool({
-    connectionLimit : 100, //important
-    host     : 'localhost',
-    user     : 'root',
-    password : 'Kie2iedu',
-    database : 'capstone',
-    debug    :  false
-});
+
+var pool = mysql.pool;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
    extended: true 
@@ -74,7 +62,7 @@ app.post('/graph1', function (req, res){
 		connection.end();
 	});
 });
-app.post('/login', function(req, res){
+app.post('/login', function (req, res){
 	
 	console.log('wassap');
 	var username = req.body.uName;
@@ -85,11 +73,11 @@ app.post('/login', function(req, res){
 	res.send({redirect: '/home'});
 	
 });
-app.get('/', function(req,res){
+app.get('/', function (req,res){
 	
 	res.sendFile("public/login.html", {"root": __dirname});
 });
-app.post('/mobile', function(req,res){
+app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
 	//console.log(JSON.parse(req.body));
@@ -99,9 +87,22 @@ app.post('/mobile', function(req,res){
 	// if(entry[0].entry_lat >18.0){
 	// res.end('OK');}
 });
-app.get('/home', function(req,res){
+app.get('/home', function (req,res){
 	
 	res.send('<h1>Welcome Home </h1>');
+});
+app.get('/admins',function (req,res){
+		var query = '';
+		pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( query, function(err, rows) {
+	   			//manipulate rows
+	  		});
+	   		// And done with the connection.
+	    	connection.release();
+
+	    	// Don't use the connection here, it has been returned to the pool.
+});
 });
 
 var server = app.listen(3000, function () {
