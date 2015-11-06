@@ -95,7 +95,7 @@ app.get('/admins',function (req,res){
 		var query = 'Select * from User';
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( query, function(err, rows) {
+	  		connection.query( 'Select * from User', function(err, rows) {
 	   			//manipulate rows
 	  		});
 	   		// And done with the connection.
