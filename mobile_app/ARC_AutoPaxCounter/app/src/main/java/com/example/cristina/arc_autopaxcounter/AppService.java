@@ -203,28 +203,27 @@ public class AppService extends IntentService {
             }
         }
 
-
         if(completePassengers >= BATCH_SIZE) {
+            //Each passenger in memory will have: study_name, study_dateTime_created, passenger info
             //TODO: store all locally completed passenger data from hash map in memory
-
 
             //send locally completed passengers to web app
             //Create connection, post study and receive ack
             ArcHttpClient myClient = new ArcHttpClient(this);
-            myClient.post(completePassList, null, null);
+            boolean isDataReceived = myClient.post(completePassList, null, null);
 
+            if(isDataReceived) {
+                //remove all completed passengers from hash map
+                HashMap<String, Passenger> tmp1 = (HashMap<String, Passenger>) tmp.clone();
+
+                for (String key : tmp1.keySet()) {
+                    Passenger current = tmp1.get(key);
+                    if (tmp.containsKey(key) && completePassList.contains(current)) {
+                        tmp.remove(key);
+                    }
+                }
+            }
         }
-
-        //if(passenger_data_complete counter >= BATCH_SIZE) {
-
-            //Create connection, post study and receive ack
-            //ArcHttpClient myClient = new ArcHttpClient(this);
-            //myClient.post(list, null, null);
-
-            //inside while loop  -v
-            //TODO: if(time data was sent - current time > THRESHOLD || ACK != OK) {send locally completed passengers to web app}
-            //TODO: else if(time data was sent - current time > THRESHOLD && ACK == OK) {remove all complete passengers from hash map; break;}
-        //}
 
         //send hash map to fragment
         sendBroadcast(tmp);
@@ -263,12 +262,6 @@ public class AppService extends IntentService {
         //Create connection, post study and receive ack
         ArcHttpClient myClient = new ArcHttpClient(this);
         myClient.post(null, study, actionHTTP);
-
-        //TODO: need old values of study_name and study_dateTime_created to find which passengers in memory must change their study info (study name and date time)
-
-
-        //Each passenger in memory will have: study_name, study_dateTime_created, passenger info
-        //TODO: edit study name and date time of all passengers with the old study name and old date time in memory (micro SDcard)
     }
 
     private void handleAction_StopStudy(HashMap<String, Passenger> tableH, String actionHTTP, String studyName, String dateEnd, String timeEnd) {
@@ -316,13 +309,15 @@ public class AppService extends IntentService {
         Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
         localIntent.addCategory(Intent.CATEGORY_DEFAULT);
         localIntent.putExtra(StartStudyFragment.MAP_DATA, table);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, true);
         sendBroadcast(localIntent);
     }
 
     private void sendBroadcastBT(String message) {
-        Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
+        Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_ACK);
         localIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        localIntent.putExtra(StartStudyFragment.BT_ACK, message);
+        localIntent.putExtra(ARC_Bluetooth.BT_ACK, message);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
         sendBroadcast(localIntent);
     }
 }

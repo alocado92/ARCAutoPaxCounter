@@ -29,6 +29,7 @@
             android:text=""
             android:inputType="text" />
 
+        <!--
         <EditText
             android:id="@+id/etStudyInfo"
             android:layout_width="wrap_content"
@@ -40,7 +41,7 @@
             android:text=""
             android:visibility="gone"
             android:layout_marginTop="-5dp"
-            android:inputType="text" />
+            android:inputType="text" /> -->
 
     </LinearLayout>
 

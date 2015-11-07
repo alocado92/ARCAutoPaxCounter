@@ -31,9 +31,10 @@ public class ArcHttpClient {
         this.context = context;
     }
 
-    public void post(List<Passenger> list, Study study, String action) {
+    public boolean post(List<Passenger> list, Study study, String action) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        boolean dataReceived = false;
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
                 URL url = new URL(myURL);
@@ -64,17 +65,38 @@ public class ArcHttpClient {
                     json = serializePassengerJSON(list);
                 }
 
-                //Write to output stream
-                OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                out.write(json);
-                out.flush();
-                out.close();
+                //inside while loop  -v
+                //TODO: if(time data was sent - current time > THRESHOLD || ACK != OK) {send locally completed passengers to web app}
+                //TODO: else if(time data was sent - current time > THRESHOLD && ACK == OK) {remove all complete passengers from hash map; break;}
+                //}
 
-                int response = conn.getResponseCode();
-                if(response == HttpURLConnection.HTTP_OK)
-                    get(conn);
-                else
-                    Log.d(TAG, conn.getResponseMessage());
+                boolean ackReceived = false;
+                int tries = 0;
+                while (!ackReceived && tries < 5) {
+
+                    //Write to output stream
+                    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+                    out.write(json);
+                    out.flush();
+                    out.close();
+                    tries++;
+
+                    int response = conn.getResponseCode();
+                    if(response == HttpURLConnection.HTTP_OK) {
+                        String result = get(conn);
+                        if(result.equals("OK")) {
+                            ackReceived = true;
+                        }
+                    } else
+                        Log.d(TAG, conn.getResponseMessage());
+                }
+
+                if(tries > 5) {
+                    //Could not receive ack from server
+                    dataReceived = false;
+                } else
+                    dataReceived = true;
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -88,6 +110,7 @@ public class ArcHttpClient {
         } else {
             //No internet connection
         }
+        return dataReceived;
     }
 
     public String get(HttpURLConnection conn) {

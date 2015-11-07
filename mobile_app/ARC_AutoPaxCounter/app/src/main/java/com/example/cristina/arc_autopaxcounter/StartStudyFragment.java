@@ -70,23 +70,19 @@ public class StartStudyFragment extends Fragment {
     private SimpleLocation location;
     private Passenger passenger;
     private BluetoothDevice btDevice;
-    private BluetoothAdapter bluetoothAdapter;
-
-    private EditText studyET;
     private EditText routeET;
     private EditText vehicleTypeET;
     private EditText capacityET;
     private boolean isEdit;
     private boolean isStart;
-    private ConnectedThread myThreadConnected;
     private long lastScannedTagTime = -1;
     private String lastScannedTag;
-
     private HashMap<String, Passenger> tableH;
     public static final String MAP_DATA = "Passengers info";
-    public static final String BT_ACK = "Bluetooth acknowledgement";
+    public static final String MAP_FLAG = "Receiving hash table";
+    public static final String BT_DATA = "My bluetooth data";
     private MyServiceReceiver receiver;
-
+    private boolean isStudyStarted;
 
     /**
      * Use this factory method to create a new instance of
@@ -112,10 +108,15 @@ public class StartStudyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //if (getArguments() != null) {
-        if (savedInstanceState != null) {
+        if (getArguments() != null) {
             btDevice = getArguments().getParcelable("BTdevice");
+            ARC_Bluetooth arc_bluetooth = new ARC_Bluetooth(true);
+
+        }
+
+        if (savedInstanceState != null) {
             tableH = (HashMap<String, Passenger>) savedInstanceState.getSerializable("table"); //savedInstanceState.getExtras().getSerializable("table");
+
         } else {
             //Initialization of dummy data
             tableH = new HashMap<>();
@@ -146,11 +147,14 @@ public class StartStudyFragment extends Fragment {
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag3, pass3);
         }
 
-        IntentFilter filter = new IntentFilter(MyServiceReceiver.BROADCAST_ACTION);
+        IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
+        filter.addAction(MyServiceReceiver.BROADCAST_BT);
+        filter.addAction(MyServiceReceiver.BROADCAST_ACTION);
         receiver = new MyServiceReceiver();
         getActivity().registerReceiver(receiver, filter);
 
+        isStudyStarted = false;
         setHasOptionsMenu(true);
     }
 
@@ -189,7 +193,6 @@ public class StartStudyFragment extends Fragment {
             }
         });
 
-        studyET = (EditText) myView.findViewById(R.id.etStudyInfo);
         routeET = (EditText) myView.findViewById(R.id.etRouteInfo);
         vehicleTypeET = (EditText) myView.findViewById(R.id.etTypeInfo);
         capacityET = (EditText) myView.findViewById(R.id.etCapInfo);
@@ -247,7 +250,9 @@ public class StartStudyFragment extends Fragment {
     }
 
     public void edit() {
-        studyET.setText(study.getText());
+        Toast.makeText(getActivity(), "Study name can only be edited in web application", Toast.LENGTH_SHORT).show();
+
+        //studyET.setText(study.getText());
         routeET.setText(route.getText());
         vehicleTypeET.setText(vehicleType.getText());
         capacityET.setText(capacity.getText());
@@ -258,7 +263,7 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.GONE);
         startB.setVisibility(View.GONE);
 
-        studyET.setVisibility(View.VISIBLE);
+        //studyET.setVisibility(View.VISIBLE);
         routeET.setVisibility(View.VISIBLE);
         vehicleTypeET.setVisibility(View.VISIBLE);
         capacityET.setVisibility(View.VISIBLE);
@@ -274,7 +279,7 @@ public class StartStudyFragment extends Fragment {
 
     public void save() {
 
-        studyInformation.setName(studyET.getText().toString());
+        //studyInformation.setName(studyET.getText().toString());
         studyInformation.setRoute(routeET.getText().toString());
         studyInformation.setType(vehicleTypeET.getText().toString());
         String capString = capacityET.getText().toString();
@@ -283,7 +288,7 @@ public class StartStudyFragment extends Fragment {
             cap = Integer.parseInt(capString);
         studyInformation.setCapacity(cap);
 
-        study.setText(studyET.getText());
+        //study.setText(studyET.getText());
         study.setVisibility(View.VISIBLE);
         route.setText(routeET.getText());
         route.setVisibility(View.VISIBLE);
@@ -293,8 +298,8 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.VISIBLE);
         startB.setVisibility(View.VISIBLE);
 
-        studyET.setVisibility(View.GONE);
-        studyET.setText("");
+        //studyET.setVisibility(View.GONE);
+        //studyET.setText("");
         routeET.setVisibility(View.GONE);
         routeET.setText("");
         vehicleTypeET.setVisibility(View.GONE);
@@ -310,16 +315,8 @@ public class StartStudyFragment extends Fragment {
             stopB.setVisibility(View.GONE);
         }
 
-        //Testing
-        String tag = "5765876979";
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Date time = Calendar.getInstance().getTime();
-
-        AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
-
-        //AppService.prepareEditStudy(this.getActivity(), HTTP_EDIT, studyInformation.getName(), studyInformation.getRoute(), studyInformation.getType(),
-        //        studyInformation.getCapacity(), studyInformation.getStart_date(), studyInformation.getStart_time());
+        AppService.prepareEditStudy(this.getActivity(), HTTP_EDIT, studyInformation.getName(), studyInformation.getRoute(), studyInformation.getType(),
+                studyInformation.getCapacity(), studyInformation.getStart_date(), studyInformation.getStart_time());
     }
 
     public void cancel() {
@@ -329,8 +326,8 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.VISIBLE);
         startB.setVisibility(View.VISIBLE);
 
-        studyET.setVisibility(View.GONE);
-        studyET.setText("");
+        //studyET.setVisibility(View.GONE);
+        //studyET.setText("");
         routeET.setVisibility(View.GONE);
         routeET.setText("");
         vehicleTypeET.setVisibility(View.GONE);
@@ -351,22 +348,12 @@ public class StartStudyFragment extends Fragment {
         startB.setVisibility(View.GONE);
         stopB.setVisibility(View.VISIBLE);
         ((MainActivity)getActivity()).startUpdateMenu();
+        isStudyStarted = true;
 
-        //Testing
-        String tag = "5765876979";
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Date time = Calendar.getInstance().getTime();
-
-        AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
-
-        /*AppService.prepareCreateStudy(this.getActivity(), HTTP_CREATE, tableH, studyInformation.getName(),
+        AppService.prepareCreateStudy(this.getActivity(), HTTP_CREATE, tableH, studyInformation.getName(),
                 studyInformation.getRoute(), studyInformation.getType(), studyInformation.getCapacity(),
-                studyInformation.getStart_date(), studyInformation.getStart_time());*/
+                studyInformation.getStart_date(), studyInformation.getStart_time());
 
-        //Connect to BT (obtain input/output stream)
-        //ConnectThread connectThread = new ConnectThread(btDevice);
-        //connectThread.start();
     }
 
     public void stopClick() {
@@ -463,183 +450,6 @@ public class StartStudyFragment extends Fragment {
         this.isStart = start;
     }
 
-    public class MyServiceReceiver extends BroadcastReceiver {
-        public static final String BROADCAST_ACTION = "Send hash map";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            tableH = (HashMap<String, Passenger>) intent.getSerializableExtra(MAP_DATA);
-            String message = intent.getStringExtra(BT_ACK);
-
-            if(myThreadConnected != null) {
-                //send acknowledgement to Bluetooth
-                myThreadConnected.write(message.getBytes());
-            }
-        }
-    }
-
-    private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-
-        public ConnectThread(BluetoothDevice device) {
-            // Use a temporary object that is later assigned to mmSocket,
-            // because mmSocket is final
-            BluetoothSocket tmp = null;
-            //mmDevice = device;
-            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            mmDevice = bluetoothAdapter.getRemoteDevice(device.getAddress());
-
-            // Get a BluetoothSocket to connect with the given BluetoothDevice
-            try {
-                // MY_UUID is the app's UUID string, also used by the server code
-                //tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
-                tmp = mmDevice.createInsecureRfcommSocketToServiceRecord(BluetoothFragmentDialog.MY_UUID);
-            } catch (IOException e) {
-                showToast("Unable to get bluetooth socket");
-            }
-            mmSocket = tmp;
-        }
-
-        public void run() {
-
-            try {
-                // Connect the device through the socket. This will block
-                // until it succeeds or throws an exception
-                mmSocket.connect();
-            } catch (IOException connectException) {
-                // Unable to connect; close the socket and get out
-                try {
-                    mmSocket.close();
-                    //showToast("Unable to connect");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return;
-            }
-            // Do work to manage the connection (in a separate thread)
-
-            myThreadConnected = new ConnectedThread(mmSocket);
-            myThreadConnected.start();
-
-            //start service when receiving or sending inf, not here
-            Intent intent = new Intent(getActivity(), AppService.class);
-            getActivity().startService(intent);
-        }
-
-        /** Will cancel an in-progress connection, and close the socket */
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) { }
-        }
-
-    }
-
-    private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-
-        public ConnectedThread(BluetoothSocket socket) {
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            // Get the input and output streams, using temp objects because member streams are final
-            try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) { }
-
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-        public void run() {
-            byte[] buffer = new byte[1024];  // buffer store for the stream
-            int bytes; // bytes returned from read()
-
-            // Keep listening to the InputStream until an exception occurs
-            while (true) {
-                try {
-                    // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-                    String strReceived = new String(buffer, 0, bytes);
-
-                    parseReceivedMsg(strReceived);
-                    // Send the obtained bytes to the UI activity
-                    //mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    showToast("Bluetooth connection lost");
-                    break;
-                }
-            }
-        }
-
-        private void parseReceivedMsg(String strReceived) {
-            String tag = "5765876979";
-
-            switch (strReceived) {
-                case "TagID":  //Passenger to parcelable
-                    DateFormat df = new SimpleDateFormat("HH:mm:ss");
-                    Date time = Calendar.getInstance().getTime();
-
-                    //for(int i = 0; i < 3; i ++) {
-                        if(lastScannedTagTime == -1) {
-                            //time = Calendar.getInstance().getTime();
-                            lastScannedTagTime = time.getTime();
-                            lastScannedTag = tag;
-                            AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                                    studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
-                        } else {
-                            //time = Calendar.getInstance().getTime();
-                            long diff = time.getTime() - lastScannedTagTime;
-                            if(diff > TIME_THRESHOLD || !lastScannedTag.equals(tag)) {
-                                lastScannedTagTime = time.getTime();
-                                lastScannedTag = tag;
-                                AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
-                            }
-                        }
-                        /*if(i == 1) {
-                            tag = "34457898098454";
-                        }*/
-                   // }
-
-                    break;
-                case "DP":
-                        AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, tableH);
-                    break;
-                default:
-
-            }
-        }
-
-        /* Call this from the main activity to send data to the remote device */
-        public void write(byte[] bytes) {
-            try {
-                mmOutStream.write(bytes);   //ack
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        /* Call this from the main activity to shutdown the connection */
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void showToast(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
-    }
-
     public String getStudyName() {
         return studyInformation.getName();
     }
@@ -650,6 +460,59 @@ public class StartStudyFragment extends Fragment {
 
     public String getTimeCreated() {
         return studyInformation.getStart_time();
+    }
+
+
+    public class MyServiceReceiver extends BroadcastReceiver {
+        public static final String BROADCAST_ACTION = "Send hash map";
+        public static final String BROADCAST_BT = "Obtain data";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            boolean isTable = intent.getBooleanExtra(MAP_FLAG, false);
+
+            if(isStudyStarted && isTable)
+                tableH = (HashMap<String, Passenger>) intent.getSerializableExtra(MAP_DATA);
+
+            String message = intent.getStringExtra(BT_DATA);
+            if(message != null && isStudyStarted) {
+                handleMessage(message);
+            }
+        }
+    }
+
+    private void handleMessage(String message) {
+        //String action = message.substring(0, 1);
+        //String data = message.substring(1);
+        String action = "0";
+
+        if(action.equals("0")) {
+            //Tag ID
+
+            String tag = message;
+            DateFormat df = new SimpleDateFormat("HH:mm:ss");
+            Date time = Calendar.getInstance().getTime();
+
+            if(lastScannedTagTime == -1) {
+                lastScannedTagTime = time.getTime();
+                lastScannedTag = tag;
+                AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
+                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
+            } else {
+                long diff = time.getTime() - lastScannedTagTime;
+                if(diff > TIME_THRESHOLD || !lastScannedTag.equals(tag)) {
+                    lastScannedTagTime = time.getTime();
+                    lastScannedTag = tag;
+                    AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
+                            studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
+                }
+            }
+
+        } else if(action.equals("1")) {
+            //Diagnostic Protocol
+            AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, tableH);
+        }
     }
 
     /**

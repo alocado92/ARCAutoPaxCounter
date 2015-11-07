@@ -67,7 +67,6 @@ public class CreateStudyFragment extends DialogFragment {
     }
 
     private void goToStudyFragment() {
-
         FragmentManager fragmentManager = getFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("studyName", studyName.getText().toString());
