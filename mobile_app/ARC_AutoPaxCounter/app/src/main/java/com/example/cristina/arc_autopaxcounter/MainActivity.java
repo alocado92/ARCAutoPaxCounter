@@ -385,6 +385,16 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onDestroy() {
+        Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_DISCONNECT);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        localIntent.putExtra(ARC_Bluetooth.BT_CLOSE, true);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
+        sendBroadcast(localIntent);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen

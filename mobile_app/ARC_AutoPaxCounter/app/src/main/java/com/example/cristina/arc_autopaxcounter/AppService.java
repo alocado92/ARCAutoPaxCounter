@@ -3,12 +3,22 @@ package com.example.cristina.arc_autopaxcounter;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,6 +38,7 @@ public class AppService extends IntentService {
     private static final String STOP_STUDY = "Stop study locally and send data to web app";
     private static final String RUN_DIAGNOSTIC = "Run diagnostic protocol";
 
+    private static final String ARC_SDCARD_FILENAME = "PassengerData.txt";
     private static final String BLUETOOTH_ACK_MESSAGE = "A";
     private static final int BATCH_SIZE = 5;
 
@@ -78,7 +89,8 @@ public class AppService extends IntentService {
         context.startService(intent);
     }
 
-    public static void prepareStopStudy(Context context, String action, HashMap<String, Passenger> tableH, String name, String dateEnd, String timeEnd) {
+    public static void prepareStopStudy(Context context, String action, HashMap<String, Passenger> tableH, String name, String dateEnd, String timeEnd,
+                                        boolean isFirstWriteToSDcard) {
         Intent intent = new Intent(context, AppService.class);
         intent.setAction(STOP_STUDY);
         intent.putExtra(StartStudyFragment.HTTP_STOP, action);
@@ -86,11 +98,12 @@ public class AppService extends IntentService {
         intent.putExtra("studyName", name);
         intent.putExtra("dateEnd", dateEnd);
         intent.putExtra("timeEnd", timeEnd);
+        intent.putExtra("isFirstWrite", isFirstWriteToSDcard);
         context.startService(intent);
     }
 
     public static void preparePassengerInfo(Context context, HashMap<String, Passenger> tableH, double lat, double longi, String time, String tag, String studyName,
-                                            String studyStartDate, String studyStartTime) {
+                                            String studyStartDate, String studyStartTime, boolean isFirstWriteToSDcard) {
         Intent intent = new Intent(context, AppService.class);
         intent.setAction(PASS_INFO);
         intent.putExtra("table", tableH);
@@ -101,10 +114,12 @@ public class AppService extends IntentService {
         intent.putExtra("studyName", studyName);
         intent.putExtra("studyStartDate", studyStartDate);
         intent.putExtra("studyStartTime", studyStartTime);
+        intent.putExtra("isFirstWrite", isFirstWriteToSDcard);
         context.startService(intent);
     }
 
-    public static void prepareDiagnosticProtocol(Context context, String action, HashMap<String, Passenger> tableH) {
+    public static void prepareDiagnosticProtocol(Context context, String action, HashMap<String, Passenger> tableH, double lat, double longi, String time,
+                                                 String tag, String studyName, String studyStartDate, String studyStartTime, boolean isDiagnostic) {
         Intent intent = new Intent(context, AppService.class);
         intent.setAction(RUN_DIAGNOSTIC);
         intent.putExtra("table", tableH);
@@ -127,7 +142,8 @@ public class AppService extends IntentService {
                 String studyName = bundle.getString("studyName");
                 String studyStartDate = bundle.getString("studyStartDate");
                 String studyStartTime = bundle.getString("studyStartTime");
-                handleAction_PassengerInfo(tableH, lat, longi, time, tag, studyName, studyStartDate, studyStartTime);
+                boolean isFirstWriteToSDcard = bundle.getBoolean("isFirstWrite");
+                handleAction_PassengerInfo(tableH, lat, longi, time, tag, studyName, studyStartDate, studyStartTime, isFirstWriteToSDcard);
             } else if (DISCARD_STUDY.equals(action)) {
                 String actionHTTP = bundle.getString(MainActivity.HTTP_DISCARD);
                 String studyName = bundle.getString("studyName");
@@ -158,7 +174,8 @@ public class AppService extends IntentService {
                 String studyName = bundle.getString("studyName");
                 String dateEnd = bundle.getString("dateEnd");
                 String timeEnd = bundle.getString("timeEnd");
-                handleAction_StopStudy(tableH, actionHTTP, studyName, dateEnd, timeEnd);
+                boolean isFirstWriteToSDcard = bundle.getBoolean("isFirstWrite");
+                handleAction_StopStudy(tableH, actionHTTP, studyName, dateEnd, timeEnd, isFirstWriteToSDcard);
             } else if (RUN_DIAGNOSTIC.equals(action)) {
                 String actionHTTP = bundle.getString(StartStudyFragment.DIAGNOSTIC);
                 HashMap<String, Passenger> tableH = (HashMap<String, Passenger>) intent.getSerializableExtra("table");
@@ -168,7 +185,8 @@ public class AppService extends IntentService {
     }
 
 
-    private void handleAction_PassengerInfo(HashMap<String, Passenger> tableH, double lat, double longi, String time, String tag, String studyName, String studyStartDate, String studyStartTime) {
+    private void handleAction_PassengerInfo(HashMap<String, Passenger> tableH, double lat, double longi, String time, String tag, String studyName, String studyStartDate,
+                                            String studyStartTime, boolean isFirstWriteToSDcard) {
 
         HashMap<String, Passenger> tmp = tableH;
 
@@ -195,39 +213,106 @@ public class AppService extends IntentService {
 
         //Calculate complete passenger data counter (count passengers with time_exit != null)
         int completePassengers = 0;
-        List<Passenger> completePassList = new ArrayList<>();
-        for(Passenger current: tmp.values()) {
-            if(current.getExit_time() != null) {
+        HashMap<String, Passenger> completePassList = new HashMap<>();
+        for(String key: tmp.keySet()) {
+            Passenger currentPass = tmp.get(key);
+            if(currentPass.getExit_time() != null) {
                 completePassengers++;
-                completePassList.add(current);
+                String a[] = key.split(",");
+                String passKey = a[2].trim();
+                completePassList.put(passKey, currentPass);
             }
         }
 
 
         if(completePassengers >= BATCH_SIZE) {
-            //TODO: store all locally completed passenger data from hash map in memory
-
-
             //send locally completed passengers to web app
             //Create connection, post study and receive ack
             ArcHttpClient myClient = new ArcHttpClient(this);
-            myClient.post(completePassList, null, null);
+            boolean isDataReceived = myClient.post(completePassList, null, null);
 
+            if(isDataReceived) {
+                //store all locally completed passenger data from hash map in memory
+                if(this.isExternalStorageWritable()) {
+                    isFirstWriteToSDcard = this.storePassengers(completePassList, studyName, studyStartDate + " " + studyStartTime, isFirstWriteToSDcard);
+                }
+
+                //remove all completed passengers from hash map
+                HashMap<String, Passenger> tmp1 = (HashMap<String, Passenger>) tmp.clone();
+
+                for (String key : tmp1.keySet()) {
+                    Passenger current = tmp1.get(key);
+                    if (tmp.containsKey(key) && current.getExit_time() != null) {
+                        tmp.remove(key);
+                    }
+                }
+            }
         }
 
-        //if(passenger_data_complete counter >= BATCH_SIZE) {
-
-            //Create connection, post study and receive ack
-            //ArcHttpClient myClient = new ArcHttpClient(this);
-            //myClient.post(list, null, null);
-
-            //inside while loop  -v
-            //TODO: if(time data was sent - current time > THRESHOLD || ACK != OK) {send locally completed passengers to web app}
-            //TODO: else if(time data was sent - current time > THRESHOLD && ACK == OK) {remove all complete passengers from hash map; break;}
-        //}
-
         //send hash map to fragment
-        sendBroadcast(tmp);
+        sendBroadcast(tmp, isFirstWriteToSDcard, false);
+    }
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean storePassengers(HashMap<String, Passenger> passengersList, String studyName, String startDateTime, boolean isFirstWriteToSDcard) {
+        Map<String, File> externalLocations = ExternalStorage.getAllStorageLocations();
+        File externalSdCard = externalLocations.get(ExternalStorage.EXTERNAL_SD_CARD);
+        File dataFile = new File(externalSdCard, ARC_SDCARD_FILENAME);
+
+        try{
+            //if file doesn't exists, then create it
+            if(!dataFile.exists()){
+                dataFile.createNewFile();
+            }
+
+            //true = append file
+            FileWriter fileWriter = new FileWriter(dataFile, true);
+            BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
+
+            if(isFirstWriteToSDcard) {
+                bufferWriter.write("=======Study: " +studyName + " === DateTime: " + startDateTime + "=======\n");
+                isFirstWriteToSDcard = false;
+            }
+
+            //Each passenger in memory will have: study_name, study_dateTime_created, passenger info
+            for (String key : passengersList.keySet()) {
+                Passenger current = passengersList.get(key);
+                bufferWriter.write("Study: [" + studyName + "], Start_datetime: [" + startDateTime + "], Tag: [" + key + "], Passenger: [" + current.toString() + "]\n");
+            }
+            bufferWriter.write("------\n\n");
+
+            bufferWriter.close();
+            fileWriter.close();
+            Log.d(ArcHttpClient.TAG, "Done writing passengers in SDcard");
+
+            /*FileReader fileReader = new FileReader(dataFile);
+            BufferedReader bufferReader = new BufferedReader(fileReader);
+
+            StringBuilder sb = new StringBuilder();
+            String line = bufferReader.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = bufferReader.readLine();
+            }
+            String everything = sb.toString();
+            Log.d(ArcHttpClient.TAG, "Done reading passengers from SDcard");*/
+
+        }catch(IOException e){
+            Log.d(ArcHttpClient.TAG, "Cannot write in sdcard", e);
+            e.printStackTrace();
+        }
+
+        return isFirstWriteToSDcard;
     }
 
     private void handleAction_DiscardStudy(String actionHTTP, String studyName, String dateCreated, String timeCreated) {
@@ -238,11 +323,9 @@ public class AppService extends IntentService {
         ArcHttpClient myClient = new ArcHttpClient(this);
         myClient.post(null, study, actionHTTP);
 
-        //TODO: clear passengers of current study from memory (microSDcard)
-
         HashMap<String, Passenger> tmp = new HashMap<>();
         //send hash map to fragment
-        sendBroadcast(tmp);
+        sendBroadcast(tmp, false, false);
     }
 
     private void handleAction_CreateStudy(String actionHTTP, String studyName, String route, String type, int capacity, String dateStart, String timeStart) {
@@ -263,37 +346,40 @@ public class AppService extends IntentService {
         //Create connection, post study and receive ack
         ArcHttpClient myClient = new ArcHttpClient(this);
         myClient.post(null, study, actionHTTP);
-
-        //TODO: need old values of study_name and study_dateTime_created to find which passengers in memory must change their study info (study name and date time)
-
-
-        //Each passenger in memory will have: study_name, study_dateTime_created, passenger info
-        //TODO: edit study name and date time of all passengers with the old study name and old date time in memory (micro SDcard)
     }
 
-    private void handleAction_StopStudy(HashMap<String, Passenger> tableH, String actionHTTP, String studyName, String dateEnd, String timeEnd) {
+    private void handleAction_StopStudy(HashMap<String, Passenger> tableH, String actionHTTP, String studyName, String dateEnd, String timeEnd, boolean isFirstWriteToSDcard) {
 
         HashMap<String, Passenger> tmp = tableH;
-
-        //TODO: calculate complete passenger data counter (count passengers with time_exit != null)
-        //if (passenger_data_complete counter > 0) {
-            //TODO: store all locally completed passenger data from hash map in memory
-            //TODO: send locally completed passengers to web app
-            //inside while loop  -v
-            //TODO: if(time data was sent - current time > THRESHOLD || ACK != OK) {send locally completed passengers to web app}
-            //TODO: else if(time data was sent - current time > THRESHOLD && ACK == OK) {tableH.clear(); break;}
-        //}
 
         //Setting study finish
         Study study = new Study(studyName, null, null, 0, dateEnd, timeEnd);
 
-        //Create connection, post study and receive ack
-        ArcHttpClient myClient = new ArcHttpClient(this);
-        myClient.post(null, study, actionHTTP);
+        //Calculate complete passenger data counter (count passengers with time_exit != null)
+        HashMap<String, Passenger> completePassList = new HashMap<>();
+        for(String key: tmp.keySet()) {
+            Passenger currentPass = tmp.get(key);
+            if(currentPass.getExit_time() != null) {
+                String a[] = key.split(",");
+                String passKey = a[2].trim();
+                completePassList.put(passKey, currentPass);
+            }
+        }
 
-        tmp.clear();
+        if(completePassList.size() > 0) {
+            //store all locally completed passenger data from hash map in memory
+            if (this.isExternalStorageWritable()) {
+                isFirstWriteToSDcard = this.storePassengers(completePassList, studyName, dateEnd + " " + timeEnd, isFirstWriteToSDcard);
+            }
+
+            ArcHttpClient myClient = new ArcHttpClient(this);
+            myClient.post(null, study, actionHTTP);
+
+            tmp.clear();
+        }
+
         //send hash map to fragment
-        sendBroadcast(tmp);
+        sendBroadcast(tmp, isFirstWriteToSDcard, true);
     }
 
     private void handleAction_Diagnostic(HashMap<String, Passenger> tableH, String actionHTTP) {
@@ -303,7 +389,7 @@ public class AppService extends IntentService {
         //TODO
 
         //send hash map to fragment
-        sendBroadcast(tmp);
+        sendBroadcast(tmp, false, true);
     }
 
     @Override
@@ -312,17 +398,21 @@ public class AppService extends IntentService {
         Toast.makeText(this, "Service Stopped", Toast.LENGTH_LONG).show();
     }
 
-    private void sendBroadcast(HashMap<String, Passenger> table) {
+    private void sendBroadcast(HashMap<String, Passenger> table, boolean isFirstWriteToSDcard, boolean isStop) {
         Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
         localIntent.addCategory(Intent.CATEGORY_DEFAULT);
         localIntent.putExtra(StartStudyFragment.MAP_DATA, table);
+        localIntent.putExtra(StartStudyFragment.STUDY_FIRST_WRITE, isFirstWriteToSDcard);
+        localIntent.putExtra(StartStudyFragment.STOP_STUDY, isStop);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, true);
         sendBroadcast(localIntent);
     }
 
     private void sendBroadcastBT(String message) {
-        Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
+        Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_ACK);
         localIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        localIntent.putExtra(StartStudyFragment.BT_ACK, message);
+        localIntent.putExtra(ARC_Bluetooth.BT_ACK, message);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
         sendBroadcast(localIntent);
     }
 }

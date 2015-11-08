@@ -1,6 +1,7 @@
 package com.example.cristina.arc_autopaxcounter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -14,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -25,15 +27,18 @@ public class ArcHttpClient {
     private Context context;
     private HttpURLConnection conn;
     private static final String myURL = "http://arcinnovations.ece.uprm.edu:3000/mobile";
-    private static final String TAG = "MyService";
+    public static final String TAG = "MyService";
+    public static final String TOAST_MSG = "Send toast to UI";
 
     public ArcHttpClient(Context context) {
         this.context = context;
     }
 
-    public void post(List<Passenger> list, Study study, String action) {
+    public boolean post(HashMap<String, Passenger> list, Study study, String action) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        boolean dataReceived = false;
+        boolean ackReceived = false;
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
                 URL url = new URL(myURL);
@@ -49,35 +54,56 @@ public class ArcHttpClient {
 
                 //parsing passenger list as json
                 String json;
-                if(StartStudyFragment.HTTP_CREATE.equals(action)) {
+                if (StartStudyFragment.HTTP_CREATE.equals(action)) {
                     json = serializeStartJSON(study, action);
-                } else if(StartStudyFragment.HTTP_EDIT.equals(action)) {
+                } else if (StartStudyFragment.HTTP_EDIT.equals(action)) {
                     json = serializeEditJSON(study, action);
-                } else if(MainActivity.HTTP_DISCARD.equals(action)) {
+                } else if (MainActivity.HTTP_DISCARD.equals(action)) {
                     json = serializeDiscardJSON(study, action);
-                } else if(StartStudyFragment.HTTP_STOP.equals(action)) {
+                } else if (StartStudyFragment.HTTP_STOP.equals(action)) {
                     json = serializeStopJSON(study, action);
-                } else if(StartStudyFragment.DIAGNOSTIC.equals(action)) {
+                } else if (StartStudyFragment.DIAGNOSTIC.equals(action)) {
                     json = serializeDiagnosticJSON(study, action);
                 } else {
                     //Passenger
                     json = serializePassengerJSON(list);
                 }
 
-                //Write to output stream
-                OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                out.write(json);
-                out.flush();
-                out.close();
+                int tries = 0;
+                while (!ackReceived && tries < 5) {
+                    //Write to output stream
+                    OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+                    out.write(json);
+                    out.flush();
+                    out.close();
+                    tries++;
 
-                int response = conn.getResponseCode();
-                if(response == HttpURLConnection.HTTP_OK)
-                    get(conn);
-                else
-                    Log.d(TAG, conn.getResponseMessage());
+                    //if no response is obtained, an IOException will occur
+                    int response = conn.getResponseCode();
+                    if (response == HttpURLConnection.HTTP_OK) {
+                        String result = get(conn);
+                        if (result.equals("OK")) {
+                            ackReceived = true;
+                        }
+                    } else
+                        Log.d(TAG, conn.getResponseMessage());
+                }
+
+                if (tries > 5) {
+                    //Could not receive ack from server
+                    dataReceived = false;
+                    sendBroadcastToast("No ack received from web app");
+                } else {
+                    dataReceived = true;
+                    sendBroadcastToast("Ack received from web app");
+                }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
+                if(!ackReceived) {
+                    dataReceived = false;
+                    sendBroadcastToast("No ack received from web app");
+                }
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -86,8 +112,9 @@ public class ArcHttpClient {
                     conn.disconnect();
             }
         } else {
-            //No internet connection
+            sendBroadcastToast("No internet connection");
         }
+        return dataReceived;
     }
 
     public String get(HttpURLConnection conn) {
@@ -108,11 +135,22 @@ public class ArcHttpClient {
         return result.toString();
     }
 
-    private String serializePassengerJSON(List<Passenger> list) {
+    private void sendBroadcastToast(String message) {
+        Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        localIntent.putExtra(TOAST_MSG, message);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
+        context.sendBroadcast(localIntent);
+    }
+
+    private String serializePassengerJSON(HashMap<String, Passenger> list) {
         JSONArray array = new JSONArray();
-        for(Passenger passenger : list) {
+
+        for(String key: list.keySet()) {
+            Passenger passenger = list.get(key);
             JSONObject jsonObject = new JSONObject();
             try {
+                jsonObject.put("tag", key);
                 jsonObject.put("entry_lat", passenger.getEntry_lat());
                 jsonObject.put("entry_log", passenger.getEntry_lon());
                 jsonObject.put("entry_time", passenger.getEntry_time());
@@ -124,7 +162,6 @@ public class ArcHttpClient {
                 e.printStackTrace();
             }
         }
-
         return array.toString();
     }
 
