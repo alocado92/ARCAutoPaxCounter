@@ -6,7 +6,7 @@
 
     		var vm = this;
 
-    		vm.hueletranca = "badilloxxx"
+    		
 
       // create a blank object to handle form data.
       	var data = {
