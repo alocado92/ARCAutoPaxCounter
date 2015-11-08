@@ -90,6 +90,12 @@ public class Passenger implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "entry_lat: " + getEntry_lat() + ", entry_lon: " + getEntry_lon() + ", entry_time: " + getEntry_time() +
+                ", exit_lat: " + getExit_lat() + ", exit_lon: " + getExit_lon() + ", exit_time: " + getExit_time();
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

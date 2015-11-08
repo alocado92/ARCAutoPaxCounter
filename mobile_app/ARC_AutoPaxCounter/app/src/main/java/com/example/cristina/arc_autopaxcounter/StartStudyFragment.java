@@ -81,8 +81,12 @@ public class StartStudyFragment extends Fragment {
     public static final String MAP_DATA = "Passengers info";
     public static final String MAP_FLAG = "Receiving hash table";
     public static final String BT_DATA = "My bluetooth data";
+    public static final String STUDY_FIRST_WRITE = "First passenger write";
+    public static final String STOP_STUDY = "Stop study";
     private MyServiceReceiver receiver;
     private boolean isStudyStarted;
+    private boolean isDiagnostic;
+    private boolean isFirstWriteToSDcard;
 
     /**
      * Use this factory method to create a new instance of
@@ -108,40 +112,41 @@ public class StartStudyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        /*if (getArguments() != null) {
             btDevice = getArguments().getParcelable("BTdevice");
             ARC_Bluetooth arc_bluetooth = new ARC_Bluetooth(true);
-
-        }
+        }*/
 
         if (savedInstanceState != null) {
-            tableH = (HashMap<String, Passenger>) savedInstanceState.getSerializable("table"); //savedInstanceState.getExtras().getSerializable("table");
+            tableH = (HashMap<String, Passenger>) savedInstanceState.getSerializable("table");
+            isStudyStarted = savedInstanceState.getBoolean("studyStarted");
+            isDiagnostic = savedInstanceState.getBoolean("diagnostic");
+            isFirstWriteToSDcard = savedInstanceState.getBoolean("firstWriteSDcard");
 
         } else {
             //Initialization of dummy data
             tableH = new HashMap<>();
+            isStudyStarted = false;
+            isDiagnostic = false;
+            isFirstWriteToSDcard = true;
 
             //Creating dummy studies
             Study study = new Study("Exp#1", "Palacio", "TR-08", 25, "3 Nov 2015", "18:56:06");
-            Study study1 = new Study("Exp#2", "Terrace", "TF-65", 25, "3 Nov 2015", "23:00:59");
 
             String tag = "4765876987";
             String tag1 = "65858758758";
             String tag2 = "476875674642";
             String tag3 = "476869797864";
 
-            //Creating dummy passenger list
             SimpleLocation location = new SimpleLocation(getActivity());
             DateFormat df = new SimpleDateFormat("HH:mm:ss");
             String dt = df.format(Calendar.getInstance().getTime());
-            //List<Passenger> list = new ArrayList<>();
-            Passenger pass = new Passenger(location.getLatitude(), location.getLongitude(), dt, location.getLatitude(),  location.getLongitude(), dt);
+
+            Passenger pass0 = new Passenger(location.getLatitude(), location.getLongitude(), dt, location.getLatitude(),  location.getLongitude(), dt);
             Passenger pass1 = new Passenger(32358, 6768687, "4:48:59", 553543, 76980980, "22:28:12");
             Passenger pass2 = new Passenger(75768, 65768, "6:27:32", 65868, -76576586, "01:00:34");
             Passenger pass3 = new Passenger(76987, 686986987, "28:49:55", -25345323, 76586969, "3:12:12");
-            //list.add(pass);
-            //list.add(pass1);
-            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag, pass);
+            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag, pass0);
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag1, pass1);
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag2, pass2);
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag3, pass3);
@@ -154,13 +159,15 @@ public class StartStudyFragment extends Fragment {
         receiver = new MyServiceReceiver();
         getActivity().registerReceiver(receiver, filter);
 
-        isStudyStarted = false;
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable("table", tableH);
+        outState.putBoolean("studyStarted", isStudyStarted);
+        outState.putBoolean("diagnostic", isDiagnostic);
+        outState.putBoolean("firstWriteSDcard", isFirstWriteToSDcard);
         super.onSaveInstanceState(outState);
     }
 
@@ -252,7 +259,6 @@ public class StartStudyFragment extends Fragment {
     public void edit() {
         Toast.makeText(getActivity(), "Study name can only be edited in web application", Toast.LENGTH_SHORT).show();
 
-        //studyET.setText(study.getText());
         routeET.setText(route.getText());
         vehicleTypeET.setText(vehicleType.getText());
         capacityET.setText(capacity.getText());
@@ -263,7 +269,6 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.GONE);
         startB.setVisibility(View.GONE);
 
-        //studyET.setVisibility(View.VISIBLE);
         routeET.setVisibility(View.VISIBLE);
         vehicleTypeET.setVisibility(View.VISIBLE);
         capacityET.setVisibility(View.VISIBLE);
@@ -279,7 +284,6 @@ public class StartStudyFragment extends Fragment {
 
     public void save() {
 
-        //studyInformation.setName(studyET.getText().toString());
         studyInformation.setRoute(routeET.getText().toString());
         studyInformation.setType(vehicleTypeET.getText().toString());
         String capString = capacityET.getText().toString();
@@ -288,7 +292,6 @@ public class StartStudyFragment extends Fragment {
             cap = Integer.parseInt(capString);
         studyInformation.setCapacity(cap);
 
-        //study.setText(studyET.getText());
         study.setVisibility(View.VISIBLE);
         route.setText(routeET.getText());
         route.setVisibility(View.VISIBLE);
@@ -298,8 +301,6 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.VISIBLE);
         startB.setVisibility(View.VISIBLE);
 
-        //studyET.setVisibility(View.GONE);
-        //studyET.setText("");
         routeET.setVisibility(View.GONE);
         routeET.setText("");
         vehicleTypeET.setVisibility(View.GONE);
@@ -326,8 +327,6 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.VISIBLE);
         startB.setVisibility(View.VISIBLE);
 
-        //studyET.setVisibility(View.GONE);
-        //studyET.setText("");
         routeET.setVisibility(View.GONE);
         routeET.setText("");
         vehicleTypeET.setVisibility(View.GONE);
@@ -378,7 +377,6 @@ public class StartStudyFragment extends Fragment {
     public void stop() {
         startB.setVisibility(View.VISIBLE);
         stopB.setVisibility(View.GONE);
-        //myThreadConnected.cancel();       //close BT socket
 
         DateFormat df = new SimpleDateFormat("d MMM yyyy, HH:mm:ss");
         String dateTime = df.format(Calendar.getInstance().getTime());
@@ -387,8 +385,8 @@ public class StartStudyFragment extends Fragment {
         studyInformation.setEnd_date(s[0].trim());
         studyInformation.setEnd_time(s[1].trim());
 
-        AppService.prepareStopStudy(this.getActivity(), HTTP_STOP, tableH, studyInformation.getName(), studyInformation.getEnd_date(), studyInformation.getEnd_time());
-        clean();
+        AppService.prepareStopStudy(this.getActivity(), HTTP_STOP, tableH, studyInformation.getName(), studyInformation.getEnd_date(), studyInformation.getEnd_time(),
+                isFirstWriteToSDcard);
     }
 
     private void clean() {
@@ -469,15 +467,25 @@ public class StartStudyFragment extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
             boolean isTable = intent.getBooleanExtra(MAP_FLAG, false);
+            boolean isStop = intent.getBooleanExtra(STOP_STUDY, false);
+            String toastM = intent.getStringExtra(ArcHttpClient.TOAST_MSG);
 
-            if(isStudyStarted && isTable)
+            if(toastM != null)
+                Toast.makeText(context, toastM, Toast.LENGTH_SHORT).show();
+
+            if(isStudyStarted && isTable) {
                 tableH = (HashMap<String, Passenger>) intent.getSerializableExtra(MAP_DATA);
+                isFirstWriteToSDcard = intent.getBooleanExtra(STUDY_FIRST_WRITE, false);
+            }
 
             String message = intent.getStringExtra(BT_DATA);
             if(message != null && isStudyStarted) {
                 handleMessage(message);
+            }
+
+            if(isStop) {
+                clean();
             }
         }
     }
@@ -485,33 +493,34 @@ public class StartStudyFragment extends Fragment {
     private void handleMessage(String message) {
         //String action = message.substring(0, 1);
         //String data = message.substring(1);
-        String action = "0";
+        String action = "1";
+
+        String tag = message;
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        Date time = Calendar.getInstance().getTime();
 
         if(action.equals("0")) {
             //Tag ID
-
-            String tag = message;
-            DateFormat df = new SimpleDateFormat("HH:mm:ss");
-            Date time = Calendar.getInstance().getTime();
-
             if(lastScannedTagTime == -1) {
                 lastScannedTagTime = time.getTime();
                 lastScannedTag = tag;
                 AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
+                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isFirstWriteToSDcard);
             } else {
                 long diff = time.getTime() - lastScannedTagTime;
                 if(diff > TIME_THRESHOLD || !lastScannedTag.equals(tag)) {
                     lastScannedTagTime = time.getTime();
                     lastScannedTag = tag;
                     AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                            studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time());
+                            studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isFirstWriteToSDcard);
                 }
             }
-
         } else if(action.equals("1")) {
             //Diagnostic Protocol
-            AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, tableH);
+            isDiagnostic = true;
+
+            AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
+                    studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isDiagnostic);
         }
     }
 
