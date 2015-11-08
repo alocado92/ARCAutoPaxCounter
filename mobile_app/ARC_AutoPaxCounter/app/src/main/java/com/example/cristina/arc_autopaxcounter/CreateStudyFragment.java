@@ -14,7 +14,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by Cristina on 10/18/2015.
@@ -51,18 +53,50 @@ public class CreateStudyFragment extends DialogFragment {
         builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setTitle("Create Study");
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        builder.setMessage("Please fill all input fields to create a new study. Vehicle capacity must be greater than zero.");
+        builder.setPositiveButton(android.R.string.ok, null);
+        builder.setNegativeButton(android.R.string.cancel, null);
+        myDialog = builder.create();
+        /*builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                goToStudyFragment();
-            }
-        });
+                String value = vehicleCapacity.getText().toString();
 
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                if(studyName.getText().toString() != null &&  route.getText().toString() != null & vehicleType.getText().toString() != null &&
+                        (!value.equals("") && Integer.parseInt(value) > 0)) {
+                    goToStudyFragment();
+
+
+                }
+            }
+        });*/
+
+        /*builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 myDialog.dismiss();
             }
+        });*/
+
+        myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button b = myDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String value = vehicleCapacity.getText().toString();
+
+                        if (studyName.getText().toString() != null && route.getText().toString() != null & vehicleType.getText().toString() != null &&
+                                (!value.equals("") && Integer.parseInt(value) > 0)) {
+                            goToStudyFragment();
+
+                            //Dismiss once everything is OK.
+                            myDialog.dismiss();
+                        }
+                    }
+                });
+            }
         });
-        myDialog = builder.create();
+
         myDialog.show();
     }
 

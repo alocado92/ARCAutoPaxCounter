@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,8 +46,7 @@ import im.delight.android.location.SimpleLocation;
  * create an instance of this fragment.
  */
 public class StartStudyFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final long TIME_THRESHOLD = 5000;
@@ -87,6 +87,7 @@ public class StartStudyFragment extends Fragment {
     private boolean isStudyStarted;
     private boolean isDiagnostic;
     private boolean isFirstWriteToSDcard;
+    private boolean sentAckBT_DP;
 
     /**
      * Use this factory method to create a new instance of
@@ -122,6 +123,7 @@ public class StartStudyFragment extends Fragment {
             isStudyStarted = savedInstanceState.getBoolean("studyStarted");
             isDiagnostic = savedInstanceState.getBoolean("diagnostic");
             isFirstWriteToSDcard = savedInstanceState.getBoolean("firstWriteSDcard");
+            sentAckBT_DP = savedInstanceState.getBoolean("sentAckBT");
 
         } else {
             //Initialization of dummy data
@@ -129,6 +131,7 @@ public class StartStudyFragment extends Fragment {
             isStudyStarted = false;
             isDiagnostic = false;
             isFirstWriteToSDcard = true;
+            sentAckBT_DP = false;
 
             //Creating dummy studies
             Study study = new Study("Exp#1", "Palacio", "TR-08", 25, "3 Nov 2015", "18:56:06");
@@ -152,6 +155,11 @@ public class StartStudyFragment extends Fragment {
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag3, pass3);
         }
 
+        LocationManager lManager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+        if(!lManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(getActivity(), "GPS is disabled. Please enable GPS to obtain passenger location.", Toast.LENGTH_LONG).show();
+        }
+
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(MyServiceReceiver.BROADCAST_BT);
@@ -168,6 +176,7 @@ public class StartStudyFragment extends Fragment {
         outState.putBoolean("studyStarted", isStudyStarted);
         outState.putBoolean("diagnostic", isDiagnostic);
         outState.putBoolean("firstWriteSDcard", isFirstWriteToSDcard);
+        outState.putBoolean("sentAckBT", sentAckBT_DP);
         super.onSaveInstanceState(outState);
     }
 
@@ -493,7 +502,7 @@ public class StartStudyFragment extends Fragment {
     private void handleMessage(String message) {
         //String action = message.substring(0, 1);
         //String data = message.substring(1);
-        String action = "0";
+        String action = "1";
 
         String tag = message;
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
@@ -519,8 +528,17 @@ public class StartStudyFragment extends Fragment {
             //Diagnostic Protocol
             isDiagnostic = true;
 
-            AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                    studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isDiagnostic);
+            if(!sentAckBT_DP) {
+                //send Ack to bluetooth
+                Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_ACK);
+                localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                localIntent.putExtra(ARC_Bluetooth.BT_ACK, message);
+                getActivity().sendBroadcast(localIntent);
+                sentAckBT_DP = true;
+            } else {
+                AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, location.getLatitude(), location.getLongitude(), df.format(time), tag,
+                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isDiagnostic);
+            }
         }
     }
 

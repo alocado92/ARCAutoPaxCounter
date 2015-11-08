@@ -63,7 +63,7 @@ public class ArcHttpClient {
                 } else if (StartStudyFragment.HTTP_STOP.equals(action)) {
                     json = serializeStopJSON(study, action);
                 } else if (StartStudyFragment.DIAGNOSTIC.equals(action)) {
-                    json = serializeDiagnosticJSON(study, action);
+                    json = serializeDiagnosticJSON(list, action);
                 } else {
                     //Passenger
                     json = serializePassengerJSON(list);
@@ -150,7 +150,7 @@ public class ArcHttpClient {
             Passenger passenger = list.get(key);
             JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.put("tag", key);
+                jsonObject.put("tagID", key);
                 jsonObject.put("entry_lat", passenger.getEntry_lat());
                 jsonObject.put("entry_log", passenger.getEntry_lon());
                 jsonObject.put("entry_time", passenger.getEntry_time());
@@ -225,11 +225,25 @@ public class ArcHttpClient {
         return result;
     }
 
-    private String serializeDiagnosticJSON(Study study, String action) {
+    private String serializeDiagnosticJSON(HashMap<String, Passenger> list, String action) {
         JSONObject jsonObject = new JSONObject();
         String result = "";
 
+        for(String key: list.keySet()) {
+            Passenger passenger = list.get(key);
+            try {
+                String a[] = key.split(",");
+                String tag = a[2].trim();
+                jsonObject.put("action", action);
+                jsonObject.put("tagID", tag);
+                jsonObject.put("entry_lat", passenger.getEntry_lat());
+                jsonObject.put("entry_log", passenger.getEntry_lon());
+                jsonObject.put("entry_time", passenger.getEntry_time());
+                result = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         return result;
     }
-
 }

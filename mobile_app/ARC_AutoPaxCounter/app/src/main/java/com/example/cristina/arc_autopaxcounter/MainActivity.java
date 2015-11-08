@@ -259,15 +259,15 @@ public class MainActivity extends ActionBarActivity
                 }
             }
             else if(isCreateStudy) {
-                //if(bt != null) {
+                if(bt != null) {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("BTdevice", bt);
                     fragmentManager = getSupportFragmentManager();
                     FragmentTransaction ft = fragmentManager.beginTransaction();
                     studyF.setArguments(bundle);
                     ft.replace(R.id.container, studyF).commit();
-                //} else
-                  //  Toast.makeText(this, "Must setup Bluetooth connection before creating new study", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(this, "Must setup Bluetooth connection before creating new study", Toast.LENGTH_SHORT).show();
             } else if(isManageGPS || isDiscardDialog || isStopDialog) {
                ;
             }
