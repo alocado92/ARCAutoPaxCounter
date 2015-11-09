@@ -15,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -33,7 +34,7 @@ public class ArcHttpClient {
         this.context = context;
     }
 
-    public boolean post(List<Passenger> list, Study study, String action) {
+    public boolean post(HashMap<String, Passenger> list, Study study, String action) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         boolean dataReceived = false;
@@ -57,12 +58,12 @@ public class ArcHttpClient {
                     json = serializeStartJSON(study, action);
                 } else if (StartStudyFragment.HTTP_EDIT.equals(action)) {
                     json = serializeEditJSON(study, action);
-                } else if (MainActivity.HTTP_DISCARD.equals(action)) {
+                } else if (StartStudyFragment.HTTP_DISCARD.equals(action)) {
                     json = serializeDiscardJSON(study, action);
                 } else if (StartStudyFragment.HTTP_STOP.equals(action)) {
                     json = serializeStopJSON(study, action);
                 } else if (StartStudyFragment.DIAGNOSTIC.equals(action)) {
-                    json = serializeDiagnosticJSON(study, action);
+                    json = serializeDiagnosticJSON(list, action);
                 } else {
                     //Passenger
                     json = serializePassengerJSON(list);
@@ -82,6 +83,7 @@ public class ArcHttpClient {
                     if (response == HttpURLConnection.HTTP_OK) {
                         String result = get(conn);
                         if (result.equals("OK")) {
+                            Log.d(TAG, result);
                             ackReceived = true;
                         }
                     } else
@@ -142,11 +144,14 @@ public class ArcHttpClient {
         context.sendBroadcast(localIntent);
     }
 
-    private String serializePassengerJSON(List<Passenger> list) {
+    private String serializePassengerJSON(HashMap<String, Passenger> list) {
         JSONArray array = new JSONArray();
-        for(Passenger passenger : list) {
+
+        for(String key: list.keySet()) {
+            Passenger passenger = list.get(key);
             JSONObject jsonObject = new JSONObject();
             try {
+                jsonObject.put("tagID", key);
                 jsonObject.put("entry_lat", passenger.getEntry_lat());
                 jsonObject.put("entry_log", passenger.getEntry_lon());
                 jsonObject.put("entry_time", passenger.getEntry_time());
@@ -158,7 +163,6 @@ public class ArcHttpClient {
                 e.printStackTrace();
             }
         }
-
         return array.toString();
     }
 
@@ -222,11 +226,25 @@ public class ArcHttpClient {
         return result;
     }
 
-    private String serializeDiagnosticJSON(Study study, String action) {
+    private String serializeDiagnosticJSON(HashMap<String, Passenger> list, String action) {
         JSONObject jsonObject = new JSONObject();
         String result = "";
 
+        for(String key: list.keySet()) {
+            Passenger passenger = list.get(key);
+            try {
+                String a[] = key.split(",");
+                String tag = a[2].trim();
+                jsonObject.put("action", action);
+                jsonObject.put("tagID", tag);
+                jsonObject.put("entry_lat", passenger.getEntry_lat());
+                jsonObject.put("entry_log", passenger.getEntry_lon());
+                jsonObject.put("entry_time", passenger.getEntry_time());
+                result = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         return result;
     }
-
 }

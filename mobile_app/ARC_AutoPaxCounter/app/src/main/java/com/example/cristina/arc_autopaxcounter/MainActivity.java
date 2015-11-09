@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity
     private boolean isGPSenabled;
 
     //ACTION
-    public static final String HTTP_DISCARD = "delete";
+
 
     //edit study view
     private boolean isEditStudy = false;
@@ -259,15 +259,15 @@ public class MainActivity extends ActionBarActivity
                 }
             }
             else if(isCreateStudy) {
-                //if(bt != null) {
+                if(bt != null) {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("BTdevice", bt);
                     fragmentManager = getSupportFragmentManager();
                     FragmentTransaction ft = fragmentManager.beginTransaction();
                     studyF.setArguments(bundle);
                     ft.replace(R.id.container, studyF).commit();
-                //} else
-                  //  Toast.makeText(this, "Must setup Bluetooth connection before creating new study", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(this, "Must setup Bluetooth connection before creating new study", Toast.LENGTH_SHORT).show();
             } else if(isManageGPS || isDiscardDialog || isStopDialog) {
                ;
             }
@@ -343,9 +343,8 @@ public class MainActivity extends ActionBarActivity
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface d, int id) {
                                 Dialog dialog = (Dialog) d;
-                                AppService.prepareDiscardStudy(((Dialog) d).getContext(), HTTP_DISCARD,
+                                AppService.prepareDiscardStudy(((Dialog) d).getContext(), StartStudyFragment.HTTP_DISCARD,
                                         studyFragment.getStudyName(), studyFragment.getDateCreated(), studyFragment.getTimeCreated());
-                                clean();
                             }
                         })
                 .setNegativeButton("Cancel",
