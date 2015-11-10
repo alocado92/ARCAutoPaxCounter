@@ -90,7 +90,7 @@ app.post('/login', function (req, res){
 	  		// Use the connection
 	  		connection.query( 'select count(*) from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
 	   			//manipulate rows
-	   			console.log(rows[0]);
+	   			console.log(rows[0].count(*));
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
