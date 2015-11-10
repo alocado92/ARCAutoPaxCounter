@@ -15,7 +15,12 @@ var log = bunyan.createLogger({
         // `type: 'file'` is implied
     }]
 });
+//session
+//var expressJwt = require('express-jwt');
+//var jwt = require('jsonwebtoken');
 
+// We are going to protect /api routes with JWT
+app.use('/api', expressJwt({secret: secret}));
 //mysql create pool
 
 var pool = mysql.pool;
@@ -78,7 +83,16 @@ app.post('/login', function (req, res){
 	var username = req.body.uName;
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
+	var query = 'select count(*) from User where username = "' + username + '" AND password ="'+hashed+'"';
 	log.info({User: username,Pass: hashed},'successful login detected!');
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( query, function(err, rows) {
+	   			//manipulate rows
+	   			console.log(rows[0]);
+	  		});
+	   		// And done with the connection.
+	    	connection.release();
 	console.log('User: '+username +'\n'+'PW: '+hashed);
 	res.send({redirect: '/home'});
 	
@@ -99,7 +113,7 @@ app.post('/mobile', function (req,res){
 });
 app.get('/home', function (req,res){
 	
-	res.send('<h1>Welcome Home </h1>');
+	res.sendFile("public/home.html", {"root": __dirname});
 });
 app.get('/admins',function (req,res){
 		var query = 'Select * from User';
@@ -115,7 +129,12 @@ app.get('/admins',function (req,res){
 	    	// Don't use the connection here, it has been returned to the pool.
 });
 });
-
+app.post('/view1', function (req,res){
+	console.log(req.body);
+	var datas = '{"data": [' + '{"name": "1", "IN": 25, "OUT": 24},' + '{"name": "2", "IN": 25, "OUT": 24},' +'{"name": "3", "IN": 25, "OUT": 24}]}';
+	console.log("Sending data to graph: "+ datas);
+	res.send(datas);
+});
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
