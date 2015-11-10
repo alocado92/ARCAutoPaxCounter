@@ -88,9 +88,9 @@ app.post('/login', function (req, res){
 	log.info({User: username,Pass: hashed},'successful login detected!');
 	pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'select count(*) from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
+	  		connection.query( 'select count(*) as check from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
 	   			//manipulate rows
-	   			console.log(rows[0]);
+	   			console.log(rows[0].check);
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
