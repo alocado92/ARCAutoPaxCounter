@@ -83,6 +83,12 @@
       	var chart = new google.visualization.ColumnChart(document.getElementById("chart2"));
         chart.draw(graphData, options);
         	}
+        	else if (vm.gtype2 == '3'){
+
+        	}
+        	else {
+        		
+        	}
             return response;
         });
         };
