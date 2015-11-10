@@ -20,7 +20,7 @@ var log = bunyan.createLogger({
 //var jwt = require('jsonwebtoken');
 
 // We are going to protect /api routes with JWT
-app.use('/api', expressJwt({secret: secret}));
+//app.use('/api', expressJwt({secret: secret}));
 //mysql create pool
 
 var pool = mysql.pool;
