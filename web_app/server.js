@@ -2,7 +2,14 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
-var mysql      = require('./mysqlpool.js');
+var mysql = require('mysql');
+var pool  = mysql.createPool({
+	connectionLimit : 100,
+    host     : 'localhost',
+    user     : 'root',
+    password : 'Kie2iedu',
+    database : 'capstone'
+});
 var md5 = require('md5');
 var hasher = require('./hashandmatch.js');
 var hash = new hasher();
@@ -18,7 +25,7 @@ var log = bunyan.createLogger({
 
 //mysql create pool
 
-var pool = mysql.pool;
+//var pool = mysql.pool;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
    extended: true 
@@ -79,6 +86,15 @@ app.post('/login', function (req, res){
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
 	log.info({User: username,Pass: hashed},'successful login detected!');
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'select count(*) from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
+	   			//manipulate rows
+	   			console.log(rows[0]);
+	   			connection.release();
+	  		});
+	   		// And done with the connection.
+	    });	
 	console.log('User: '+username +'\n'+'PW: '+hashed);
 	res.send({redirect: '/home'});
 	
