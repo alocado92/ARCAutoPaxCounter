@@ -25,6 +25,8 @@
 //		Global Variables
 //********************************
 extern uint8_t bluetoothMessage[MESSAGESIZE];
+extern int flagRX;
+extern int flagRXDiag;
 
 //********************************
 //		Defines Functions

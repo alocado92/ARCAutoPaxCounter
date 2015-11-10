@@ -8,16 +8,16 @@
 //			Includes
 //********************************
 #include "bluetooth.h"
+#include "trueOrFalse.h"
 
 //********************************
 //		Global Variables
 //********************************
 uint8_t bluetoothMessage[MESSAGESIZE];
+int flagRX = FALSE;
+int flagRXDiag = FALSE;
 
-//********************************
-//		Local Variables
-//********************************
-unsigned int counter2 =0;
+unsigned int counterBlue = 0;
 
 //********************************
 //			Function
@@ -32,30 +32,6 @@ void bluetoothInit(){
 	UCA0CTL1 &= ~UCSWRST;					//Initilaize USCI state machine
 	UCA0IE |= UCRXIE;						//Enable USCI_A0 RX interrupt
 
-	//LED init
-	P1DIR |= LED1;
-	P1OUT &= ~LED1;
-}
-
-void sendMessage(uint8_t value){
-	char messageON[6] = "LED ON";
-	char messageOFF[7] = "LED OFF";
-
-	if(value == 0){
-		int i;
-		for(i=0; i<6; i++){
-			while(!(UCA0IFG & UCTXIFG));
-			UCA0TXBUF = messageON[i];
-		}
-	}
-	else if (value == 1){
-		int i;
-		for(i=0; i<7; i++){
-			while(!(UCA0IFG & UCTXIFG));
-			UCA0TXBUF = messageOFF[i];
-		}
-	}
-
 }
 
 //********************************
@@ -66,14 +42,12 @@ __interrupt void USCI_A0_ISR(void){
 	switch(__even_in_range(UCA0IV, 4)){
 		case 0: break;
 		case 2:
-			if (UCA0RXBUF == 't'){
-				P1OUT |= LED1;
-				sendMessage(0);
-
+			if (UCA0RXBUF == 'A'){
+				flagRX = TRUE;
+				counterBlue++;
 			}
-			if (UCA0RXBUF == 'f'){
-				P1OUT &= ~LED1;
-				sendMessage(1);
+			else if (UCA0RXBUF == 'D'){
+				flagRXDiag = TRUE;
 			}
 			break;
 		case 4: break;

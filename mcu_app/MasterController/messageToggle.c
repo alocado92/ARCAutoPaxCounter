@@ -30,6 +30,11 @@ void messageSwitchTimer(){
     TA1CCTL0 |= CCIE;                       // Interrupt Enable
 }
 
+void messageSwitchStopTimer(){
+	TA1CTL = TACLR + MC_0;
+	seconds = 0;
+}
+
 //********************************
 //          Interrupt
 //********************************

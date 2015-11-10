@@ -40,6 +40,7 @@ void rfidOperation();
 int getIndex(uint8_t idPax[IDLEN]);
 uint8_t getStatus(int index);
 int addID(int index, uint8_t idPax[IDLEN]);
+void diagnosticProtocol();
 
 
 #endif /* ARCLOGIC_H_ */

@@ -10,6 +10,8 @@
 //********************************
 #include "diagnosticButton.h"
 #include "buzzer.h"
+#include "arcLogic.h"
+#include "trueOrFalse.h"
 
 //********************************
 //			Function
@@ -26,6 +28,8 @@ void diagnosticButtonInit(){
 //********************************
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void){
+	flagDiag = TRUE;
+	flagDiag2 = TRUE;
 	startSound();
     P2IFG &= ~BUTTON;                // P2.0 IFG cleared
 }

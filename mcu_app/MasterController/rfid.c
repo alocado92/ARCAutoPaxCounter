@@ -52,11 +52,6 @@ __interrupt void USCI_A1_ISR(void){
     		if(counter >= MAXINTERRUPT){
     			counter = 0;
     			rfidOperation();
-    			//int i;
-    			//for(i=0; i<RFIDSIZE; i++){
-    			//	while(!(UCA0IFG & UCTXIFG));
-    			//	UCA0TXBUF = rfidCard[i];
-    			//}
     		}
     		break;
     case 4:break;

@@ -19,6 +19,12 @@
 #define BUTTON BIT0
 
 //********************************
+//	 	Global Varibles
+//********************************
+unsigned int flagDiag;
+unsigned int flagDiag2;
+
+//********************************
 //	 		Fuctions
 //********************************
 void diagnosticButtonInit();

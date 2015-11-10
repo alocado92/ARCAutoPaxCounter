@@ -28,6 +28,8 @@ extern int seconds;             //Seconds counter
 //	 	     Function
 //********************************
 void messageSwitchTimer();      //Timer Initialization
+void messageSwitchStopTimer();  //Timer Stop
+
 
 
 #endif /* MESSAGETOOGLE_H_ */
