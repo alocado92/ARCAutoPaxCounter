@@ -114,8 +114,8 @@ app.post('/mobile', function (req,res){
 	// res.end('OK');}
 });
 app.get('/home', function (req,res){
-	
-	res.send('<h1>Welcome Home </h1>');
+	res.sendFile("public/home.html", {"root": __dirname});
+	//res.send('<h1>Welcome Home </h1>');
 });
 app.get('/admins',function (req,res){
 		var query = 'Select * from User';
@@ -130,6 +130,12 @@ app.get('/admins',function (req,res){
 	    	res.sendStatus(200);
 	    	// Don't use the connection here, it has been returned to the pool.
 });
+});
+app.post('/view1', function (req,res){
+	console.log(req.body);
+	var datas = '{"data": [' + '{"name": "1", "IN": 25, "OUT": 24},' + '{"name": "2", "IN": 25, "OUT": 24},' +'{"name": "3", "IN": 25, "OUT": 24}]}';
+	console.log("Sending data to graph: "+ datas);
+	res.send(datas);
 });
 
 var server = app.listen(3000, function () {
