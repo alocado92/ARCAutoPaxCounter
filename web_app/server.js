@@ -127,6 +127,7 @@ app.post('/forgot', function (req,res){
 	  		connection.query( 'select count(*) as userCount, username from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
 	   			user = rows[0].username;
+	   			exists = rows[0].userCount;
 	   			connection.release();
 	  		});
 	   		// And done with the connection (for now...).
@@ -146,7 +147,7 @@ app.post('/forgot', function (req,res){
 	    });
 	    var mailOptions = {
 
-    from: 'ARC Innovations Group <arc.innovations.group@gmail.com>', // sender address
+    from: 'arc.innovations.group@gmail.com', // sender address
     to: 'alexis.figueroa4@upr.edu' , // list of receivers
     subject: 'Your forgotten credentials', // Subject line
     text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username: "+user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account." 
