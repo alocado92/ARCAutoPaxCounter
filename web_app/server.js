@@ -127,12 +127,12 @@ app.post('/forgot', function (req,res){
 	  		connection.query( 'select count(*) as userCount, username from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
 	   			user = rows[0].username;
-	   			exists = rows[0].userCount;
+	   			exists = 1;
 	   			connection.release();
 	  		});
 	   		// And done with the connection (for now...).
 	    });
-	if (exists == '1'){
+	if (exists == 1){
 		//send email with updated credentials
 		var hashedPass = hash.Hash(tempPass);
 		pool.getConnection(function(err, connection) {
