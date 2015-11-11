@@ -128,7 +128,7 @@ app.post('/forgot', function (req,res){
 	   			//manipulate rows
 	   			
 	   			exists = rows[0].userCount;
-	   			//connection.release();
+	   			connection.release();
 	  		});
 	   		// And done with the connection (for now...).
 	    });
