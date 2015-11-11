@@ -58,7 +58,7 @@ public class ArcHttpClient {
                     json = serializeStartJSON(study, action);
                 } else if (StartStudyFragment.HTTP_EDIT.equals(action)) {
                     json = serializeEditJSON(study, action);
-                } else if (MainActivity.HTTP_DISCARD.equals(action)) {
+                } else if (StartStudyFragment.HTTP_DISCARD.equals(action)) {
                     json = serializeDiscardJSON(study, action);
                 } else if (StartStudyFragment.HTTP_STOP.equals(action)) {
                     json = serializeStopJSON(study, action);
@@ -83,6 +83,7 @@ public class ArcHttpClient {
                     if (response == HttpURLConnection.HTTP_OK) {
                         String result = get(conn);
                         if (result.equals("OK")) {
+                            Log.d(TAG, result);
                             ackReceived = true;
                         }
                     } else
@@ -113,6 +114,7 @@ public class ArcHttpClient {
             }
         } else {
             sendBroadcastToast("No internet connection");
+
         }
         return dataReceived;
     }

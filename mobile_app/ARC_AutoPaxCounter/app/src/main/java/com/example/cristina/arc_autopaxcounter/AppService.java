@@ -40,6 +40,7 @@ public class AppService extends IntentService {
 
     private static final String ARC_SDCARD_FILENAME = "PassengerData.txt";
     public static final String BLUETOOTH_ACK_MESSAGE = "A";
+    public static final String BLUETOOTH_ACK_MESSAGE_DIAGNOSTIC = "D";
     private static final int BATCH_SIZE = 5;
 
     public AppService() {
@@ -53,7 +54,7 @@ public class AppService extends IntentService {
     public static void prepareDiscardStudy(Context context, String action, String studyName, String dateCreated, String timeCreated) {
         Intent intent = new Intent(context, AppService.class);
         intent.setAction(DISCARD_STUDY);
-        intent.putExtra(MainActivity.HTTP_DISCARD, action);
+        intent.putExtra(StartStudyFragment.HTTP_DISCARD, action);
         intent.putExtra("studyName", studyName);
         intent.putExtra("dateCreated", dateCreated);
         intent.putExtra("timeCreated", timeCreated);
@@ -152,7 +153,7 @@ public class AppService extends IntentService {
                 boolean isFirstWriteToSDcard = bundle.getBoolean("isFirstWrite");
                 handleAction_PassengerInfo(tableH, lat, longi, time, tag, studyName, studyStartDate, studyStartTime, isFirstWriteToSDcard);
             } else if (DISCARD_STUDY.equals(action)) {
-                String actionHTTP = bundle.getString(MainActivity.HTTP_DISCARD);
+                String actionHTTP = bundle.getString(StartStudyFragment.HTTP_DISCARD);
                 String studyName = bundle.getString("studyName");
                 String dateEntry = bundle.getString("dateCreated");
                 String timeEntry = bundle.getString("timeCreated");
@@ -280,6 +281,8 @@ public class AppService extends IntentService {
         Map<String, File> externalLocations = ExternalStorage.getAllStorageLocations();
         File externalSdCard = externalLocations.get(ExternalStorage.EXTERNAL_SD_CARD);
         File dataFile = new File(externalSdCard, ARC_SDCARD_FILENAME);
+        //String secStore = System.getenv("SECONDARY_STORAGE");
+        //File dataFile = new File(secStore, ARC_SDCARD_FILENAME);
 
         try{
             //if file doesn't exists, then create it
@@ -303,6 +306,7 @@ public class AppService extends IntentService {
                     bufferWriter.write("Study: [" + studyName + "], Start_datetime: [" + startDateTime + "], TagID: [" + key + "], Passenger: [" + current.toString() + "]\n");
                 }
 
+                bufferWriter.write("---------\n");
                 bufferWriter.close();
                 fileWriter.close();
                 Log.d(ArcHttpClient.TAG, "Done writing passengers in SDcard");
@@ -346,7 +350,7 @@ public class AppService extends IntentService {
 
         HashMap<String, Passenger> tmp = new HashMap<>();
         //send hash map to fragment
-        sendBroadcast(tmp, false, false);
+        sendBroadcast(tmp, false, true);
     }
 
     private void handleAction_CreateStudy(String actionHTTP, String studyName, String route, String type, int capacity, String dateStart, String timeStart) {
@@ -387,6 +391,7 @@ public class AppService extends IntentService {
             }
         }
 
+        ArcHttpClient myClient = new ArcHttpClient(this);
         if(completePassList.size() > 0) {
             //store all locally completed passenger data from hash map in memory
             if (this.isExternalStorageWritable()) {
@@ -395,11 +400,13 @@ public class AppService extends IntentService {
 
             //send locally completed passengers to web app
             //Create connection, post study and receive ack
-            ArcHttpClient myClient = new ArcHttpClient(this);
-            myClient.post(null, study, actionHTTP);
+            myClient.post(completePassList, null, null);
 
             tmp.clear();
         }
+
+        //Create connection, post study and receive ack
+        myClient.post(null, study, actionHTTP);
 
         //send hash map to fragment
         sendBroadcast(tmp, isFirstWriteToSDcard, true);
@@ -423,7 +430,12 @@ public class AppService extends IntentService {
         //send passengers to web app
         //Create connection, post study and receive ack
         ArcHttpClient myClient = new ArcHttpClient(this);
-        myClient.post(tmp, null, actionHTTP);
+        boolean isDataReceived = myClient.post(tmp, null, actionHTTP);
+
+        if(isDataReceived) {
+            //send Ack to bluetooth
+            sendBroadcastBT(BLUETOOTH_ACK_MESSAGE_DIAGNOSTIC);
+        }
 
         tmp.clear();
     }
@@ -431,7 +443,8 @@ public class AppService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Service Stopped", Toast.LENGTH_LONG).show();
+        //
+        // Toast.makeText(this, "Service Stopped", Toast.LENGTH_LONG).show();
     }
 
     private void sendBroadcast(HashMap<String, Passenger> table, boolean isFirstWriteToSDcard, boolean isStop) {

@@ -55,6 +55,7 @@ public class StartStudyFragment extends Fragment {
     public static final String HTTP_EDIT = "edit";
     public static final String DIAGNOSTIC = "diagnostic";
     public static final String HTTP_STOP = "stop";
+    public static final String HTTP_DISCARD = "delete";
 
     private View myView;
     private Menu menu;
@@ -124,6 +125,7 @@ public class StartStudyFragment extends Fragment {
             isDiagnostic = savedInstanceState.getBoolean("diagnostic");
             isFirstWriteToSDcard = savedInstanceState.getBoolean("firstWriteSDcard");
             sentAckBT_DP = savedInstanceState.getBoolean("sentAckBT");
+            isStart = savedInstanceState.getBoolean("isStart");
 
         } else {
             //Initialization of dummy data
@@ -134,7 +136,7 @@ public class StartStudyFragment extends Fragment {
             sentAckBT_DP = false;
 
             //Creating dummy studies
-            Study study = new Study("Exp#1", "Palacio", "TR-08", 25, "3 Nov 2015", "18:56:06");
+            /*Study study = new Study("Exp#1", "Palacio", "TR-08", 25, "3 Nov 2015", "18:56:06");
 
             String tag = "4765876987";
             String tag1 = "65858758758";
@@ -152,9 +154,11 @@ public class StartStudyFragment extends Fragment {
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag, pass0);
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag1, pass1);
             tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag2, pass2);
-            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag3, pass3);
+            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag3, pass3);*/
         }
 
+        location = new SimpleLocation(getActivity());
+        Toast.makeText(getActivity(), "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude(), Toast.LENGTH_LONG).show();
         LocationManager lManager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
         if(!lManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(getActivity(), "GPS is disabled. Please enable GPS to obtain passenger location.", Toast.LENGTH_LONG).show();
@@ -177,6 +181,7 @@ public class StartStudyFragment extends Fragment {
         outState.putBoolean("diagnostic", isDiagnostic);
         outState.putBoolean("firstWriteSDcard", isFirstWriteToSDcard);
         outState.putBoolean("sentAckBT", sentAckBT_DP);
+        outState.putBoolean("isStart", isStart);
         super.onSaveInstanceState(outState);
     }
 
@@ -325,8 +330,10 @@ public class StartStudyFragment extends Fragment {
             stopB.setVisibility(View.GONE);
         }
 
-        AppService.prepareEditStudy(this.getActivity(), HTTP_EDIT, studyInformation.getName(), studyInformation.getRoute(), studyInformation.getType(),
-                studyInformation.getCapacity(), studyInformation.getStart_date(), studyInformation.getStart_time());
+        if(isStudyStarted) {
+            AppService.prepareEditStudy(this.getActivity(), HTTP_EDIT, studyInformation.getName(), studyInformation.getRoute(), studyInformation.getType(),
+                    studyInformation.getCapacity(), studyInformation.getStart_date(), studyInformation.getStart_time());
+        }
     }
 
     public void cancel() {
@@ -357,6 +364,7 @@ public class StartStudyFragment extends Fragment {
         stopB.setVisibility(View.VISIBLE);
         ((MainActivity)getActivity()).startUpdateMenu();
         isStudyStarted = true;
+        isStart = true;
 
         AppService.prepareCreateStudy(this.getActivity(), HTTP_CREATE, tableH, studyInformation.getName(),
                 studyInformation.getRoute(), studyInformation.getType(), studyInformation.getCapacity(),
@@ -500,11 +508,10 @@ public class StartStudyFragment extends Fragment {
     }
 
     private void handleMessage(String message) {
-        //String action = message.substring(0, 1);
-        //String data = message.substring(1);
-        String action = "1";
+        String action = message.substring(0, 1);
+        String tag = message.substring(1);
 
-        String tag = message;
+        //String tag = message;
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Date time = Calendar.getInstance().getTime();
 
@@ -532,7 +539,7 @@ public class StartStudyFragment extends Fragment {
                 //send Ack to bluetooth
                 Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_ACK);
                 localIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                localIntent.putExtra(ARC_Bluetooth.BT_ACK, message);
+                localIntent.putExtra(ARC_Bluetooth.BT_ACK, AppService.BLUETOOTH_ACK_MESSAGE);
                 getActivity().sendBroadcast(localIntent);
                 sentAckBT_DP = true;
             } else {
