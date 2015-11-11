@@ -16,6 +16,7 @@
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.1', {'packages': ['corechart']});
       google.load("visualization", "1.1", {packages:["bar"]});
+      google.load("visualization", "1", {packages:["table"]});
       
     </script>
     <style>
@@ -60,7 +61,7 @@
                <select id="routeOptions" ng-model="ctrl.gtype">
                   <option value="1">Origin-Destination Matrix</option>
                   <option value="2">Passenger Net Flow</option>
-                  <option value="3">Net Flow Diagram</option>
+                  
                 </select>
               </div>
             </div>
@@ -72,9 +73,9 @@
               <div class="btn-group btn-group-md" id="route1">
                 
                 <select id="routeOptions" ng-model="ctrl.route">
-                  <option value="1">Route 1</option>
-                  <option value="2">Route 2</option>
-                  <option value="3">Route 3</option>
+                  <option value="1">Barcelona</option>
+                  <option value="2">Civil</option>
+                  <option value="3">Interna</option>
                 </select>
                 <form name="viewForm1" ng-submit="ctrl.createView()" novalidate>
                   <button type="submit" class="btn btn-primary">Create View</button>
@@ -96,7 +97,7 @@
                 <select id="routeOptions" ng-model="ctrl.gtype2">
                   <option value="1">Origin-Destination Matrix</option>
                   <option value="2">Passenger Net Flow</option>
-                  <option value="3">Net Flow Diagram</option>
+                  
                 </select>
               </div>
             </div>
@@ -107,9 +108,9 @@
             
               <div class="btn-group btn-group-md" id="route2">
                 <select id="routeOptions2" ng-model="ctrl.route2">
-                  <option value="1">Route 1</option>
-                  <option value="2">Route 2</option>
-                  <option value="3">Route 3</option>
+                  <option value="1">Barcelona</option>
+                  <option value="2">Civil</option>
+                  <option value="3">Interna</option>
                 </select>
                 <form name="viewForm2" ng-submit="ctrl.createView2()" novalidate>
                   <button type="submit" class="btn btn-primary">Create View</button>
@@ -128,8 +129,8 @@
     <div class="section">
       <div class="container"  >
         <div class="row">
-          <div class="col-md-6" id="chart1" style="width:500px;height:400px;"></div>
-          <div class="col-md-6" id="chart2" style="width:500px;height:400px;"></div>
+          <div class="col-md-6" id="chart1" style="width:50%;height:50%"></div>
+          <div class="col-md-6" id="chart2" style="width:50%;height:50%;"></div>
         </div>
       </div>
     </div>
