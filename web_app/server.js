@@ -1,4 +1,5 @@
 var express = require('express');
+var nodemailer = require('nodemailer');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -82,6 +83,7 @@ app.post('/graph1', function (req, res){
 app.post('/login', function (req, res){
 	
 	console.log('wassap');
+	var exists = 0;
 	var username = req.body.uName;
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
@@ -90,13 +92,78 @@ app.post('/login', function (req, res){
 	  		// Use the connection
 	  		connection.query( 'select count(*) as userCount from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
 	   			//manipulate rows
-	   			console.log(rows[0].userCount);
+	   			console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
+	   			exists = rows[0].userCount;
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
-	    });	
+	    });
+	if(exists == 1){
+		console.log('User session will be created here');
+	}	
 	console.log('User: '+username +'\n'+'PW: '+hashed);
 	res.send({redirect: '/home'});
+	
+});
+app.get('/remind', function (req,res){
+	res.sendFile("public/forgot.html", {"root": __dirname});
+});
+app.post('/forgot', function (req,res){
+	var email = req.body.email;
+	var exists = 0;
+	var user = '';
+	var tempPass = 'epicMealTime';
+	var transporter = nodemailer.createTransport({
+    service: 'Gmail',
+	    auth: 
+	    {
+	        user: 'arc.innovations.group@gmail.com',
+	        pass: 'AutoPaxCounter'
+	    }
+	});
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'select count(*) as userCount, username from User where email ="'+email+'"', function (err, rows) {
+	   			//manipulate rows
+	   			user = rows[0].username;
+	   			connection.release();
+	  		});
+	   		// And done with the connection (for now...).
+	    });
+	if (exists == '1'){
+		//send email with updated credentials
+		var hashedPass = hash.Hash(tempPass);
+		pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'update User set password ="'+hashedPass+'" where email ="'+email+'"', function (err, rows) {
+	   			//manipulate rows
+	   			console.log('updated password for reset email');
+	   			connection.release();
+	  		});
+
+	   		// And done with the connection (for now...).
+	    });
+	    var mailOptions = {
+
+    from: 'ARC Innovations Group <arc.innovations.group@gmail.com>', // sender address
+    to: 'alexis.figueroa4@upr.edu' , // list of receivers
+    subject: 'Your forgotten credentials', // Subject line
+    text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username: "+user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account." 
+    
+	};
+	transporter.sendMail(mailOptions, function (error, info){
+    if(error){
+        console.log(error);
+    }else{
+        console.log('Message sent: ' + info.response);
+    }
+});
+	}
+	else {
+		//error message sent to client
+		console.log('Email did not match');
+		
+	}
 	
 });
 app.get('/', function (req,res){
