@@ -144,7 +144,7 @@ app.post('/forgot', function (req,res){
 	  		});
 
 	   		// And done with the connection (for now...).
-	    });
+	    })
 	    var mailOptions = {
 
     from: 'arc.innovations.group@gmail.com', // sender address

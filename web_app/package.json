@@ -12,6 +12,7 @@
   "dependencies": {
     "bunyan": "^1.5.1",
     "md5": "^2.0.0",
-    "mysql": "^2.9.0"
+    "mysql": "^2.9.0",
+    "nodemailer": "^1.9.0"
   }
 }
