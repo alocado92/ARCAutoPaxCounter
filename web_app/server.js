@@ -109,7 +109,7 @@ app.get('/remind', function (req,res){
 	res.sendFile("public/forgot.html", {"root": __dirname});
 });
 app.post('/forgot', function (req,res){
-	console.log('entered send email server handler');
+	console.log('entered send email server handler: '+req.body.email);
 	var email = req.body.email;
 	var exists = 0;
 	var user = '';
