@@ -124,11 +124,11 @@ app.post('/forgot', function (req,res){
 	});
 	pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'select count(*) as userCount, username from User where email ="'+email+'"', function (err, rows) {
+	  		connection.query( 'select count(*) as userCount from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
-	   			user = rows[0].username;
-	   			exists = 1;
-	   			connection.release();
+	   			
+	   			exists = rows[0].userCount;
+	   			//connection.release();
 	  		});
 	   		// And done with the connection (for now...).
 	    });
@@ -150,7 +150,7 @@ app.post('/forgot', function (req,res){
     from: 'arc.innovations.group@gmail.com', // sender address
     to: 'alexis.figueroa4@upr.edu' , // list of receivers
     subject: 'Your forgotten credentials', // Subject line
-    text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username: "+user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account." 
+    text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username: Tester1 and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account." 
     
 	};
 	transporter.sendMail(mailOptions, function (error, info){
