@@ -8,7 +8,7 @@
 
     		
             var data = {
-                email: vm.email;
+                email: vm.email
             };
       
 
