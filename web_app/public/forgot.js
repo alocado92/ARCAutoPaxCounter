@@ -14,9 +14,7 @@
 
       // calling our submit function.
         vm.forgot = function() {
-        		var data = {
-                email: vm.email;
-            };
+        		var data = {email: vm.email};
         // Posting data to node.js server
         $http.post("/forgot", data, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
