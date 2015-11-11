@@ -122,7 +122,7 @@ app.post('/forgot', function (req,res){
 	        pass: 'AutoPaxCounter'
 	    }
 	});
-	pool.getConnection(function(err, connection) {
+	/*pool.getConnection(function(err, connection) {
 	  		// Use the connection
 	  		connection.query( 'select count(*) as userCount from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
@@ -144,7 +144,7 @@ app.post('/forgot', function (req,res){
 	  		});
 
 	   		// And done with the connection (for now...).
-	    })
+	    });*/
 	    var mailOptions = {
 
     from: 'arc.innovations.group@gmail.com', // sender address
@@ -160,12 +160,12 @@ app.post('/forgot', function (req,res){
         console.log('Message sent: ' + info.response);
     }
 });
-	}
+	/*}
 	else {
 		//error message sent to client
 		console.log('Email did not match');
 		
-	}
+	}*/
 	
 });
 app.get('/', function (req,res){
