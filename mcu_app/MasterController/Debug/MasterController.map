@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v4.3.3                      
 ******************************************************************************
->> Linked Mon Nov 09 22:17:21 2015
+>> Linked Wed Nov 11 03:40:27 2015
 
 OUTPUT FILE NAME:   <MasterController.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 00004482
+ENTRY POINT SYMBOL: "_c_int00"  address: 000044a8
 
 
 MEMORY CONFIGURATION
@@ -19,8 +19,8 @@ MEMORY CONFIGURATION
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
   USBRAM                00001c00   00000800  00000000  00000800  RWIX
-  RAM                   00002400   00002000  00000102  00001efe  RWIX
-  FLASH                 00004400   0000bb80  00000113  0000ba6d  RWIX
+  RAM                   00002400   00002000  0000010a  00001ef6  RWIX
+  FLASH                 00004400   0000bb80  00000125  0000ba5b  RWIX
   INT00                 0000ff80   00000002  00000000  00000002  RWIX
   INT01                 0000ff82   00000002  00000000  00000002  RWIX
   INT02                 0000ff84   00000002  00000000  00000002  RWIX
@@ -85,7 +85,7 @@ MEMORY CONFIGURATION
   INT61                 0000fffa   00000002  00000002  00000000  RWIX
   INT62                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FLASH2                00010000   00014400  0000041a  00013fe6  RWIX
+  FLASH2                00010000   00014400  00000482  00013f7e  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -96,48 +96,49 @@ section   page    origin      length       input sections
 .init_array 
 *          0    00004400    00000000     UNINITIALIZED
 
-.bss       0    00002400    00000050     UNINITIALIZED
+.bss       0    00002400    00000052     UNINITIALIZED
                   00002400    0000003c     (.common:id)
                   0000243c    0000000c     (.common:rfidCard)
                   00002448    00000006     (.common:idStatus)
                   0000244e    00000002     (.common:flagDiag)
+                  00002450    00000002     (.common:flagDiag2)
 
 .TI.noinit 
 *          0    00002400    00000000     UNINITIALIZED
 
-.data      0    00002450    00000012     UNINITIALIZED
-                  00002450    00000008     arcLogic.obj (.data)
-                  00002458    00000004     bluetooth.obj (.data)
-                  0000245c    00000003     messageToggle.obj (.data)
-                  0000245f    00000001     --HOLE--
-                  00002460    00000002     rfid.obj (.data)
+.data      0    00002452    00000018     UNINITIALIZED
+                  00002452    0000000c     arcLogic.obj (.data)
+                  0000245e    00000006     bluetooth.obj (.data)
+                  00002464    00000003     messageToggle.obj (.data)
+                  00002467    00000001     --HOLE--
+                  00002468    00000002     rfid.obj (.data)
 
 .TI.persistent 
-*          0    00002450    00000000     UNINITIALIZED
+*          0    00002452    00000000     UNINITIALIZED
 
 .stack     0    00004360    000000a0     UNINITIALIZED
                   00004360    00000004     rts430x_lc_rd_eabi.lib : boot.obj (.stack)
                   00004364    0000009c     --HOLE--
 
 .text:_isr 
-*          0    00004400    000000e0     
+*          0    00004400    000000f2     
                   00004400    00000048     messageToggle.obj (.text:_isr:TIMER1_A0_ISR)
                   00004448    0000003a     rfid.obj (.text:_isr:USCI_A1_ISR)
-                  00004482    0000001a     rts430x_lc_rd_eabi.lib : boot.obj (.text:_isr:_c_int00_noexit)
-                  0000449c    00000018     bluetooth.obj (.text:_isr:USCI_A0_ISR)
-                  000044b4    00000012     diagnosticButton.obj (.text:_isr:Port_2)
-                  000044c6    00000010     photodiode.obj (.text:_isr:Port_1)
-                  000044d6    0000000a     buzzer.obj (.text:_isr:TIMER2_A0_ISR)
+                  00004482    00000026     bluetooth.obj (.text:_isr:USCI_A0_ISR)
+                  000044a8    0000001a     rts430x_lc_rd_eabi.lib : boot.obj (.text:_isr:_c_int00_noexit)
+                  000044c2    00000016     diagnosticButton.obj (.text:_isr:Port_2)
+                  000044d8    00000010     photodiode.obj (.text:_isr:Port_1)
+                  000044e8    0000000a     buzzer.obj (.text:_isr:TIMER2_A0_ISR)
 
-.const     0    000044e0    00000007     
-                  000044e0    00000007     ledController.obj (.const:.string:colorM)
+.const     0    000044f2    00000007     
+                  000044f2    00000007     ledController.obj (.const:.string:colorM)
 
-.cinit     0    000044e8    0000002c     
-                  000044e8    0000000c     (__TI_handler_table)
-                  000044f4    00000009     (.cinit..data.load) [load image, compression = rle]
-                  000044fd    00000001     --HOLE-- [fill = 0]
-                  000044fe    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  00004504    00000010     (__TI_cinit_table)
+.cinit     0    000044fa    0000002c     
+                  000044fa    0000000c     (__TI_handler_table)
+                  00004506    00000009     (.cinit..data.load) [load image, compression = rle]
+                  0000450f    00000001     --HOLE-- [fill = 0]
+                  00004510    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004516    00000010     (__TI_cinit_table)
 
 RTC        0    0000ffd2    00000002     
                   0000ffd2    00000002     rts430x_lc_rd_eabi.lib : int41.obj (.int41)
@@ -216,44 +217,46 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.text      0    00010000    0000041a     
-                  00010000    00000116     arcLogic.obj (.text:rfidOperation)
-                  00010116    0000006e     rts430x_lc_rd_eabi.lib : autoinit.obj (.text:_auto_init_hold_wdt)
-                  00010184    00000062                            : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
-                  000101e6    00000054     arcLogic.obj (.text:addID)
-                  0001023a    00000052     arcLogic.obj (.text:getIndex)
-                  0001028c    0000002a     bluetooth.obj (.text:bluetoothInit)
-                  000102b6    0000002a     rfid.obj (.text:rfidInit)
-                  000102e0    00000028     main.obj (.text:main)
-                  00010308    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  0001032c    0000001e     ledController.obj (.text:sendledCommand)
-                  0001034a    0000001a     photodiode.obj (.text:photodiodeInit)
-                  00010364    00000016     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
-                  0001037a    00000014     arcLogic.obj (.text:getStatus)
-                  0001038e    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
-                  000103a2    00000014     buzzer.obj (.text:startTimer)
-                  000103b6    00000012     rts430x_lc_rd_eabi.lib : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  000103c8    00000012     diagnosticButton.obj (.text:diagnosticButtonInit)
-                  000103da    0000000e     ledController.obj (.text:assembleCommand)
-                  000103e8    0000000a     buzzer.obj (.text:buzzerInit)
-                  000103f2    0000000a     buzzer.obj (.text:startSound)
-                  000103fc    0000000a     buzzer.obj (.text:stopSound)
-                  00010406    00000006     rts430x_lc_rd_eabi.lib : isr_trap.obj (.text:__TI_ISR_TRAP)
-                  0001040c    00000006                            : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
-                  00010412    00000004                            : pre_init.obj (.text:_system_pre_init)
-                  00010416    00000004                            : exit.obj (.text:abort)
+.text      0    00010000    00000482     
+                  00010000    00000126     arcLogic.obj (.text:rfidOperation)
+                  00010126    0000006e     rts430x_lc_rd_eabi.lib : autoinit.obj (.text:_auto_init_hold_wdt)
+                  00010194    00000062                            : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
+                  000101f6    00000054     arcLogic.obj (.text:addID)
+                  0001024a    00000052     arcLogic.obj (.text:getIndex)
+                  0001029c    00000036     arcLogic.obj (.text:arcLogicInit)
+                  000102d2    0000002c     main.obj (.text:main)
+                  000102fe    0000002a     bluetooth.obj (.text:bluetoothInit)
+                  00010328    0000002a     rfid.obj (.text:rfidInit)
+                  00010352    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  00010376    0000001e     arcLogic.obj (.text:diagnosticProtocol)
+                  00010394    0000001e     ledController.obj (.text:sendledCommand)
+                  000103b2    0000001a     photodiode.obj (.text:photodiodeInit)
+                  000103cc    00000016     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
+                  000103e2    00000014     arcLogic.obj (.text:getStatus)
+                  000103f6    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
+                  0001040a    00000014     buzzer.obj (.text:startTimer)
+                  0001041e    00000012     rts430x_lc_rd_eabi.lib : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  00010430    00000012     diagnosticButton.obj (.text:diagnosticButtonInit)
+                  00010442    0000000e     ledController.obj (.text:assembleCommand)
+                  00010450    0000000a     buzzer.obj (.text:buzzerInit)
+                  0001045a    0000000a     buzzer.obj (.text:startSound)
+                  00010464    0000000a     buzzer.obj (.text:stopSound)
+                  0001046e    00000006     rts430x_lc_rd_eabi.lib : isr_trap.obj (.text:__TI_ISR_TRAP)
+                  00010474    00000006                            : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
+                  0001047a    00000004                            : pre_init.obj (.text:_system_pre_init)
+                  0001047e    00000004                            : exit.obj (.text:abort)
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004504 records: 2, size/record: 8, table size: 16
-	.data: load addr=000044f4, load size=00000009 bytes, run addr=00002450, run size=00000012 bytes, compression=rle
-	.bss: load addr=000044fe, load size=00000006 bytes, run addr=00002400, run size=00000050 bytes, compression=zero_init
+__TI_cinit_table @ 00004516 records: 2, size/record: 8, table size: 16
+	.data: load addr=00004506, load size=00000009 bytes, run addr=00002452, run size=00000018 bytes, compression=rle
+	.bss: load addr=00004510, load size=00000006 bytes, run addr=00002400, run size=00000052 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 000044e8 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 000044fa records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_rle24
 	index: 2, handler: __TI_decompress_none
@@ -345,7 +348,7 @@ address    name
 00000732   ADC12MEM9
 00000733   ADC12MEM9_H
 00000732   ADC12MEM9_L
-00010416   C$$EXIT
+0001047e   C$$EXIT
 000008c0   CBCTL0
 000008c1   CBCTL0_H
 000008c0   CBCTL0_L
@@ -604,8 +607,8 @@ address    name
 0000012e   PMMRIE
 0000012f   PMMRIE_H
 0000012e   PMMRIE_L
-000044c6   Port_1
-000044b4   Port_2
+000044d8   Port_1
+000044c2   Port_2
 00000158   RCCTL0
 00000159   RCCTL0_H
 00000158   RCCTL0_L
@@ -771,7 +774,7 @@ address    name
 000003ee   TB0IV
 000003d0   TB0R
 00004400   TIMER1_A0_ISR
-000044d6   TIMER2_A0_ISR
+000044e8   TIMER2_A0_ISR
 000005d0   UCA0ABCTL
 000005c6   UCA0BRW
 000005c7   UCA0BRW_H
@@ -1007,23 +1010,23 @@ address    name
 00000932   USBVECINT
 00000933   USBVECINT_H
 00000932   USBVECINT_L
-0000449c   USCI_A0_ISR
+00004482   USCI_A0_ISR
 00004448   USCI_A1_ISR
 0000015c   WDTCTL
 0000015d   WDTCTL_H
 0000015c   WDTCTL_L
 00004400   __STACK_END
 000000a0   __STACK_SIZE
-00004504   __TI_CINIT_Base
-00004514   __TI_CINIT_Limit
-000044e8   __TI_Handler_Table_Base
-000044f4   __TI_Handler_Table_Limit
+00004516   __TI_CINIT_Base
+00004526   __TI_CINIT_Limit
+000044fa   __TI_Handler_Table_Base
+00004506   __TI_Handler_Table_Limit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
-00010406   __TI_ISR_TRAP
+0001046e   __TI_ISR_TRAP
 00000001   __TI_args_main
-000103b6   __TI_decompress_none
-0001040c   __TI_decompress_rle24
+0001041e   __TI_decompress_none
+00010474   __TI_decompress_rle24
 00000001   __TI_exit
 0000ffd2   __TI_int41
 0000ffd4   __TI_int42
@@ -1047,48 +1050,54 @@ UNDEFED    __TI_INITARRAY_Limit
 0000fff8   __TI_int60
 0000fffa   __TI_int61
 0000fffc   __TI_int62
-00010308   __TI_zero_init
+00010352   __TI_zero_init
 ffffffff   __binit__
 ffffffff   __c_args__
-00010364   __mspabi_mpyi_f5hw
-00010116   _auto_init_hold_wdt
-00004482   _c_int00
-00004482   _c_int00_noexit
+000103cc   __mspabi_mpyi_f5hw
+00010126   _auto_init_hold_wdt
+000044a8   _c_int00
+000044a8   _c_int00_noexit
 0000fffe   _reset_vector
 00004360   _stack
-00010412   _system_pre_init
-00010416   abort
-000101e6   addID
-000103da   assembleCommand
+0001047a   _system_pre_init
+0001047e   abort
+000101f6   addID
+0001029c   arcLogicInit
+00010442   assembleCommand
 ffffffff   binit
-0001028c   bluetoothInit
-000103e8   buzzerInit
-000044e0   colorM
-00002460   counter
-0000245a   counterBlue
-00002450   counterDiagFalse
-00002452   counterDiagTrue
-00002456   counterRXFalse
-00002454   counterRXTrue
-000103c8   diagnosticButtonInit
+000102fe   bluetoothInit
+00010450   buzzerInit
+000044f2   colorM
+00002468   counter
+00002462   counterBlue
+00002452   counterDiagFalse
+00002454   counterDiagTrue
+00002458   counterRXFalse
+00002456   counterRXTrue
+00010430   diagnosticButtonInit
+00010376   diagnosticProtocol
 0000244e   flagDiag
-00002458   flagRX
-0001023a   getIndex
-0001037a   getStatus
+00002450   flagDiag2
+0000245e   flagRX
+00002460   flagRXDiag
+0000245a   flagTagEnterDiag
+0000245c   flagTagExitDiag
+0001024a   getIndex
+000103e2   getStatus
 00002400   id
 00002448   idStatus
-000102e0   main
-0001038e   memcpy
-0001034a   photodiodeInit
+000102d2   main
+000103f6   memcpy
+000103b2   photodiodeInit
 0000243c   rfidCard
-000102b6   rfidInit
+00010328   rfidInit
 00010000   rfidOperation
-0000245c   seconds
-0001032c   sendledCommand
-0000245e   shownMessage
-000103f2   startSound
-000103a2   startTimer
-000103fc   stopSound
+00002464   seconds
+00010394   sendledCommand
+00002466   shownMessage
+0001045a   startSound
+0001040a   startTimer
+00010464   stopSound
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -1844,30 +1853,34 @@ address    name
 0000243c   rfidCard
 00002448   idStatus
 0000244e   flagDiag
-00002450   counterDiagFalse
-00002452   counterDiagTrue
-00002454   counterRXTrue
-00002456   counterRXFalse
-00002458   flagRX
-0000245a   counterBlue
-0000245c   seconds
-0000245e   shownMessage
-00002460   counter
+00002450   flagDiag2
+00002452   counterDiagFalse
+00002454   counterDiagTrue
+00002456   counterRXTrue
+00002458   counterRXFalse
+0000245a   flagTagEnterDiag
+0000245c   flagTagExitDiag
+0000245e   flagRX
+00002460   flagRXDiag
+00002462   counterBlue
+00002464   seconds
+00002466   shownMessage
+00002468   counter
 00004360   _stack
 00004400   TIMER1_A0_ISR
 00004400   __STACK_END
 00004448   USCI_A1_ISR
-00004482   _c_int00
-00004482   _c_int00_noexit
-0000449c   USCI_A0_ISR
-000044b4   Port_2
-000044c6   Port_1
-000044d6   TIMER2_A0_ISR
-000044e0   colorM
-000044e8   __TI_Handler_Table_Base
-000044f4   __TI_Handler_Table_Limit
-00004504   __TI_CINIT_Base
-00004514   __TI_CINIT_Limit
+00004482   USCI_A0_ISR
+000044a8   _c_int00
+000044a8   _c_int00_noexit
+000044c2   Port_2
+000044d8   Port_1
+000044e8   TIMER2_A0_ISR
+000044f2   colorM
+000044fa   __TI_Handler_Table_Base
+00004506   __TI_Handler_Table_Limit
+00004516   __TI_CINIT_Base
+00004526   __TI_CINIT_Limit
 0000ffd2   __TI_int41
 0000ffd4   __TI_int42
 0000ffd6   __TI_int43
@@ -1892,34 +1905,36 @@ address    name
 0000fffc   __TI_int62
 0000fffe   _reset_vector
 00010000   rfidOperation
-00010116   _auto_init_hold_wdt
-000101e6   addID
-0001023a   getIndex
-0001028c   bluetoothInit
-000102b6   rfidInit
-000102e0   main
-00010308   __TI_zero_init
-0001032c   sendledCommand
-0001034a   photodiodeInit
-00010364   __mspabi_mpyi_f5hw
-0001037a   getStatus
-0001038e   memcpy
-000103a2   startTimer
-000103b6   __TI_decompress_none
-000103c8   diagnosticButtonInit
-000103da   assembleCommand
-000103e8   buzzerInit
-000103f2   startSound
-000103fc   stopSound
-00010406   __TI_ISR_TRAP
-0001040c   __TI_decompress_rle24
-00010412   _system_pre_init
-00010416   C$$EXIT
-00010416   abort
+00010126   _auto_init_hold_wdt
+000101f6   addID
+0001024a   getIndex
+0001029c   arcLogicInit
+000102d2   main
+000102fe   bluetoothInit
+00010328   rfidInit
+00010352   __TI_zero_init
+00010376   diagnosticProtocol
+00010394   sendledCommand
+000103b2   photodiodeInit
+000103cc   __mspabi_mpyi_f5hw
+000103e2   getStatus
+000103f6   memcpy
+0001040a   startTimer
+0001041e   __TI_decompress_none
+00010430   diagnosticButtonInit
+00010442   assembleCommand
+00010450   buzzerInit
+0001045a   startSound
+00010464   stopSound
+0001046e   __TI_ISR_TRAP
+00010474   __TI_decompress_rle24
+0001047a   _system_pre_init
+0001047e   C$$EXIT
+0001047e   abort
 ffffffff   __binit__
 ffffffff   __c_args__
 ffffffff   binit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
 
-[826 symbols]
+[832 symbols]

@@ -153,24 +153,24 @@ int addID(int index, uint8_t idPax[IDLEN]){
 
 void diagnosticProtocol(){
 	if(flagDiag2 == TRUE){
-		flagDiag2 == FALSE;
-		messageSwitchStopTimer();
-		assembleCommand(TAGENTER);
+		//flagDiag2 = FALSE;
+		//messageSwitchStopTimer();
+		//assembleCommand(TAGENTER);
 	}
 	else if(flagTagEnterDiag == TRUE){
-		flagTagEnterDiag == FALSE;
-		assembleCommand(TAGEXIT);
+		//flagTagEnterDiag = FALSE;
+		//assembleCommand(TAGEXIT);
 	}
 	else if(flagTagExitDiag == TRUE){
-		flagTagExitDiag == FALSE;
+		//flagTagExitDiag = FALSE;
 		if(flagRXDiag == TRUE){
 			flagRXDiag = FALSE;
-			assembleCommand(SYSTEMOK);
-			messageSwitchTimer();
+			//assembleCommand(SYSTEMOK);
+			//messageSwitchTimer();
 		}
 		else if (flagRXDiag == FALSE){
 			//assembleCommand(SYSTEMFAIL);
-			messageSwitchTimer();
+			//messageSwitchTimer();
 		}
 	}
 }

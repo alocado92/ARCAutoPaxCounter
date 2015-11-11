@@ -12,6 +12,7 @@ main.obj: ../ledController.h
 main.obj: ../messageToggle.h
 main.obj: ../photodiode.h
 main.obj: ../rfid.h
+main.obj: ../arcLogic.h
 
 ../main.c: 
 c:/ti/ccsv6/ccs_base/msp430/include/msp430f5529.h: 
@@ -25,3 +26,4 @@ c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/stdint.h:
 ../messageToggle.h: 
 ../photodiode.h: 
 ../rfid.h: 
+../arcLogic.h: 

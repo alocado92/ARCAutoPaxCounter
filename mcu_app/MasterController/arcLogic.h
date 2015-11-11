@@ -36,6 +36,7 @@ extern uint8_t id[PAXNUM][IDLEN];
 //********************************
 //      Defines Functions
 //********************************
+void arcLogicInit();
 void rfidOperation();
 int getIndex(uint8_t idPax[IDLEN]);
 uint8_t getStatus(int index);

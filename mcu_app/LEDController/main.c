@@ -24,7 +24,7 @@ int main(void) {
 
     //Modules Initialization
     ledCntrlInit();
-    masterInterfaceInit();
+    //masterInterfaceInit();
 
     while(1){
     	__bis_SR_register(LPM0_bits + GIE);

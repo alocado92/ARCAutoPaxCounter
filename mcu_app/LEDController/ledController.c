@@ -35,7 +35,7 @@ void ledCntrlInit(){
     P3OUT &= ~(aAddr + bAddr + cAddr + OE + LAT);
     P1OUT |= CLK;
 
-    fillMessage(1);
+    fillMessage(0);
     fillBuffer(BLUE);
     clkTimerInit();
 }

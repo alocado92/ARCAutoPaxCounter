@@ -12,6 +12,7 @@
 #include "messageToggle.h"
 #include "photodiode.h"
 #include "rfid.h"
+#include "arcLogic.h"
 
 
 //********************************
@@ -30,6 +31,7 @@ int main(void) {
     //ledCtrlInit();
     photodiodeInit();
     rfidInit();
+    arcLogicInit();
 
     //Start Message to Toggle
     //messageSwitchTimer();

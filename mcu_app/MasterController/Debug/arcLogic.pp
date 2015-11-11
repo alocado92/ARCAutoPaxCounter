@@ -10,6 +10,7 @@ arcLogic.obj: ../rfid.h
 arcLogic.obj: ../bluetooth.h
 arcLogic.obj: ../diagnosticButton.h
 arcLogic.obj: ../trueOrFalse.h
+arcLogic.obj: ../ledController.h
 
 ../arcLogic.c: 
 ../arcLogic.h: 
@@ -21,3 +22,4 @@ c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/stdint.h:
 ../bluetooth.h: 
 ../diagnosticButton.h: 
 ../trueOrFalse.h: 
+../ledController.h: 
