@@ -15,16 +15,23 @@
 //********************************
 //Color scheme for each message
 const uint8_t colorM[7] = {BLUE1, RED, GREEN, RED, RED, GREEN, BLUE1};
+int assembleFlag = 0;
+int sendLedFlag = 0;
 
+uint8_t command1;
+uint8_t command2;
 //********************************
 //          Functions
 //********************************
 //Initialize Ports
 void ledCtrlInit(){
+	//For message
     P3DIR |= BIT0 + BIT1 + BIT2;
     P4DIR |= BIT0 + BIT1 + BIT2;
-    P2DIR |= TRIGGER;
+    //For interrupt
     P2OUT &= TRIGGER;
+    P2DIR |= TRIGGER;
+
 
 }
 
@@ -39,14 +46,18 @@ void ledCtrlInit(){
  * 6 ---> SYSTEM OK
  */
 void assembleCommand(uint8_t message){
-	uint8_t command1 = message;
-	uint8_t command2 = colorM[(unsigned int) message];
+	assembleFlag = 1;
+	sendLedFlag = 0;
+	command1 = message;
+	command2 = colorM[(unsigned int) message];
 	sendledCommand(command1, command2);
 }
 
 //Send Command
 void sendledCommand(uint8_t command1, uint8_t command2){
-    P3OUT = command1;
+	assembleFlag = 0;
+	sendLedFlag = 1;
+	P3OUT = command1;
     P4OUT = command2;
     P2OUT |= TRIGGER;
     __delay_cycles(100);

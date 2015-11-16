@@ -12,14 +12,21 @@
 #include "ledController.h"
 
 //********************************
+//          Local Variables
+//********************************
+uint8_t command1;
+uint8_t command2;
+
+//********************************
 //          Functions
 //********************************
 void masterInterfaceInit(){
 	P1DIR &= ~(BIT2 + BIT3 + BIT4); 	//For message
 	P4DIR &= ~(BIT0 + BIT1 + BIT2);		//For color
+
 	P2DIR &= ~TRIGGER;					//Trigger
 	P2IES &= ~TRIGGER;
-	P2IE &= ~TRIGGER;
+	P2IE |= TRIGGER;
 	P2OUT &= ~TRIGGER;
 	P2REN |= TRIGGER;
 	P2IFG &= ~TRIGGER;
@@ -51,8 +58,8 @@ void masterInterfaceInit(){
  */
 
 void decodeCommand(uint8_t command1, uint8_t command2){
-	fillMessage(command1);
-	uint8_t color = (command2);
+	fillMessage((command1 & 0x1C) >> 2);
+	uint8_t color = (command2 & 0x07);
 
 	switch(color){
 		case 0: fillBuffer(RED);
@@ -77,8 +84,6 @@ void decodeCommand(uint8_t command1, uint8_t command2){
 //********************************
 #pragma vector = PORT2_VECTOR
 __interrupt void PORT2_ISR(void){
-    uint8_t command1;
-    uint8_t command2;
     switch(__even_in_range(P2IV,16)){
         case 0: break;
         case 2:

@@ -24,7 +24,7 @@ int main(void) {
 
     //Modules Initialization
     ledCntrlInit();
-    //masterInterfaceInit();
+    masterInterfaceInit();
 
     while(1){
     	__bis_SR_register(LPM0_bits + GIE);
@@ -33,8 +33,8 @@ int main(void) {
         if(clkFlag == TRUE){
         	clkFlag = FALSE;
             updatePort();
-            P1OUT ^= CLK;
-            P1OUT ^= CLK;
+            P2OUT ^= CLK;
+            P2OUT ^= CLK;
             __no_operation();
         }
     }

@@ -15,7 +15,8 @@
 //		Local Variables
 //********************************
 int seconds = 0;                            //Seconds counter
-
+int returnFlag = 0;
+int welcomeFlag = 0;
 //********************************
 //		Global Variables
 //********************************
@@ -43,13 +44,19 @@ void messageSwitchStopTimer(){
 __interrupt void TIMER1_A0_ISR(){
     seconds++;
     if(seconds == messageToggleDelay && shownMessage == WELCOME){
-        shownMessage = RETURNTAG;
+        returnFlag = 1;
+        welcomeFlag = 0;
+    	shownMessage = RETURNTAG;
         assembleCommand(shownMessage);
         seconds = 0;
     }else if(seconds == messageToggleDelay && shownMessage == RETURNTAG){
-        shownMessage = WELCOME;
+    	welcomeFlag = 1;
+    	returnFlag = 0;
+    	shownMessage = WELCOME;
         assembleCommand(shownMessage);
         seconds = 0;
+    }else if(seconds > messageToggleDelay){
+    	seconds = 0;
     }
 }
 

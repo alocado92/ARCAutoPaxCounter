@@ -30,10 +30,10 @@ int ledBuffcolumn = 63;
 void ledCntrlInit(){
     P6DIR |= (R1 + G1 + B1 + R2 + G2 + B2);
     P3DIR |= (aAddr + bAddr + cAddr + OE + LAT);
-    P1DIR |= CLK;
+    P2DIR |= CLK;
     P6OUT &= ~(R1 + G1 + B1);
     P3OUT &= ~(aAddr + bAddr + cAddr + OE + LAT);
-    P1OUT |= CLK;
+    P2OUT |= CLK;
 
     fillMessage(0);
     fillBuffer(BLUE);

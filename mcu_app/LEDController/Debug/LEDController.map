@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v4.3.3                      
 ******************************************************************************
->> Linked Wed Nov 11 03:51:01 2015
+>> Linked Sun Nov 15 21:58:07 2015
 
 OUTPUT FILE NAME:   <LEDController.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 0000441c
+ENTRY POINT SYMBOL: "_c_int00"  address: 00004428
 
 
 MEMORY CONFIGURATION
@@ -19,8 +19,8 @@ MEMORY CONFIGURATION
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
   USBRAM                00001c00   00000800  00000000  00000800  RWIX
-  RAM                   00002400   00002000  000004ad  00001b53  RWIX
-  FLASH                 00004400   0000bb80  00000bf4  0000af8c  RWIX
+  RAM                   00002400   00002000  000004af  00001b51  RWIX
+  FLASH                 00004400   0000bb80  00000c00  0000af80  RWIX
   INT00                 0000ff80   00000002  00000000  00000002  RWIX
   INT01                 0000ff82   00000002  00000000  00000002  RWIX
   INT02                 0000ff84   00000002  00000000  00000002  RWIX
@@ -85,7 +85,7 @@ MEMORY CONFIGURATION
   INT61                 0000fffa   00000002  00000002  00000000  RWIX
   INT62                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FLASH2                00010000   00014400  000004ae  00013f52  RWIX
+  FLASH2                00010000   00014400  000004dc  00013f24  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -96,40 +96,42 @@ section   page    origin      length       input sections
 .init_array 
 *          0    00004400    00000000     UNINITIALIZED
 
-.bss       0    00002400    00000409     UNINITIALIZED
+.bss       0    00002400    0000040b     UNINITIALIZED
                   00002400    00000400     (.common:ledBuff)
                   00002800    00000008     (.common:dMessage)
                   00002808    00000001     (.common:clkFlag)
+                  00002809    00000001     (.common:command1)
+                  0000280a    00000001     (.common:command2)
 
 .TI.noinit 
 *          0    00002400    00000000     UNINITIALIZED
 
-.data      0    0000280a    00000004     UNINITIALIZED
-                  0000280a    00000004     ledController.obj (.data)
+.data      0    0000280c    00000004     UNINITIALIZED
+                  0000280c    00000004     ledController.obj (.data)
 
 .TI.persistent 
-*          0    0000280a    00000000     UNINITIALIZED
+*          0    0000280c    00000000     UNINITIALIZED
 
 .stack     0    00004360    000000a0     UNINITIALIZED
                   00004360    00000004     rts430x_lc_rd_eabi.lib : boot.obj (.stack)
                   00004364    0000009c     --HOLE--
 
 .text:_isr 
-*          0    00004400    00000042     
-                  00004400    0000001c     masterInterface.obj (.text:_isr:PORT2_ISR)
-                  0000441c    0000001a     rts430x_lc_rd_eabi.lib : boot.obj (.text:_isr:_c_int00_noexit)
-                  00004436    0000000c     ledController.obj (.text:_isr:TIMER0_A0_ISR)
+*          0    00004400    0000004e     
+                  00004400    00000028     masterInterface.obj (.text:_isr:PORT2_ISR)
+                  00004428    0000001a     rts430x_lc_rd_eabi.lib : boot.obj (.text:_isr:_c_int00_noexit)
+                  00004442    0000000c     ledController.obj (.text:_isr:TIMER0_A0_ISR)
 
-.const     0    00004442    00000b86     
-                  00004442    00000820     alphabet.obj (.const:alphabet)
-                  00004c62    00000320     numbers.obj (.const:numbers)
-                  00004f82    00000046     alphabet.obj (.const:messages)
+.const     0    0000444e    00000b86     
+                  0000444e    00000820     alphabet.obj (.const:alphabet)
+                  00004c6e    00000320     numbers.obj (.const:numbers)
+                  00004f8e    00000046     alphabet.obj (.const:messages)
 
-.cinit     0    00004fc8    0000002c     
-                  00004fc8    0000000c     (__TI_handler_table)
-                  00004fd4    0000000a     (.cinit..data.load) [load image, compression = rle]
-                  00004fde    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  00004fe4    00000010     (__TI_cinit_table)
+.cinit     0    00004fd4    0000002c     
+                  00004fd4    0000000c     (__TI_handler_table)
+                  00004fe0    0000000a     (.cinit..data.load) [load image, compression = rle]
+                  00004fea    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004ff0    00000010     (__TI_cinit_table)
 
 RTC        0    0000ffd2    00000002     
                   0000ffd2    00000002     rts430x_lc_rd_eabi.lib : int41.obj (.int41)
@@ -208,38 +210,39 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.text      0    00010000    000004ae     
+.text      0    00010000    000004dc     
                   00010000    000000fa     ledController.obj (.text:fillBuffer)
                   000100fa    000000f4     ledController.obj (.text:updatePort)
                   000101ee    0000006e     rts430x_lc_rd_eabi.lib : autoinit.obj (.text:_auto_init_hold_wdt)
                   0001025c    00000062                            : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
                   000102be    0000004e     main.obj (.text:setVcoreUp)
                   0001030c    0000004c     main.obj (.text:uscInit)
-                  00010358    0000003e     main.obj (.text:main)
-                  00010396    00000036     ledController.obj (.text:ledCntrlInit)
-                  000103cc    00000032     masterInterface.obj (.text:decodeCommand)
-                  000103fe    00000028     ledController.obj (.text:fillMessage)
-                  00010426    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
-                  0001044a    00000016                            : mult16_f5hw.obj (.text)
-                  00010460    00000014     ledController.obj (.text:clkTimerInit)
-                  00010474    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
-                  00010488    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  0001049a    00000006                            : isr_trap.obj (.text:__TI_ISR_TRAP)
-                  000104a0    00000006                            : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
-                  000104a6    00000004                            : pre_init.obj (.text:_system_pre_init)
-                  000104aa    00000004                            : exit.obj (.text:abort)
+                  00010358    0000003e     masterInterface.obj (.text:decodeCommand)
+                  00010396    0000003e     main.obj (.text:main)
+                  000103d4    00000032     ledController.obj (.text:ledCntrlInit)
+                  00010406    00000028     ledController.obj (.text:fillMessage)
+                  0001042e    00000026     masterInterface.obj (.text:masterInterfaceInit)
+                  00010454    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.obj (.text:decompress:ZI:__TI_zero_init)
+                  00010478    00000016                            : mult16_f5hw.obj (.text)
+                  0001048e    00000014     ledController.obj (.text:clkTimerInit)
+                  000104a2    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
+                  000104b6    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  000104c8    00000006                            : isr_trap.obj (.text:__TI_ISR_TRAP)
+                  000104ce    00000006                            : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
+                  000104d4    00000004                            : pre_init.obj (.text:_system_pre_init)
+                  000104d8    00000004                            : exit.obj (.text:abort)
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004fe4 records: 2, size/record: 8, table size: 16
-	.data: load addr=00004fd4, load size=0000000a bytes, run addr=0000280a, run size=00000004 bytes, compression=rle
-	.bss: load addr=00004fde, load size=00000006 bytes, run addr=00002400, run size=00000409 bytes, compression=zero_init
+__TI_cinit_table @ 00004ff0 records: 2, size/record: 8, table size: 16
+	.data: load addr=00004fe0, load size=0000000a bytes, run addr=0000280c, run size=00000004 bytes, compression=rle
+	.bss: load addr=00004fea, load size=00000006 bytes, run addr=00002400, run size=0000040b bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00004fc8 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00004fd4 records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_rle24
 	index: 2, handler: __TI_decompress_none
@@ -331,7 +334,7 @@ address    name
 00000732   ADC12MEM9
 00000733   ADC12MEM9_H
 00000732   ADC12MEM9_L
-000104aa   C$$EXIT
+000104d8   C$$EXIT
 000008c0   CBCTL0
 000008c1   CBCTL0_H
 000008c0   CBCTL0_L
@@ -755,7 +758,7 @@ address    name
 000003e0   TB0EX0
 000003ee   TB0IV
 000003d0   TB0R
-00004436   TIMER0_A0_ISR
+00004442   TIMER0_A0_ISR
 000005d0   UCA0ABCTL
 000005c6   UCA0BRW
 000005c7   UCA0BRW_H
@@ -996,16 +999,16 @@ address    name
 0000015c   WDTCTL_L
 00004400   __STACK_END
 000000a0   __STACK_SIZE
-00004fe4   __TI_CINIT_Base
-00004ff4   __TI_CINIT_Limit
-00004fc8   __TI_Handler_Table_Base
-00004fd4   __TI_Handler_Table_Limit
+00004ff0   __TI_CINIT_Base
+00005000   __TI_CINIT_Limit
+00004fd4   __TI_Handler_Table_Base
+00004fe0   __TI_Handler_Table_Limit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
-0001049a   __TI_ISR_TRAP
+000104c8   __TI_ISR_TRAP
 00000001   __TI_args_main
-00010488   __TI_decompress_none
-000104a0   __TI_decompress_rle24
+000104b6   __TI_decompress_none
+000104ce   __TI_decompress_rle24
 00000001   __TI_exit
 0000ffd2   __TI_int41
 0000ffd4   __TI_int42
@@ -1029,33 +1032,36 @@ UNDEFED    __TI_INITARRAY_Limit
 0000fff8   __TI_int60
 0000fffa   __TI_int61
 0000fffc   __TI_int62
-00010426   __TI_zero_init
+00010454   __TI_zero_init
 ffffffff   __binit__
 ffffffff   __c_args__
-0001044a   __mspabi_mpyi_f5hw
+00010478   __mspabi_mpyi_f5hw
 000101ee   _auto_init_hold_wdt
-0000441c   _c_int00
-0000441c   _c_int00_noexit
+00004428   _c_int00
+00004428   _c_int00_noexit
 0000fffe   _reset_vector
 00004360   _stack
-000104a6   _system_pre_init
-000104aa   abort
-00004442   alphabet
+000104d4   _system_pre_init
+000104d8   abort
+0000444e   alphabet
 ffffffff   binit
 00002808   clkFlag
-00010460   clkTimerInit
+0001048e   clkTimerInit
+00002809   command1
+0000280a   command2
 00002800   dMessage
-000103cc   decodeCommand
+00010358   decodeCommand
 00010000   fillBuffer
-000103fe   fillMessage
+00010406   fillMessage
 00002400   ledBuff
-0000280c   ledBuffcolumn
-0000280a   ledBuffrow
-00010396   ledCntrlInit
-00010358   main
-00010474   memcpy
-00004f82   messages
-00004c62   numbers
+0000280e   ledBuffcolumn
+0000280c   ledBuffrow
+000103d4   ledCntrlInit
+00010396   main
+0001042e   masterInterfaceInit
+000104a2   memcpy
+00004f8e   messages
+00004c6e   numbers
 000102be   setVcoreUp
 000100fa   updatePort
 0001030c   uscInit
@@ -1813,21 +1819,23 @@ address    name
 00002400   ledBuff
 00002800   dMessage
 00002808   clkFlag
-0000280a   ledBuffrow
-0000280c   ledBuffcolumn
+00002809   command1
+0000280a   command2
+0000280c   ledBuffrow
+0000280e   ledBuffcolumn
 00004360   _stack
 00004400   PORT2_ISR
 00004400   __STACK_END
-0000441c   _c_int00
-0000441c   _c_int00_noexit
-00004436   TIMER0_A0_ISR
-00004442   alphabet
-00004c62   numbers
-00004f82   messages
-00004fc8   __TI_Handler_Table_Base
-00004fd4   __TI_Handler_Table_Limit
-00004fe4   __TI_CINIT_Base
-00004ff4   __TI_CINIT_Limit
+00004428   _c_int00
+00004428   _c_int00_noexit
+00004442   TIMER0_A0_ISR
+0000444e   alphabet
+00004c6e   numbers
+00004f8e   messages
+00004fd4   __TI_Handler_Table_Base
+00004fe0   __TI_Handler_Table_Limit
+00004ff0   __TI_CINIT_Base
+00005000   __TI_CINIT_Limit
 0000ffd2   __TI_int41
 0000ffd4   __TI_int42
 0000ffd6   __TI_int43
@@ -1856,24 +1864,25 @@ address    name
 000101ee   _auto_init_hold_wdt
 000102be   setVcoreUp
 0001030c   uscInit
-00010358   main
-00010396   ledCntrlInit
-000103cc   decodeCommand
-000103fe   fillMessage
-00010426   __TI_zero_init
-0001044a   __mspabi_mpyi_f5hw
-00010460   clkTimerInit
-00010474   memcpy
-00010488   __TI_decompress_none
-0001049a   __TI_ISR_TRAP
-000104a0   __TI_decompress_rle24
-000104a6   _system_pre_init
-000104aa   C$$EXIT
-000104aa   abort
+00010358   decodeCommand
+00010396   main
+000103d4   ledCntrlInit
+00010406   fillMessage
+0001042e   masterInterfaceInit
+00010454   __TI_zero_init
+00010478   __mspabi_mpyi_f5hw
+0001048e   clkTimerInit
+000104a2   memcpy
+000104b6   __TI_decompress_none
+000104c8   __TI_ISR_TRAP
+000104ce   __TI_decompress_rle24
+000104d4   _system_pre_init
+000104d8   C$$EXIT
+000104d8   abort
 ffffffff   __binit__
 ffffffff   __c_args__
 ffffffff   binit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
 
-[810 symbols]
+[813 symbols]

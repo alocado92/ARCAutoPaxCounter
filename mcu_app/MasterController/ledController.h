@@ -19,17 +19,17 @@
 //********************************
 #define TRIGGER		BIT3
 
-#define RED         0x01        //Red command
-#define GREEN       0x02        //Green command
-#define BLUE1       0x03        //Blue command
+#define RED         0        //Red command
+#define GREEN       1        //Green command
+#define BLUE1       2        //Blue command
 
-#define WELCOME     0x00        //Welcome command
-#define RETURNTAG	0x01		//Return tag command
-#define DIAGNOSTIC  0x02        //Diagnostic command
-#define TAGENTER	0x03        //Tag enter command
-#define TAGEXIT     0x04        //Tag exit command
-#define JUSTWAIT	0x05        //Wait command
-#define SYSTEMOK    0x06	    //System ok command
+#define WELCOME     0        //Welcome command
+#define RETURNTAG	1		//Return tag command
+#define DIAGNOSTIC  2        //Diagnostic command
+#define TAGENTER	3        //Tag enter command
+#define TAGEXIT     4        //Tag exit command
+#define JUSTWAIT	5        //Wait command
+#define SYSTEMOK    6	    //System ok command
 
 //********************************
 //        Public Functions

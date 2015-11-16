@@ -30,7 +30,7 @@
 #define bAddr			BIT3
 #define cAddr			BIT4
 
-#define CLK				BIT6
+#define CLK				BIT2
 #define OE				BIT5
 #define LAT				BIT6
 

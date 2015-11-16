@@ -28,13 +28,13 @@ int main(void) {
     bluetoothInit();
     buzzerInit();
     diagnosticButtonInit();
-    //ledCtrlInit();
+    ledCtrlInit();
     photodiodeInit();
     rfidInit();
     arcLogicInit();
 
     //Start Message to Toggle
-    //messageSwitchTimer();
+    messageSwitchTimer();
 
 
     __bis_SR_register(LPM0_bits + GIE);
