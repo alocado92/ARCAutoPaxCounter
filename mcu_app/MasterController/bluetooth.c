@@ -9,13 +9,14 @@
 //********************************
 #include "bluetooth.h"
 #include "trueOrFalse.h"
+#include "arcLogic.h"
 
 //********************************
 //		Global Variables
 //********************************
 uint8_t bluetoothMessage[MESSAGESIZE];
 int flagRX = FALSE;
-int flagRXDiag = FALSE;
+int flagRXDiag;
 
 unsigned int counterBlue = 0;
 
@@ -48,6 +49,7 @@ __interrupt void USCI_A0_ISR(void){
 			}
 			else if (UCA0RXBUF == 'D'){
 				flagRXDiag = TRUE;
+				diagnosticProtocol();
 			}
 			break;
 		case 4: break;

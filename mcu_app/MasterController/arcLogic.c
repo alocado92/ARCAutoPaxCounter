@@ -13,6 +13,7 @@
 #include "diagnosticButton.h"
 #include "trueOrFalse.h"
 #include "ledController.h"
+#include "messageToggle.h"
 
 //********************************
 //      Global Variables
@@ -29,6 +30,7 @@ unsigned int counterRXTrue = 0;
 unsigned int counterRXFalse = 0;
 unsigned int flagTagEnterDiag = FALSE;
 unsigned int flagTagExitDiag = FALSE;
+unsigned int flagFinish = FALSE;
 //********************************
 //          Functions
 //********************************
@@ -153,24 +155,24 @@ int addID(int index, uint8_t idPax[IDLEN]){
 
 void diagnosticProtocol(){
 	if(flagDiag2 == TRUE){
-		//flagDiag2 = FALSE;
-		//messageSwitchStopTimer();
-		//assembleCommand(TAGENTER);
+		flagDiag2 = FALSE;
+		messageSwitchStopTimer();
+		assembleCommand(TAGENTER);
 	}
 	else if(flagTagEnterDiag == TRUE){
-		//flagTagEnterDiag = FALSE;
-		//assembleCommand(TAGEXIT);
+		flagTagEnterDiag = FALSE;
+		assembleCommand(TAGEXIT);
 	}
 	else if(flagTagExitDiag == TRUE){
-		//flagTagExitDiag = FALSE;
-		if(flagRXDiag == TRUE){
+		flagTagExitDiag = FALSE;
+	}
+	else if(flagRXDiag == TRUE){
 			flagRXDiag = FALSE;
-			//assembleCommand(SYSTEMOK);
-			//messageSwitchTimer();
-		}
-		else if (flagRXDiag == FALSE){
-			//assembleCommand(SYSTEMFAIL);
-			//messageSwitchTimer();
-		}
+			assembleCommand(SYSTEMOK);
+			flagFinish = TRUE;
+			if (flagFinish == TRUE){
+				flagFinish = FALSE;
+				messageSwitchTimer();
+			}
 	}
 }

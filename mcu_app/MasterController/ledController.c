@@ -14,7 +14,7 @@
 //          Variables
 //********************************
 //Color scheme for each message
-const uint8_t colorM[7] = {BLUE1, RED, GREEN, RED, RED, GREEN, BLUE1};
+const uint8_t colorM[7] = {BLUE1, RED, GREEN, GREEN, RED, GREEN, BLUE1};
 int assembleFlag = 0;
 int sendLedFlag = 0;
 

@@ -11,6 +11,7 @@ arcLogic.obj: ../bluetooth.h
 arcLogic.obj: ../diagnosticButton.h
 arcLogic.obj: ../trueOrFalse.h
 arcLogic.obj: ../ledController.h
+arcLogic.obj: ../messageToggle.h
 
 ../arcLogic.c: 
 ../arcLogic.h: 
@@ -23,3 +24,4 @@ c:/ti/ccsv6/tools/compiler/msp430_4.3.3/include/stdint.h:
 ../diagnosticButton.h: 
 ../trueOrFalse.h: 
 ../ledController.h: 
+../messageToggle.h: 

@@ -31,6 +31,7 @@ __interrupt void Port_2(void){
 	flagDiag = TRUE;
 	flagDiag2 = TRUE;
 	startSound();
+	diagnosticProtocol();
     P2IFG &= ~BUTTON;                // P2.0 IFG cleared
 }
 
