@@ -24,12 +24,13 @@
 #define BLUE1       2        //Blue command
 
 #define WELCOME     0        //Welcome command
-#define RETURNTAG	1		//Return tag command
-#define DIAGNOSTIC  2        //Diagnostic command
-#define TAGENTER	3        //Tag enter command
-#define TAGEXIT     4        //Tag exit command
-#define JUSTWAIT	5        //Wait command
-#define SYSTEMOK    6	    //System ok command
+#define RETURNTAG	1		 //Return tag command
+#define TAGENTER	2        //Tag enter command
+#define TAGEXIT     3        //Tag exit command
+#define SYSTEMOK    4	     //System ok command
+#define SYSFAIL		5		 //System Fail command
+#define OPEN		6		 //Open command
+#define CAPSTONE	7		 //Capstone command
 
 //********************************
 //        Public Functions

@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v4.3.3                      
 ******************************************************************************
->> Linked Sun Nov 15 21:58:07 2015
+>> Linked Wed Nov 18 01:02:49 2015
 
 OUTPUT FILE NAME:   <LEDController.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 00004428
@@ -20,7 +20,7 @@ MEMORY CONFIGURATION
   INFOA                 00001980   00000080  00000000  00000080  RWIX
   USBRAM                00001c00   00000800  00000000  00000800  RWIX
   RAM                   00002400   00002000  000004af  00001b51  RWIX
-  FLASH                 00004400   0000bb80  00000c00  0000af80  RWIX
+  FLASH                 00004400   0000bb80  00000c0a  0000af76  RWIX
   INT00                 0000ff80   00000002  00000000  00000002  RWIX
   INT01                 0000ff82   00000002  00000000  00000002  RWIX
   INT02                 0000ff84   00000002  00000000  00000002  RWIX
@@ -122,16 +122,16 @@ section   page    origin      length       input sections
                   00004428    0000001a     rts430x_lc_rd_eabi.lib : boot.obj (.text:_isr:_c_int00_noexit)
                   00004442    0000000c     ledController.obj (.text:_isr:TIMER0_A0_ISR)
 
-.const     0    0000444e    00000b86     
+.const     0    0000444e    00000b90     
                   0000444e    00000820     alphabet.obj (.const:alphabet)
                   00004c6e    00000320     numbers.obj (.const:numbers)
-                  00004f8e    00000046     alphabet.obj (.const:messages)
+                  00004f8e    00000050     alphabet.obj (.const:messages)
 
-.cinit     0    00004fd4    0000002c     
-                  00004fd4    0000000c     (__TI_handler_table)
-                  00004fe0    0000000a     (.cinit..data.load) [load image, compression = rle]
-                  00004fea    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  00004ff0    00000010     (__TI_cinit_table)
+.cinit     0    00004fde    0000002c     
+                  00004fde    0000000c     (__TI_handler_table)
+                  00004fea    0000000a     (.cinit..data.load) [load image, compression = rle]
+                  00004ff4    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004ffa    00000010     (__TI_cinit_table)
 
 RTC        0    0000ffd2    00000002     
                   0000ffd2    00000002     rts430x_lc_rd_eabi.lib : int41.obj (.int41)
@@ -235,14 +235,14 @@ SYSNMI     0    0000fffc    00000002
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00004ff0 records: 2, size/record: 8, table size: 16
-	.data: load addr=00004fe0, load size=0000000a bytes, run addr=0000280c, run size=00000004 bytes, compression=rle
-	.bss: load addr=00004fea, load size=00000006 bytes, run addr=00002400, run size=0000040b bytes, compression=zero_init
+__TI_cinit_table @ 00004ffa records: 2, size/record: 8, table size: 16
+	.data: load addr=00004fea, load size=0000000a bytes, run addr=0000280c, run size=00000004 bytes, compression=rle
+	.bss: load addr=00004ff4, load size=00000006 bytes, run addr=00002400, run size=0000040b bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00004fd4 records: 3, size/record: 4, table size: 12
+__TI_handler_table @ 00004fde records: 3, size/record: 4, table size: 12
 	index: 0, handler: __TI_zero_init
 	index: 1, handler: __TI_decompress_rle24
 	index: 2, handler: __TI_decompress_none
@@ -999,10 +999,10 @@ address    name
 0000015c   WDTCTL_L
 00004400   __STACK_END
 000000a0   __STACK_SIZE
-00004ff0   __TI_CINIT_Base
-00005000   __TI_CINIT_Limit
-00004fd4   __TI_Handler_Table_Base
-00004fe0   __TI_Handler_Table_Limit
+00004ffa   __TI_CINIT_Base
+0000500a   __TI_CINIT_Limit
+00004fde   __TI_Handler_Table_Base
+00004fea   __TI_Handler_Table_Limit
 UNDEFED    __TI_INITARRAY_Base
 UNDEFED    __TI_INITARRAY_Limit
 000104c8   __TI_ISR_TRAP
@@ -1832,10 +1832,10 @@ address    name
 0000444e   alphabet
 00004c6e   numbers
 00004f8e   messages
-00004fd4   __TI_Handler_Table_Base
-00004fe0   __TI_Handler_Table_Limit
-00004ff0   __TI_CINIT_Base
-00005000   __TI_CINIT_Limit
+00004fde   __TI_Handler_Table_Base
+00004fea   __TI_Handler_Table_Limit
+00004ffa   __TI_CINIT_Base
+0000500a   __TI_CINIT_Limit
 0000ffd2   __TI_int41
 0000ffd4   __TI_int42
 0000ffd6   __TI_int43

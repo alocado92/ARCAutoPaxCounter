@@ -18,7 +18,7 @@
 //********************************
 //      Global Variables
 //********************************
-extern const uint8_t messages[7][10];
+extern const uint8_t messages[8][10];
 extern const uint8_t alphabet[26][80];
 
 

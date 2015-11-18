@@ -41,11 +41,12 @@ void masterInterfaceInit(){
  * Message Decoding:
  * 0 ---> WELCOME
  * 1 ---> RETURN TAG
- * 2 ---> DIAGNOSTIC
- * 3 ---> TAG ENTER
- * 4 ---> TAG EXIT
- * 5 ---> WAIT
- * 6 ---> SYSTEM OK
+ * 2 ---> TAG ENTER
+ * 3 ---> TAG EXIT
+ * 4 ---> SYSTEM OK
+ * 5 ---> SYS FAIL
+ * 6 ---> OPEN
+ * 7 ---> CAPSTONE
  *
  * Color Decoding:
  * 0 ---> RED
