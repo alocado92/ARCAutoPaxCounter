@@ -130,11 +130,11 @@ app.post('/add', function (req,res){
 	else if(admin =='No'){
 		isAdmin = 0;
 	}
+	var post = {username: username, password: hashedPass, email: email, f_name: fname, l_name: lname, is_admin: isAdmin, company: company,is_active:is_active };
 
 	pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( "INSERT INTO User (username,password,email,f_name,l_name,is_admin,company,is_active)
-VALUES ("+username+","+password+","+email+","+fname+","+lname+","+isAdmin+","+company+","+is_active+");", function (err, rows) {
+	  		connection.query( "INSERT INTO User SET ?",post, function (err, rows) {
 	   			//manipulate rows
 	   			if (err) throw err;
 	   			console.log('Insert new user successful');
