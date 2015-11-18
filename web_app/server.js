@@ -108,6 +108,46 @@ app.post('/login', function (req, res){
 app.get('/remind', function (req,res){
 	res.sendFile("public/forgot.html", {"root": __dirname});
 });
+app.get('/newUser', function (req,res){
+	res.sendFile("public/add_user.html", {"root": __dirname});
+});
+app.post('/add', function (req,res){
+	console.log('Adding a new user');
+	var email = req.body.email;
+	var username = req.body.user;
+	var password = req.body.password;
+	var fname = req.body.fname;
+	var lname = req.body.lname;
+	var admin = req.body.admin;
+	var company = req.body.company;
+	var hashedPass = hash.Hash(password);
+	var isAdmin = -1;
+	var completed = 0;
+	var is_active =1;
+	if(admin == 'Yes'){
+		isAdmin = 1;
+	}
+	else if(admin =='No'){
+		isAdmin = 0;
+	}
+
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( "INSERT INTO User (username,password,email,f_name,l_name,is_admin,company,is_active)
+VALUES ("+username+","+password+","+email+","+fname+","+lname+","+isAdmin+","+company+","+is_active+");", function (err, rows) {
+	   			//manipulate rows
+	   			if (err) throw err;
+	   			console.log('Insert new user successful');
+	   			var completed =1;
+	   			connection.release();
+	  		});
+	   		// And done with the connection.
+	    });
+	if(completed ==1){
+		console.log('Done adding new user');
+		res.send({redirect: '/home'});
+	}
+});
 app.post('/forgot', function (req,res){
 	console.log('entered send email server handler: '+req.body.email);
 	var email = req.body.email;

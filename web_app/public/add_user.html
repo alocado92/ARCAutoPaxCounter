@@ -1,0 +1,116 @@
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"
+    rel="stylesheet" type="text/css">
+    <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css"
+    rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-resource.js"></script>
+    <script src="./addApp.js"></script>
+    <script src="./add_user.js"></script>
+  </head>
+  
+  <body ng-app="add_app">
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><span>Brand</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active">
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="#">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container" ng-controller="addController as ctrl">
+        <div class="row">
+          <div class="col-md-12">
+            <form class="form-horizontal" role="form" ng-submit="ctrl.addUser()">
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputEmail3" class="control-label">Email</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="email" ng-model="ctrl.email"placeholder="John.Doe@test.com" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputEmail3" class="control-label">Username</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="user" ng-model="ctrl.user"placeholder="abc123" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputPassword3" class="control-label">Password</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="pword" ng-model="ctrl.pword"placeholder="Password" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputEmail3" class="control-label">First Name</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="fname" ng-model="ctrl.fname" placeholder="John" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputPassword3" class="control-label">Last Name</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="lname" ng-model="ctrl.lname" placeholder="Doe" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputPassword3" class="control-label">Company Name</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="company" ng-model="ctrl.company" placeholder="UPRM" required>
+                </div>
+              </div>
+              <div class="form-group">
+               <div class="col-sm-2">
+                 <label for="inputPassword3" class="control-label">Admin?</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="admin" ng-model="ctrl.admin" placeholder="Yes/No" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-default">Add User</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>
