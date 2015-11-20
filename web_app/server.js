@@ -128,6 +128,9 @@ app.post('/fetch', function (req,res){
 	   			fname = rows[0].f_name;
 	   			lname = rows[0].l_name;
 	   			console.log(rows);
+	   			console.log(fname);
+	   			console.log(lname);
+	   			console.log(isAdmin);
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
