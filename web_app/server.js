@@ -121,7 +121,7 @@ app.post('/fetch', function (req,res){
 	var isAdmin = -1;
 	pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select f_name,l_name,count(is_admin) as admin from User where email ="'+email+'"', function (err, rows) {
+	  		connection.query( 'Select f_name,l_name,(select count(is_admin) from User where email = "'+email+'" AND is_admin = 1) as admin from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
 	   			//console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
 	   			isAdmin = rows[0].admin;
