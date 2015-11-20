@@ -112,7 +112,7 @@ app.get('/newUser', function (req,res){
 	res.sendFile("public/add_user.html", {"root": __dirname});
 });
 app.get('/editUser', function (req,res){
-	res.sendFile("public/add_user.html", {"root": __dirname});
+	res.sendFile("public/edit_user.html", {"root": __dirname});
 });
 app.post('/fetch', function (req,res){
 	var email = req.body.email;
