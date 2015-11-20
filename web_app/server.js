@@ -196,7 +196,7 @@ app.post('/add', function (req,res){
 	   			//manipulate rows
 	   			//if (err) throw err;
 	   			console.log('Insert new user successful');
-	   			var completed =1;
+	   			completed =1;
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
