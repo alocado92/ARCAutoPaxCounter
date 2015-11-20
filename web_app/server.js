@@ -140,7 +140,34 @@ app.post('/fetch', function (req,res){
 	
 });
 app.post('/edit', function (req,res){
-	
+	var email = req.body.email;
+	console.log('Editing user with email: '+email);
+	var admin = req.body.admin;
+	var isAdmin = -1;
+	if(admin == 'Yes'){
+		isAdmin = 1;
+	}
+	else if(admin =='No'){
+		isAdmin = 0;
+	}
+	var post = {is_admin: isAdmin};
+	var where = {email: email};
+	var completed = 0;
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( "Update User SET ? where ?",[post,where], function (err, rows) {
+	   			//manipulate rows
+	   			//if (err) throw err;
+	   			console.log('edited user successful');
+	   			 completed =1;
+	   			connection.release();
+	  		});
+	   		// And done with the connection.
+	    });
+	if(completed ==1){
+		console.log('Done editing user');
+		res.send({redirect: '/home'});
+	}
 });
 app.post('/add', function (req,res){
 	console.log('Adding a new user');
