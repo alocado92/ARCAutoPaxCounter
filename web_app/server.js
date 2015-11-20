@@ -111,6 +111,30 @@ app.get('/remind', function (req,res){
 app.get('/newUser', function (req,res){
 	res.sendFile("public/add_user.html", {"root": __dirname});
 });
+app.post('/fetch', function (req,res){
+	var email = req.body.email;
+	var fname = '';
+	var lname = '';
+	var isAdmin = -1;
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'Select f_name,l_name,is_admin from User where email ="'+email+'"', function (err, rows) {
+	   			//manipulate rows
+	   			//console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
+	   			isAdmin = rows[0].is_admin;
+	   			fname = rows[0].f_name;
+	   			lname = rows[0].l_name;
+
+	   			connection.release();
+	  		});
+	   		// And done with the connection.
+	    });
+	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
+	res.send({email: email, fname: fname, lname: lname, isAdmin: isAdmin});
+});
+app.post('/edit', function (req,res){
+	
+});
 app.post('/add', function (req,res){
 	console.log('Adding a new user');
 	var email = req.body.email;
