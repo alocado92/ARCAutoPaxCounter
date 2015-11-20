@@ -31,7 +31,8 @@
             
             vm.fname = response.data.fname;
             vm.lname = response.data.lname;
-            vm.isAdmin = response.data.isAdmin;
+            if(response.data.isAdmin == 1)
+            vm.isAdmin = 'Yes';
             vm.email = response.data.email;
             vm.canShow = true;
             return response;
