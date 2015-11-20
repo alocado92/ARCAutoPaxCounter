@@ -111,6 +111,9 @@ app.get('/remind', function (req,res){
 app.get('/newUser', function (req,res){
 	res.sendFile("public/add_user.html", {"root": __dirname});
 });
+app.get('/editUser', function (req,res){
+	res.sendFile("public/add_user.html", {"root": __dirname});
+});
 app.post('/fetch', function (req,res){
 	var email = req.body.email;
 	var fname = '';
@@ -160,7 +163,7 @@ app.post('/add', function (req,res){
 	  		// Use the connection
 	  		connection.query( "INSERT INTO User SET ?",post, function (err, rows) {
 	   			//manipulate rows
-	   			if (err) throw err;
+	   			//if (err) throw err;
 	   			console.log('Insert new user successful');
 	   			var completed =1;
 	   			connection.release();
