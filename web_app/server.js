@@ -116,8 +116,8 @@ app.get('/editUser', function (req,res){
 });
 app.post('/fetch', function (req,res){
 	var email = req.body.email;
-	var fname = '';
-	var lname = '';
+	var fName = '';
+	var lName = '';
 	var isAdmin = -1;
 	pool.getConnection(function(err, connection) {
 	  		// Use the connection
@@ -125,18 +125,19 @@ app.post('/fetch', function (req,res){
 	   			//manipulate rows
 	   			//console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
 	   			isAdmin = rows[0].admin;
-	   			fname = rows[0].f_name;
-	   			lname = rows[0].l_name;
+	   			fName = rows[0].f_name;
+	   			lName = rows[0].l_name;
 	   			console.log(rows);
-	   			console.log(fname);
-	   			console.log(lname);
+	   			console.log(fName);
+	   			console.log(lName);
 	   			console.log(isAdmin);
+	   			res.send({email: email, fname: fName, lname: lName, isAdmin: isAdmin});
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
 	    });
 	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
-	res.send({email: email, fname: fname, lname: lname, isAdmin: isAdmin});
+	
 });
 app.post('/edit', function (req,res){
 	
