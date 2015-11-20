@@ -164,10 +164,10 @@ app.post('/edit', function (req,res){
 	  		});
 	   		// And done with the connection.
 	    });
-	if(completed ==1){
+	
 		console.log('Done editing user');
 		res.send({redirect: '/home'});
-	}
+	
 });
 app.post('/add', function (req,res){
 	console.log('Adding a new user');
