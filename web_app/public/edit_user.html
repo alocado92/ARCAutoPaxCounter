@@ -17,6 +17,7 @@
   </head>
   
   <body ng-app="edit_app" >
+    <div class="container" ng-controller="editController as ctrl">
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
         <div class="navbar-header">
@@ -40,7 +41,7 @@
         </div>
       </div>
     </div>
-    <div class="section" ng-controller="editController as ctrl">
+    <div class="section" >
       <div class="container">
         <div class="row">
           <div class="col-md-offset-1 col-md-12">
@@ -63,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div class="section" ng-controller="editController as ctrl">
+    <div class="section" >
       <div class="container"ng-show="ctrl.canShow == 1">
         <div class="row">
           <div class="col-md-12">
@@ -93,6 +94,7 @@
         </div>
       </div>
     </div>
+  </div>
   </body>
 
 </html>
