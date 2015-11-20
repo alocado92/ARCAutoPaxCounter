@@ -5,7 +5,7 @@
     	app.controller('editController',['$http',function($http) {
 
     		var vm = this;
-            var vm.canShow = 0;
+            var vm.canShow = false;
     		
             var data = {
                 email: vm.email,
@@ -33,7 +33,7 @@
             vm.lname = response.data.lname;
             vm.isAdmin = response.data.isAdmin;
             vm.email = response.data.email;
-            vm.canShow = (vm.canShow +1)%2;
+            vm.canShow = true;
             return response;
         });
         
