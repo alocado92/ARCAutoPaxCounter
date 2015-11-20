@@ -5,7 +5,7 @@
     	app.controller('editController',['$http',function($http) {
 
     		var vm = this;
-            var vm.canShow = false;
+            //var vm.canShow = false;
     		
             var data = {
                 email: vm.email,
