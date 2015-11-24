@@ -26,7 +26,11 @@ var log = bunyan.createLogger({
 var distance = require('google-distance');
 
 //API Key for on-remote server testing
-distance.apiKey = 'AIzaSyC7ZVsNOFln4BjoOK998A2pODHq70QzDOY';
+distance.apiKey = 'AIzaSyCLWYwZfhXxvlaBHRTEEt40KooXr62LuxY';
+
+//API Key for local server testing
+/*distance.apiKey = 'AIzaSyC7ZVsNOFln4BjoOK998A2pODHq70QzDOY';
+*/
 //mysql create pool
 var trip = '';
 //var pool = mysql.pool;
@@ -300,7 +304,7 @@ app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
 	if(req.body){
-		res.send('OK');
+		
 	}
 	var option = req.body.action;
 	
@@ -338,6 +342,7 @@ app.post('/mobile', function (req,res){
 	   			
 	   			console.log('Insert new belongs successful');
 	   			
+	   			
 	  		});
 	   			
 	  		});
@@ -347,6 +352,7 @@ app.post('/mobile', function (req,res){
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
+	   		res.send('OK');
 	   		connection.release();
 	    });
 
@@ -370,6 +376,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Stop study update successful');
+	   			res.send('OK');
 	   			connection.release();
 	  		});
 	  		});
@@ -386,7 +393,7 @@ app.post('/mobile', function (req,res){
 		var origin_dest = [];
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select stop_ID, stop_latitude, stop_longitude, name from Route natural join Linked_to natural join Stop where ?',{route_name: 'Select route_name from Trip natural join Belongs natural join Route where end_time = null'}, function (err, rows) {
+	  		connection.query( 'Select stop_ID, stop_latitude, stop_longitude, name from Route natural join Linked_to natural join Stop where ?',{route_name: 'Select route_name from Trip natural join Belongs natural join Route where end_time is null'}, function (err, rows) {
 	   			//manipulate rows
 	   			
 	   			for(var row in rows ){
