@@ -416,6 +416,7 @@ app.post('/mobile', function (req,res){
 	   			//get stops for origin destinations 
 	   			for(var passenger in passengers){
 	  			//origin stops
+	  			var data10 = 8;
 	  			for(var i =0; i < stops.length; i++){
 					distance.get(
 					  {
@@ -428,13 +429,17 @@ app.post('/mobile', function (req,res){
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    if(data.distanceValue <=7){
+					    	data10 = data.distanceValue;
 					    	origin_dest.push({origin_stop: stops[i].name, dest_stop: ''});
 					    	
 					    }
-					    	break;
+					    	
 					});
-					
+					if(data10 <=7){
+						break;
+					}
 	  			}
+	  			data10 = 8;
 	  			//destination stops
 	  			for(var i =0; i < stops.length; i++){
 					distance.get(
@@ -448,12 +453,15 @@ app.post('/mobile', function (req,res){
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    if(data.distanceValue <=7){
+					    	data10 = data.distanceValue;
 					    	origin_dest[i].dest_stop += stops[i].name;
 					    	
 					    }
-					    	break;
+					    	
 					});
-					
+					if(data10 <=7){
+						break;
+					}	
 	  			}
 	  			distance.get(
 					  {
