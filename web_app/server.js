@@ -303,9 +303,9 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	/*if(req.body){
+	if(req.body){
 		res.send('OK');
-	}*/
+	}
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
@@ -352,7 +352,7 @@ app.post('/mobile', function (req,res){
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
-	   		res.send('OK');
+	   		//res.send('OK');
 	   		connection.release();
 	    });
 		break;
@@ -375,7 +375,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Stop study update successful');
-	   			res.send('OK');
+	   			//res.send('OK');
 	   			connection.release();
 	  		});
 	  		});
@@ -383,10 +383,10 @@ app.post('/mobile', function (req,res){
 	  	});
 		break;
 		case 'delete':
-		res.send('OK');
+		//res.send('OK');
 		break;
 		case 'diagnostic':
-		res.send('OK');
+		//res.send('OK');
 	  		
 
 		break;
@@ -398,7 +398,7 @@ app.post('/mobile', function (req,res){
 				var distances = [];
 				var origin_dest = [];
 				console.log(passengers[0].entry_lat+","+passengers[0].entry_log);
-				for(var i=0;i<passengers.length;i++){
+				/*for(var i=0;i<passengers.length;i++){
 					distance.get(
 					  {
 					     origins: [passengers[i].entry_lat +','+ passengers[i].entry_log],
@@ -411,12 +411,12 @@ app.post('/mobile', function (req,res){
 					    console.log(data.distanceValue);
 					    distances.push(data.distanceValue);
 					    if(i==passengers.length -1){
-						res.send('OK');
+						//res.send('OK');
 					}
 
 					});
-					
-				}
+
+				}*/
 
 				/*pool.getConnection(function(err, connection) {
 
