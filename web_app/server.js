@@ -418,7 +418,7 @@ app.post('/mobile', function (req,res){
 	   			//get stops for origin destinations 
 	   			for(var passenger in passengers){
 	  			//origin stops
-	  			var data10 = 8;
+	  			var data10 = 50;
 	  			for(var i =0; i < stops.length; i++){
 					distance.get(
 					  {
@@ -434,19 +434,8 @@ app.post('/mobile', function (req,res){
 					    	data10 = data.distanceValue;
 					    	origin_dest.push({origin_stop: stops[i].name, dest_stop: ''});
 					    	console.log(origin_dest[i].origin_stop);
-					    }
-					    	
-					});
-					if(data10 <=50){
-						done++;
-						break;
-					}
-	  			}
-	  			console.log(origin_dest);
-	  			data10 = 8;
-	  			//destination stops
-	  			for(var i =0; i < stops.length; i++){
-					distance.get(
+
+					    	distance.get(
 					  {
 					     origins: [stops[i].stop_latitude + ',' + stops[i].stop_longitude],
 					  destinations: [ passenger.exit_lat +','+ passenger.exit_log],
@@ -460,16 +449,7 @@ app.post('/mobile', function (req,res){
 					    	data10 = data.distanceValue;
 					    	console.log(stops[i].name);
 					    	origin_dest[i].dest_stop = stops[i].name;
-					    	
-					    }
-					    	
-					});
-					if(data10 <=50){
-						done++
-						break;
-					}	
-	  			}
-	  			distance.get(
+					    	distance.get(
 					  {
 					     origins: [passenger.entry_lat +','+ passenger.entry_long],
 					  destinations: [ passenger.exit_lat +','+ passenger.exit_long],
@@ -480,15 +460,24 @@ app.post('/mobile', function (req,res){
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    distances.push(data.distanceValue);
-					    done++;
+					   
 
 					});
-	  			if(k<passengers.length){
-
+					    }
+					    	
+					});
+					    }
+					    	
+					});
+					if(data10 <=50){
+						done++;
+						break;
+					}
 	  			}
-	  				
-	  		}
-	  		while(done !=14){}
+	  			console.log(origin_dest);
+	  			
+	  			
+	  			
 	  		for (var i=0; i<passengers.length;i++){
 	  			
 	  		// Use the connection
