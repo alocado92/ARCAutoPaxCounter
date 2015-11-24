@@ -304,7 +304,7 @@ app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
 	if(req.body){
-		
+		res.send('OK');
 	}
 	var option = req.body.action;
 	
@@ -384,16 +384,26 @@ app.post('/mobile', function (req,res){
 	  	});
 		break;
 		case 'delete':
+		//res.send('OK');
+		break;
+		case 'diagnostic':
+		//res.send('OK');
+	  		
 
 		break;
-		case 'insert':
-		var passengers = req.body;
+		default:
+			//console.log('Something went wrong with the options');
+			//res.send('OK');
+			var passengers = req.body;
 		var stops = [];
 		var distances = [];
 		var origin_dest = [];
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select stop_ID, stop_latitude, stop_longitude, name from Route natural join Linked_to natural join Stop where ?',{route_name: 'Select route_name from Trip natural join Belongs natural join Route where end_time is null'}, function (err, rows) {
+	  		connection.query( 'Select route_name from Trip natural join Belongs natural join Route where end_time is null', function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			connection.query( 'Select stop_ID, stop_latitude, stop_longitude, name from Route natural join Linked_to natural join Stop where ?',{route_name: rows[0].route_name}, function (err, rows) {
 	   			//manipulate rows
 	   			
 	   			for(var row in rows ){
@@ -401,17 +411,16 @@ app.post('/mobile', function (req,res){
 	   			}
 	   			console.log('Search for stops in route successful');
 	   			
-	   			connection.release();
-	  		});
-	  		});
-	  		//get stops for origin destinations 
-	  		for(var passenger in passengers){
+	   			//connection.release();
+
+	   			//get stops for origin destinations 
+	   			for(var passenger in passengers){
 	  			//origin stops
 	  			for(var i =0; i < stops.length; i++){
 					distance.get(
 					  {
 					     origins: [stops[i].stop_latitude + ',' + stops[i].stop_longitude],
-					  destinations: [ passenger.entry_lat +','+ passenger.entry_long],
+					  destinations: [ passenger.entry_lat +','+ passenger.entry_log],
 					    mode: 'driving',
 					    units: 'metric'
 					  },
@@ -422,16 +431,16 @@ app.post('/mobile', function (req,res){
 					    	origin_dest.push({origin_stop: stops[i].name, dest_stop: ''});
 					    	
 					    }
-
+					    	break;
 					});
-					break;
+					
 	  			}
 	  			//destination stops
 	  			for(var i =0; i < stops.length; i++){
 					distance.get(
 					  {
 					     origins: [stops[i].stop_latitude + ',' + stops[i].stop_longitude],
-					  destinations: [ passenger.exit_lat +','+ passenger.exit_long],
+					  destinations: [ passenger.exit_lat +','+ passenger.exit_log],
 					    mode: 'driving',
 					    units: 'metric'
 					  },
@@ -442,9 +451,9 @@ app.post('/mobile', function (req,res){
 					    	origin_dest[i].dest_stop += stops[i].name;
 					    	
 					    }
-
+					    	break;
 					});
-					break;
+					
 	  			}
 	  			distance.get(
 					  {
@@ -460,31 +469,42 @@ app.post('/mobile', function (req,res){
 					    
 
 					});
+
+	  				
 	  		}
 	  		for (var i=0; i<passengers.length;i++){
-	  			pool.getConnection(function(err, connection) {
+	  			
 	  		// Use the connection
-	  			var post = {entry_time: passengers[i].entry_time, entry_latitude: passengers[i].entry_lat, entry_longitude: passengers[i].entry_long, exit_time: passengers[i].exit_time, exit_latitude: passengers[i].exit_lat, exit_longitude: passengers[i].exit_log, distance: distances[i], dest_stop: origin_dest[i].dest_stop, origin_stop: origin_dest[i].origin_stop};
+	  		var pass_ID = 0;
+	  			var post = {entry_time: passengers[i].entry_time, entry_latitude: passengers[i].entry_lat, entry_longitude: passengers[i].entry_log, exit_time: passengers[i].exit_time, exit_latitude: passengers[i].exit_lat, exit_longitude: passengers[i].exit_log, distance: distances[i], dest_stop: origin_dest[i].dest_stop, origin_stop: origin_dest[i].origin_stop};
 	  			connection.query( "INSERT INTO Passenger SET ?",post, function (err, rows) {
 	   			//manipulate rows
+	   				pass_ID = rows.insertId;
 	   			
 		   			console.log('Insert new passenger successful');
+		   			connection.query('Select trip_ID from Trip where end_time is null',function (err, rows){
+		   				console.log('Looking for trip_ID with null end_time: ' + rows[0].trip_ID);
+		   				connection.query('Insert into Takes SET ?',{passenger_ID: pass_ID, trip_ID: rows[0].trip_ID},function (err, rows){
+		   					console.log('inserted into set: ID = '+rows.insertId);
+	  			});
+	  			});
 		   			
 		   			
 	  			});
 
-	  			connection.query('Insert into Takes SET ?',{passenger_ID: 'SELECT LAST_INSERTED_ID()', trip_ID: 'Select trip_ID from Trip where end_time = null'},function (err, rows){
-
-	  			});
+	  			
 
 	   		// And done with the connection.
-	   		connection.release();
-	    });
+	   		
+	    
 	  		}
-
-		break;
-		default:
-			console.log('Something went wrong with the options');
+	  		});
+	   		connection.release();	
+	  		});
+	  		
+	  		});
+	  		
+	  		
 	}
 
 	
