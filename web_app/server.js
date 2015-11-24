@@ -397,6 +397,7 @@ app.post('/mobile', function (req,res){
 				var stops = [];
 				var distances = [];
 				var origin_dest = [];
+				console.log(passengers[0].entry_lat+","+passengers[0].entry_log);
 				for(var i=0;i<passengers.length;i++){
 					distance.get(
 					  {
@@ -413,6 +414,7 @@ app.post('/mobile', function (req,res){
 
 					});
 				}
+				res.send('OK');
 				/*pool.getConnection(function(err, connection) {
 
 				});*/
