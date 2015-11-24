@@ -314,21 +314,24 @@ app.post('/mobile', function (req,res){
 			var type = req.body[0].type;
 			var para = {vehicle_type: type, start_time: begin_date, name: t_name};
 			var query = 'Insert into Trip SET ?';
+			var id = 0;
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
 	  		connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
 	   			
 	   			console.log('Insert new trip successful');
+	   			id = rows.insertId;
+	   			console.log(id);
 	   			
 	  		});
 	  		//connection.release();
 	  		var query1 = 'Insert into Belongs SET ?';
-	  		var para1 = {trip_ID: 'SELECT trip_ID from Trip where end_time = NULL',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
+	  		var para1 = {trip_ID: id,route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
 	  		connection.query( query,para1, function (err, rows) {
 	   			//manipulate rows
 	   			
-	   			console.log('Insert new trip successful');
+	   			console.log('Insert new belongs successful');
 	   			
 	  		});
 	   		// And done with the connection.
