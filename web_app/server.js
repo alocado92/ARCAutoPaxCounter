@@ -324,7 +324,7 @@ app.post('/mobile', function (req,res){
 	  		});
 	  		//connection.release();
 	  		var query1 = 'Insert into Belongs SET ?';
-	  		var para1 = {trip_ID: 'SELECT LAST_INSERTED_ID()',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
+	  		var para1 = {trip_ID: 'SELECT trip_ID from Trip where end_time = NULL',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
 	  		connection.query( query,para1, function (err, rows) {
 	   			//manipulate rows
 	   			
