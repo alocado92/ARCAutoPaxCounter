@@ -511,12 +511,13 @@ app.post('/mobile', function (req,res){
 	  		
 	  		});
 	  		res.send('OK');
+	  		console.log("Processed mobile data successfully");
 	   		connection.release();
 	  		
 	}
 
 	
-	console.log("Processed mobile data successfully");
+	
 	
 	
 });
