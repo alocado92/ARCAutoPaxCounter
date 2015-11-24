@@ -354,15 +354,26 @@ app.post('/mobile', function (req,res){
 		case 'stop':
 		var end_date = req.body[0].dateTime;
 		query = 'update Trip SET ? where ?';
-		var para = {trip_ID: 'Select trip_ID from Trip where end_time = NULL'};
+		var t_ID = 0;
+		
+
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( query,[{end_time: end_date},para], function (err, rows) {
+	  		connection.query( 'Select trip_ID from Trip where end_time = NULL', function (err, rows) {
+	   			//manipulate rows
+	   			t_id = rows[0].trip_ID;
+	   			var para = {trip_ID: t_id};
+	   			console.log('Stop study update successful');
+	   			//connection.release();
+
+	   			connection.query( query,[{end_time: end_date},para], function (err, rows) {
 	   			//manipulate rows
 	   			
 	   			console.log('Stop study update successful');
 	   			connection.release();
 	  		});
+	  		});
+	  		
 	  	});
 		break;
 		case 'delete':
