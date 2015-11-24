@@ -410,11 +410,14 @@ app.post('/mobile', function (req,res){
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    distances.push(data.distanceValue);
-					    
+					    if(i==passengers.length -1){
+						res.send('OK');
+					}
 
 					});
+					
 				}
-				res.send('OK');
+
 				/*pool.getConnection(function(err, connection) {
 
 				});*/
