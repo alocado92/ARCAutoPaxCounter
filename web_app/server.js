@@ -303,9 +303,9 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	if(req.body){
+	/*if(req.body){
 		res.send('OK');
-	}
+	}*/
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
@@ -384,10 +384,10 @@ app.post('/mobile', function (req,res){
 	  	});
 		break;
 		case 'delete':
-		//res.send('OK');
+		res.send('OK');
 		break;
 		case 'diagnostic':
-		//res.send('OK');
+		res.send('OK');
 	  		
 
 		break;
@@ -507,6 +507,7 @@ app.post('/mobile', function (req,res){
 	    
 	  		}
 	  		});
+			res.send('OK');
 	   		connection.release();	
 	  		});
 	  		
