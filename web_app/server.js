@@ -302,7 +302,7 @@ app.post('/mobile', function (req,res){
 	if(req.body){
 		res.send('OK');
 	}
-	var option = req.body[0].action;
+	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
 	switch(option){
