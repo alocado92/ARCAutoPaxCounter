@@ -399,6 +399,7 @@ app.post('/mobile', function (req,res){
 		var origin_dest = [];
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
+	  		var k = 0;
 	  		connection.query( 'Select route_name from Trip natural join Belongs natural join Route where end_time is null', function (err, rows) {
 	   			//manipulate rows
 	   			
@@ -475,17 +476,9 @@ app.post('/mobile', function (req,res){
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    distances.push(data.distanceValue);
-					    
-
-					});
-
-	  				
-	  		}
-	  		for (var i=0; i<passengers.length;i++){
-	  			
-	  		// Use the connection
-	  		var pass_ID = 0;
-	  			var post = {entry_time: passengers[i].entry_time, entry_latitude: passengers[i].entry_lat, entry_longitude: passengers[i].entry_log, exit_time: passengers[i].exit_time, exit_latitude: passengers[i].exit_lat, exit_longitude: passengers[i].exit_log, distance: distances[i], dest_stop: origin_dest[i].dest_stop, origin_stop: origin_dest[i].origin_stop};
+					    if(k<passengers.length){
+	  				var pass_ID = 0;
+	  			var post = {entry_time: passengers[k].entry_time, entry_latitude: passengers[k].entry_lat, entry_longitude: passengers[k].entry_log, exit_time: passengers[k].exit_time, exit_latitude: passengers[k].exit_lat, exit_longitude: passengers[k].exit_log, distance: distances[k], dest_stop: origin_dest[k].dest_stop, origin_stop: origin_dest[k].origin_stop};
 	  			connection.query( "INSERT INTO Passenger SET ?",post, function (err, rows) {
 	   			//manipulate rows
 	   				pass_ID = rows.insertId;
@@ -495,18 +488,29 @@ app.post('/mobile', function (req,res){
 		   				console.log('Looking for trip_ID with null end_time: ' + rows[0].trip_ID);
 		   				connection.query('Insert into Takes SET ?',{passenger_ID: pass_ID, trip_ID: rows[0].trip_ID},function (err, rows){
 		   					console.log('inserted into set: ID = '+rows.insertId);
+		   					k++;
 	  			});
 	  			});
 		   			
 		   			
 	  			});
+	  			}
+
+					});
+	  			
+	  				
+	  		}
+	  		/*for (var i=0; i<passengers.length;i++){
+	  			
+	  		// Use the connection
+	  		
 
 	  			
 
 	   		// And done with the connection.
 	   		
 	    
-	  		}
+	  		}*/
 
 	  		});
 			res.send('OK');
