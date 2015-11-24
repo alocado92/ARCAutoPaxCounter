@@ -322,7 +322,7 @@ app.post('/mobile', function (req,res){
 	   			console.log('Insert new trip successful');
 	   			
 	  		});
-	  		connection.release();
+	  		//connection.release();
 	  		var query1 = 'Insert into Belongs SET ?';
 	  		var para1 = {trip_ID: 'SELECT LAST_INSERTED_ID()',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
 	  		connection.query( query,para1, function (err, rows) {
