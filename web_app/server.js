@@ -397,11 +397,11 @@ app.post('/mobile', function (req,res){
 				var stops = [];
 				var distances = [];
 				var origin_dest = [];
-				for(var passenger in passengers){
+				for(var i=0;i<passengers.length;i++){
 					distance.get(
 					  {
-					     origins: [passenger.entry_lat +','+ passenger.entry_log],
-					  destinations: [ passenger.exit_lat +','+ passenger.exit_log],
+					     origins: [passengers[i].entry_lat +','+ passengers[i].entry_log],
+					  destinations: [ passengers[i].exit_lat +','+ passengers[i].exit_log],
 					    mode: 'driving',
 					    units: 'metric'
 					  },
