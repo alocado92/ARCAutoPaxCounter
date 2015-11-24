@@ -430,7 +430,7 @@ app.post('/mobile', function (req,res){
 					    if(data.distanceValue <=7){
 					    	data10 = data.distanceValue;
 					    	origin_dest.push({origin_stop: stops[i].name, dest_stop: ''});
-					    	
+					    	console.log(origin_dest[i].origin_stop);
 					    }
 					    	
 					});
@@ -506,7 +506,7 @@ app.post('/mobile', function (req,res){
 	   		
 	    
 	  		}
-	  		
+
 	  		});
 			res.send('OK');
 	   		connection.release();	
