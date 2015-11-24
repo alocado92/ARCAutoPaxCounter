@@ -359,7 +359,7 @@ app.post('/mobile', function (req,res){
 
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select trip_ID from Trip where end_time = NULL', function (err, rows) {
+	  		connection.query( 'Select trip_ID from Trip where end_time is NULL', function (err, rows) {
 	   			//manipulate rows
 	   			t_id = rows[0].trip_ID;
 	   			var para = {trip_ID: t_id};
