@@ -453,6 +453,7 @@ app.post('/mobile', function (req,res){
 					    console.log(data.distanceValue);
 					    if(data.distanceValue <=7){
 					    	data10 = data.distanceValue;
+					    	console.log(stops[i].name);
 					    	origin_dest[i].dest_stop = stops[i].name;
 					    	
 					    }
