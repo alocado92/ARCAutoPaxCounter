@@ -312,7 +312,7 @@ app.post('/mobile', function (req,res){
 			var t_name = req.body[0].study;
 			var capacity = req.body[0].capacity;
 			var type = req.body[0].type;
-			var para = {vehicle_type: type, start_time: begin_date, end_time: null, name: t_name};
+			var para = {vehicle_type: type, start_time: begin_date, name: t_name};
 			var query = 'Insert into Trip SET ?';
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
@@ -323,7 +323,7 @@ app.post('/mobile', function (req,res){
 	   			
 	  		});
 	  		query = 'Insert into Belongs SET ?';
-	  		para = {trip_ID: 'Select trip_ID from Trip where end_time = null',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
+	  		para = {trip_ID: 'SELECT LAST_INSERTED_ID()',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
 	  		connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
 	   			
@@ -338,7 +338,7 @@ app.post('/mobile', function (req,res){
 		case 'stop':
 		var end_date = req.body[0].dateTime;
 		query = 'update Trip SET ? where ?';
-		var para = {trip_ID: 'Select trip_ID from Trip where end_time = null'};
+		var para = {trip_ID: 'Select trip_ID from Trip where end_time = NULL'};
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
 	  		connection.query( query,[{end_time: end_date},para], function (err, rows) {
