@@ -324,17 +324,13 @@ app.post('/mobile', function (req,res){
 	   			console.log('Insert new trip successful');
 	   			id = rows.insertId;
 	   			console.log(id);
-	   			
-	  		});
-	  		connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
+
+	   			connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
 	   			//manipulate rows
 	   			r_id = rows[0].route_ID;
 	   			console.log('fetch route_ID successful ' + r_id);
-	   			
-	  		});
 
-	  		//connection.release();
-	  		var query1 = 'Insert into Belongs SET ?';
+	   			var query1 = 'Insert into Belongs SET ?';
 	  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
 	  		var para1 = {trip_ID: id,route_ID: r_id };
 	  		connection.query( query1,para1, function (err, rows) {
@@ -343,6 +339,13 @@ app.post('/mobile', function (req,res){
 	   			console.log('Insert new belongs successful');
 	   			
 	  		});
+	   			
+	  		});
+	  		});
+	  		
+
+	  		//connection.release();
+	  		
 	   		// And done with the connection.
 	   		connection.release();
 	    });
