@@ -438,6 +438,7 @@ app.post('/mobile', function (req,res){
 						break;
 					}
 	  			}
+	  			console.log(origin_dest);
 	  			data10 = 8;
 	  			//destination stops
 	  			for(var i =0; i < stops.length; i++){
