@@ -23,9 +23,12 @@ var log = bunyan.createLogger({
         // `type: 'file'` is implied
     }]
 });
+var distance = require('google-distance');
 
+//API Key for on-remote server testing
+distance.apiKey = 'AIzaSyC7ZVsNOFln4BjoOK998A2pODHq70QzDOY';
 //mysql create pool
-
+var trip = '';
 //var pool = mysql.pool;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
@@ -47,9 +50,29 @@ app.use(allowCrossDomain);
 app.use(express.static(path.join('./public')));
 
 
-app.get('/user/:user_id', function (req, res) {
-  res.send('Hello World!');
-  console.log('Hello ' + req.params.user_id);
+app.get('/user', function (req, res) {
+	var check = '';
+	distance.get(
+  {
+     origins: ['San Francisco, CA'],
+  destinations: ['San Diego, CA'],
+    mode: 'driving',
+    units: 'imperial'
+  },
+  function(err, data) {
+    if (err) return console.log(err);
+    console.log(data);
+    if (data.distanceValue >= 100000){
+    	check = 'True';
+
+    }
+    else {
+    	check = 'False';
+    }
+    res.sendStatus(check);
+});
+  
+ 
 });
 app.post('/graph1', function (req, res){
 	var type = req.body.type;
@@ -123,7 +146,7 @@ app.post('/fetch', function (req,res){
 	  		// Use the connection
 	  		connection.query( 'Select f_name,l_name,(select count(is_admin) from User where email = "'+email+'" AND is_admin = 1) as admin from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
-	   			//console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
+	   			
 	   			isAdmin = rows[0].admin;
 	   			fName = rows[0].f_name;
 	   			lName = rows[0].l_name;
@@ -138,6 +161,9 @@ app.post('/fetch', function (req,res){
 	    });
 	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
 	
+});
+app.post('/delete', function (req,res){
+
 });
 app.post('/edit', function (req,res){
 	var email = req.body.email;
@@ -157,7 +183,7 @@ app.post('/edit', function (req,res){
 	  		// Use the connection
 	  		connection.query( "Update User SET ? where ?",[post,where], function (err, rows) {
 	   			//manipulate rows
-	   			//if (err) throw err;
+	   			
 	   			console.log('edited user successful');
 	   			 completed =1;
 	   			connection.release();
@@ -194,7 +220,7 @@ app.post('/add', function (req,res){
 	  		// Use the connection
 	  		connection.query( "INSERT INTO User SET ?",post, function (err, rows) {
 	   			//manipulate rows
-	   			//if (err) throw err;
+	   			
 	   			console.log('Insert new user successful');
 	   			completed =1;
 	   			connection.release();
@@ -273,16 +299,168 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	//console.log(JSON.parse(req.body));
-	//console.log(JSON.stringify(req.body));
-	console.log("Received");
-	res.send('OK');
-	// if(entry[0].entry_lat >18.0){
-	// res.end('OK');}
+	if(req.body){
+		res.send('OK');
+	}
+	var option = req.body[0].action;
+	
+	//Parse which transaction mobile is sending
+	switch(option){
+		case 'create':
+			var route = req.body[0].route;
+			var begin_date = req.body[0].dateTime;
+			var t_name = req.body[0].study;
+			var capacity = req.body[0].capacity;
+			var type = req.body[0].type;
+			var para = {vehicle_type: type, start_time: begin_date, end_time: null, name: t_name};
+			var query = 'Insert into Trip SET ?';
+			pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( query,para, function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Insert new trip successful');
+	   			
+	  		});
+	  		query = 'Insert into Belongs SET ?';
+	  		para = {trip_ID: 'Select trip_ID from Trip where end_time = null',route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
+	  		connection.query( query,para, function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Insert new trip successful');
+	   			
+	  		});
+	   		// And done with the connection.
+	   		connection.release();
+	    });
+
+		break;
+		case 'stop':
+		var end_date = req.body[0].dateTime;
+		query = 'update Trip SET ? where ?';
+		var para = {trip_ID: 'Select trip_ID from Trip where end_time = null'};
+		pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( query,[{end_time: end_date},para], function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Stop study update successful');
+	   			connection.release();
+	  		});
+	  	});
+		break;
+		case 'delete':
+
+		break;
+		case 'insert':
+		var passengers = req.body;
+		var stops = [];
+		var distances = [];
+		var origin_dest = [];
+			pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'Select stop_ID, stop_latitude, stop_longitude, name from Route natural join Linked_to natural join Stop where ?',{route_name: 'Select route_name from Trip natural join Belongs natural join Route where end_time = null'}, function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			for(var row in rows ){
+	   				stops.push({stop_ID: row.stop_ID, stop_latitude: row.stop_latitude, stop_longitude: row.stop_longitude, name: row.name});
+	   			}
+	   			console.log('Search for stops in route successful');
+	   			
+	   			connection.release();
+	  		});
+	  		});
+	  		//get stops for origin destinations 
+	  		for(var passenger in passengers){
+	  			//origin stops
+	  			for(var i =0; i < stops.length; i++){
+					distance.get(
+					  {
+					     origins: [stops[i].stop_latitude + ',' + stops[i].stop_longitude],
+					  destinations: [ passenger.entry_lat +','+ passenger.entry_long],
+					    mode: 'driving',
+					    units: 'metric'
+					  },
+					  function(err, data) {
+					    if (err) return console.log(err);
+					    console.log(data.distanceValue);
+					    if(data.distanceValue <=7){
+					    	origin_dest.push({origin_stop: stops[i].name, dest_stop: ''});
+					    	
+					    }
+
+					});
+					break;
+	  			}
+	  			//destination stops
+	  			for(var i =0; i < stops.length; i++){
+					distance.get(
+					  {
+					     origins: [stops[i].stop_latitude + ',' + stops[i].stop_longitude],
+					  destinations: [ passenger.exit_lat +','+ passenger.exit_long],
+					    mode: 'driving',
+					    units: 'metric'
+					  },
+					  function(err, data) {
+					    if (err) return console.log(err);
+					    console.log(data.distanceValue);
+					    if(data.distanceValue <=7){
+					    	origin_dest[i].dest_stop += stops[i].name;
+					    	
+					    }
+
+					});
+					break;
+	  			}
+	  			distance.get(
+					  {
+					     origins: [passenger.entry_lat +','+ passenger.entry_long],
+					  destinations: [ passenger.exit_lat +','+ passenger.exit_long],
+					    mode: 'driving',
+					    units: 'metric'
+					  },
+					  function(err, data) {
+					    if (err) return console.log(err);
+					    console.log(data.distanceValue);
+					    distances.push(data.distanceValue);
+					    
+
+					});
+	  		}
+	  		for (var i=0; i<passengers.length;i++){
+	  			pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  			var post = {entry_time: passengers[i].entry_time, entry_latitude: passengers[i].entry_lat, entry_longitude: passengers[i].entry_long, exit_time: passengers[i].exit_time, exit_latitude: passengers[i].exit_lat, exit_longitude: passengers[i].exit_log, distance: distances[i], dest_stop: origin_dest[i].dest_stop, origin_stop: origin_dest[i].origin_stop};
+	  			connection.query( "INSERT INTO Passenger SET ?",post, function (err, rows) {
+	   			//manipulate rows
+	   			
+		   			console.log('Insert new passenger successful');
+		   			
+		   			
+	  			});
+
+	  			connection.query('Insert into Takes SET ?',{passenger_ID: 'SELECT LAST_INSERTED_ID()', trip_ID: 'Select trip_ID from Trip where end_time = null'},function (err, rows){
+
+	  			});
+
+	   		// And done with the connection.
+	   		connection.release();
+	    });
+	  		}
+
+		break;
+		default:
+			console.log('Something went wrong with the options');
+	}
+
+	
+	console.log("Processed mobile data successfully");
+	
+	
 });
 app.get('/home', function (req,res){
 	res.sendFile("public/home.html", {"root": __dirname});
-	//res.send('<h1>Welcome Home </h1>');
+	
 });
 app.get('/admins',function (req,res){
 		var query = 'Select * from User';
