@@ -322,7 +322,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Insert new trip successful');
-	   			id = rows[0].insertId;
+	   			id = rows.insertId;
 	   			console.log(id);
 
 	   			connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
