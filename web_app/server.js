@@ -315,6 +315,7 @@ app.post('/mobile', function (req,res){
 			var para = {vehicle_type: type, start_time: begin_date, name: t_name};
 			var query = 'Insert into Trip SET ?';
 			var id = 0;
+			var r_id = 0;
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
 	  		connection.query( query,para, function (err, rows) {
@@ -325,9 +326,16 @@ app.post('/mobile', function (req,res){
 	   			console.log(id);
 	   			
 	  		});
+	  		connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
+	   			//manipulate rows
+	   			r_id = rows[0].route_ID;
+	   			console.log('fetch route_ID successful ' + r_id);
+	   			
+	  		});
+
 	  		//connection.release();
 	  		var query1 = 'Insert into Belongs SET ?';
-	  		var para1 = {trip_ID: id,route_ID: 'Select route_ID from Route where route_name = "'+route+'"'};
+	  		var para1 = {trip_ID: id,route_ID: r_id };
 	  		connection.query( query,para1, function (err, rows) {
 	   			//manipulate rows
 	   			
