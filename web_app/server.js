@@ -307,11 +307,11 @@ app.post('/mobile', function (req,res){
 	//Parse which transaction mobile is sending
 	switch(option){
 		case 'create':
-			var route = req.body[0].route;
-			var begin_date = req.body[0].dateTime;
-			var t_name = req.body[0].study;
-			var capacity = req.body[0].capacity;
-			var type = req.body[0].type;
+			var route = req.body.route;
+			var begin_date = req.body.dateTime;
+			var t_name = req.body.study;
+			var capacity = req.body.capacity;
+			var type = req.body.type;
 			var para = {vehicle_type: type, start_time: begin_date, name: t_name};
 			var query = 'Insert into Trip SET ?';
 			var id = 0;
@@ -322,7 +322,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Insert new trip successful');
-	   			id = rows.insertId;
+	   			id = rows[0].insertId;
 	   			console.log(id);
 
 	   			connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
@@ -352,7 +352,7 @@ app.post('/mobile', function (req,res){
 
 		break;
 		case 'stop':
-		var end_date = req.body[0].dateTime;
+		var end_date = req.body.dateTime;
 		query = 'update Trip SET ? where ?';
 		var t_ID = 0;
 		
