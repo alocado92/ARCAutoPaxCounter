@@ -427,14 +427,14 @@ app.post('/mobile', function (req,res){
 					  function(err, data) {
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
-					    if(data.distanceValue <=7){
+					    if(data.distanceValue <=50){
 					    	data10 = data.distanceValue;
 					    	origin_dest.push({origin_stop: stops[i].name, dest_stop: ''});
 					    	console.log(origin_dest[i].origin_stop);
 					    }
 					    	
 					});
-					if(data10 <=7){
+					if(data10 <=50){
 						break;
 					}
 	  			}
@@ -452,7 +452,7 @@ app.post('/mobile', function (req,res){
 					  function(err, data) {
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
-					    if(data.distanceValue <=7){
+					    if(data.distanceValue <=50){
 					    	data10 = data.distanceValue;
 					    	console.log(stops[i].name);
 					    	origin_dest[i].dest_stop = stops[i].name;
@@ -460,7 +460,7 @@ app.post('/mobile', function (req,res){
 					    }
 					    	
 					});
-					if(data10 <=7){
+					if(data10 <=50){
 						break;
 					}	
 	  			}
