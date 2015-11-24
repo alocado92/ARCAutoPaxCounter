@@ -335,8 +335,9 @@ app.post('/mobile', function (req,res){
 
 	  		//connection.release();
 	  		var query1 = 'Insert into Belongs SET ?';
+	  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
 	  		var para1 = {trip_ID: id,route_ID: r_id };
-	  		connection.query( query,para1, function (err, rows) {
+	  		connection.query( query1,para1, function (err, rows) {
 	   			//manipulate rows
 	   			
 	   			console.log('Insert new belongs successful');
