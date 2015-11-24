@@ -355,7 +355,6 @@ app.post('/mobile', function (req,res){
 	   		res.send('OK');
 	   		connection.release();
 	    });
-
 		break;
 		case 'stop':
 		var end_date = req.body.dateTime;
@@ -454,7 +453,7 @@ app.post('/mobile', function (req,res){
 					    console.log(data.distanceValue);
 					    if(data.distanceValue <=7){
 					    	data10 = data.distanceValue;
-					    	origin_dest[i].dest_stop += stops[i].name;
+					    	origin_dest[i].dest_stop = stops[i].name;
 					    	
 					    }
 					    	
