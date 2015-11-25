@@ -177,6 +177,23 @@ app.post('/fetch', function (req,res){
 app.post('/delete', function (req,res){
 
 });
+app.post('/delete', function (req,res){
+	var email = req.body.email;
+	console.log('Deleting user with email: '+email);
+	var where = {email: email};
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( "Delete from User where ?",[where], function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Delete user was successful');
+	   			 res.send({redirect: '/home'});
+	   			connection.release();
+	   			
+	  		});
+	   		// And done with the connection.
+	    });
+});
 app.post('/edit', function (req,res){
 	var email = req.body.email;
 	console.log('Editing user with email: '+email);
