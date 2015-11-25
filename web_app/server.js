@@ -96,16 +96,7 @@ app.post('/graph1', function (req, res){
 	}
 
 	var query = '';
-	connection.connect();
-	connection.query(query, function(err,rows,field){
-		if(!err){
-			//do black magic
-		}
-		else{
-			//handle error like a boss
-		}
-		connection.end();
-	});
+	
 });
 app.post('/login', function (req, res){
 	
@@ -431,6 +422,27 @@ app.post('/mobile', function (req,res){
 				}
 
 				
+				
+
+				pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'Insert into User (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Insert new users successful');
+
+	   			connection.query( 'Insert into Scan (tag_ID, scan_time) Values ?',insert_scans, function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Insert new scans successful');
+	   			
+	   			connection.release();
+	  		});
+	   			
+	   			
+	  		});
+	   		// And done with the connection.
+	    });
 
 				/*for(var i=0;i<passengers.length;i++){
 					distance.get(
