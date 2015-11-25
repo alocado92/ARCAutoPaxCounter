@@ -161,9 +161,10 @@ app.post('/fetch', function (req,res){
 	   			console.log(fName);
 	   			console.log(lName);
 	   			console.log(isAdmin);
-	   			res.send({email: email, fname: fName, lname: lName, isAdmin: isAdmin});}
+	   			res.send({matched: true,email: email, fname: fName, lname: lName, isAdmin: isAdmin});}
 	   			else{
 	   				console.log('Unmatched query');
+	   				res.send({matched: false});
 	   			}
 	   			
 	   			connection.release();
