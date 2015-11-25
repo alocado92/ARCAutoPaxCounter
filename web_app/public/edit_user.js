@@ -2,7 +2,7 @@
 	 var app = angular.module('edit_app');
 	 
     // Controller function and passing $http service and $scope var.
-    	app.controller('editController',['$http',function($http) {
+    	app.controller('editController',['$http','$window',function($http,$window) {
 
     		var vm = this;
             //var vm.canShow = false;
