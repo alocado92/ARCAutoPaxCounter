@@ -32,7 +32,7 @@
             
             
             vm.email = response.data.email;
-            if(response.data){
+            if(response.data.matched){
                 vm.canShow = true;
                     vm.fname = response.data.fname;
                     vm.lname = response.data.lname;
