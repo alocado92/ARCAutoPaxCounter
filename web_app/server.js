@@ -426,7 +426,7 @@ app.post('/mobile', function (req,res){
 
 				pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Insert into User (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
+	  		connection.query( 'Insert into Passenger (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
 	   			//manipulate rows
 	   			
 	   			console.log('Insert new users successful');
