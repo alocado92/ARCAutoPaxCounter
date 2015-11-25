@@ -174,9 +174,7 @@ app.post('/fetch', function (req,res){
 	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
 	
 });
-app.post('/delete', function (req,res){
 
-});
 app.post('/delete', function (req,res){
 	var email = req.body.email;
 	console.log('Deleting user with email: '+email);
@@ -187,12 +185,13 @@ app.post('/delete', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Delete user was successful');
-	   			 res.send({redirect: '/home'});
+	   			 
 	   			connection.release();
-	   			
+
 	  		});
 	   		// And done with the connection.
 	    });
+	res.send({redirect: '/home'});
 });
 app.post('/edit', function (req,res){
 	var email = req.body.email;
