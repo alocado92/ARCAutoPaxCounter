@@ -426,10 +426,13 @@ app.post('/mobile', function (req,res){
 
 				pool.getConnection(function(err, connection) {
 	  		// Use the connection
+	  			console.log(insert_rows);
+	  			console.log(insert_scans);
+
 	  		connection.query( 'Insert into Passenger (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
 	   			//manipulate rows
 	   			
-	   			console.log('Insert new users successful');
+	   			console.log('Insert new passengers successful');
 
 	   			connection.query( 'Insert into Scan (tag_ID, scan_time) Values ?',insert_scans, function (err, rows) {
 	   			//manipulate rows
