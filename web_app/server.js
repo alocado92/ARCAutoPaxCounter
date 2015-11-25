@@ -153,15 +153,18 @@ app.post('/fetch', function (req,res){
 	  		// Use the connection
 	  		connection.query( 'Select f_name,l_name,(select count(is_admin) from User where email = "'+email+'" AND is_admin = 1) as admin from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
-	   			
-	   			isAdmin = rows[0].admin;
+	   			if(!err){isAdmin = rows[0].admin;
 	   			fName = rows[0].f_name;
 	   			lName = rows[0].l_name;
 	   			console.log(rows);
 	   			console.log(fName);
 	   			console.log(lName);
 	   			console.log(isAdmin);
-	   			res.send({email: email, fname: fName, lname: lName, isAdmin: isAdmin});
+	   			res.send({email: email, fname: fName, lname: lName, isAdmin: isAdmin});}
+	   			else{
+	   				console.log('Unmatched query');
+	   			}
+	   			
 	   			connection.release();
 	  		});
 	   		// And done with the connection.

@@ -29,13 +29,16 @@
             
             console.log('fetching a user');
             
-            vm.fname = response.data.fname;
-            vm.lname = response.data.lname;
-            if((response.data.isAdmin == 1)){vm.isAdmin = 'Yes';}
-            else {vm.isAdmin = 'No';}
+            
             
             vm.email = response.data.email;
-            if(response.data){vm.canShow = true;}
+            if(response.data){
+                vm.canShow = true;
+                    vm.fname = response.data.fname;
+                    vm.lname = response.data.lname;
+                    if((response.data.isAdmin == 1)){vm.isAdmin = 'Yes';}
+                    else {vm.isAdmin = 'No';}
+                }
             else{$window.alert('Email address provided does not belong to a registered user');}
             
             return response;
