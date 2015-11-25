@@ -2,7 +2,7 @@
 	 var app = angular.module('delete_app');
 	 
     // Controller function and passing $http service and $scope var.
-    	app.controller('deleteController',['$http',function($http) {
+    	app.controller('deleteController',['$http','$window',function($http,$window) {
 
     		var vm = this;
             //var vm.canShow = false;
@@ -31,11 +31,13 @@
             
             vm.fname = response.data.fname;
             vm.lname = response.data.lname;
-            if(response.data.isAdmin == 1){vm.isAdmin = 'Yes';}
+            if((response.data.isAdmin == 1)){vm.isAdmin = 'Yes';}
             else {vm.isAdmin = 'No';}
             
             vm.email = response.data.email;
-            vm.canShow = true;
+            if(response.data){vm.canShow = true;}
+            else{$window.alert('Email address provided does not belong to a registered user');}
+            
             return response;
         });
         

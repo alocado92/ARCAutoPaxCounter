@@ -141,6 +141,9 @@ app.get('/newUser', function (req,res){
 app.get('/editUser', function (req,res){
 	res.sendFile("public/edit_user.html", {"root": __dirname});
 });
+app.get('/deleteUser', function (req,res){
+	res.sendFile("public/delete_user.html", {"root": __dirname});
+});
 app.post('/fetch', function (req,res){
 	var email = req.body.email;
 	var fName = '';
@@ -397,7 +400,17 @@ app.post('/mobile', function (req,res){
 				var stops = [];
 				var distances = [];
 				var origin_dest = [];
-				console.log(passengers[0].entry_lat+","+passengers[0].entry_log);
+				var insert_rows = [];
+				var insert_scans = [];
+
+				for(var i=0; i< passengers.length;i++){
+					insert_rows.push([passengers[i].entry_lat,passengers[i].entry_log,passengers[i].entry_time,passengers[i].exit_lat,passengers[i].exit_log,passengers[i].exit_time]);
+					insert_scans.push([passengers[i].tag_ID,passengers[i].entry_time]);
+					insert_scans.push([passengers[i].tag_ID,passengers[i].exit_time]);
+				}
+
+				
+
 				/*for(var i=0;i<passengers.length;i++){
 					distance.get(
 					  {

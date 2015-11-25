@@ -65,12 +65,15 @@
       </div>
     </div>
     <div class="section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12"></div>
-        </div>
+      <div class="container" ng-show="ctrl.canShow">
         <div class="row">
           <div class="col-md-12">
+              <p>  User: {{ctrl.fname }} {{ctrl.lname}}</p>
+            <p> Email: {{ctrl.email}}</p>
+          </div>
+        </div>
+        <div class="row" ng-show="ctrl.canShow">
+          <div class="col-md-12" >
             <form class="form-horizontal" role="form" ng-submit="ctrl.deleteUser()">
               
               <div class="form-group">
