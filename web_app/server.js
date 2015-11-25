@@ -417,8 +417,8 @@ app.post('/mobile', function (req,res){
 
 				for(var i=0; i< passengers.length;i++){
 					insert_rows.push([passengers[i].entry_lat,passengers[i].entry_log,passengers[i].entry_time,passengers[i].exit_lat,passengers[i].exit_log,passengers[i].exit_time]);
-					insert_scans.push([passengers[i].tag_ID,passengers[i].entry_time]);
-					insert_scans.push([passengers[i].tag_ID,passengers[i].exit_time]);
+					insert_scans.push([passengers[i].tagID,passengers[i].entry_time]);
+					insert_scans.push([passengers[i].tagID,passengers[i].exit_time]);
 				}
 
 				
