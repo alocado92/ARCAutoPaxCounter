@@ -153,7 +153,7 @@ app.post('/fetch', function (req,res){
 	  		// Use the connection
 	  		connection.query( 'Select f_name,l_name,(select count(is_admin) from User where email = "'+email+'" AND is_admin = 1) as admin from User where email ="'+email+'"', function (err, rows) {
 	   			//manipulate rows
-	   			if(!err){isAdmin = rows[0].admin;
+	   			if(rows){isAdmin = rows[0].admin;
 	   			fName = rows[0].f_name;
 	   			lName = rows[0].l_name;
 	   			console.log(rows);
