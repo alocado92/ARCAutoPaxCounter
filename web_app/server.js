@@ -429,8 +429,9 @@ app.post('/mobile', function (req,res){
 					//passengers.push(req.body[i]);
 					pool.getConnection(function (err,connection){
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
+								console.log("Rows after initial query "+rows);
 								connection.query('select name, stop_latitude, stop_longitude from Stop where stop_ID in ?',rows, function (err, rows){
-									console.log(rows);
+									console.log("Rows after inner query "+rows);
 									if(rows.length < 1){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
 									}
