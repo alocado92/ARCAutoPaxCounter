@@ -423,6 +423,7 @@ app.post('/mobile', function (req,res){
 
 				
 				for(var i=0; i< insert_rows.length; i++){
+					console.log("Insert rows value: "+insert_rows[i]);
 					distance.get(
 					  {
 					     origins: [insert_rows[i].entry_latitude +','+ insert_rows[i].entry_longitude],
