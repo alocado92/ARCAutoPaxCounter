@@ -462,23 +462,7 @@ app.post('/mobile', function (req,res){
 					    		});
 					    	});
 						});
-					/*var coord = {
-					     origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
-					  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
-					    mode: 'driving',
-					    units: 'metric'
-					  };
-					distance.get(
-					  coord,
-					  function(err, data) {
-					    if (err) return console.log(err);
-					    console.log(data.distanceValue);
-					    var distance = data.distanceValue;
-					    
-					    
-					    
-
-					});*/
+					
 					
 				}*/
 				//console.log("passenger req.body: "+ passengers);
