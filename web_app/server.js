@@ -425,7 +425,31 @@ app.post('/mobile', function (req,res){
 					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
 					    		console.log("i = "+i);
 					    		console.log("successfully inserted passenger with id: "+rows.insertId);
-					    		if(i == req.body.length -1){connection.release();}
+					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude from Passenger where Set ?',{passenger_ID: rows.insertId},function (err, rows){
+					    			console.log('selecting passenger with ID: ' +rows.insertId);
+					    			coord = {
+										  origins: [rows[0].entry_latitude +','+ rows[0].entry_longitude],
+										  destinations: [ rows[0].exit_latitude +','+ rows[0].exit_longitude],
+									    mode: 'driving',
+									    units: 'metric'
+									  };
+									  distance.get(
+										  coord,
+										  function(err, data) {
+										    if (err) return console.log(err);
+										    console.log(data.distanceValue);
+										    var distance = data.distanceValue;
+										    console.log("Distance in meters: "+ distance);
+										    
+										    connection.query('Update Passenger Set ? where ?',{distance: distance, passenger_ID: rows.insertId}, function (err,rows){
+										    	if(i >= req.body.length -1){
+										    		console.log('Updated successfully Passenger with ID: '+rows.insertId);
+										    		connection.release();
+										    });
+
+										});
+					    		});
+					    		}
 					    	});
 					    });
 					/*var coord = {
