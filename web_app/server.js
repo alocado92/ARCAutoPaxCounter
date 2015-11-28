@@ -415,9 +415,10 @@ app.post('/mobile', function (req,res){
 				var insert_rows = [];
 				var insert_scans = [];
 				for(var i=0; i<req.body.length;i++){
+					console.log(req.body[i].entry_lat.toString());
 					var coord = {
-											  origins: [req.body[i].entry_lat +', '+ req.body[i].entry_log],
-											  destinations: [ req.body[i].exit_lat +', '+ req.body[i].exit_log],
+											  origins: [req.body[i].entry_lat.toString() +', '+ req.body[i].entry_log.toString()],
+											  destinations: [ req.body[i].exit_lat.toString() +', '+ req.body[i].exit_log.toString()],
 										      mode: 'driving',
 										      units: 'metric'
 									  	  };
