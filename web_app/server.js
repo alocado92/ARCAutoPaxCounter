@@ -416,7 +416,7 @@ app.post('/mobile', function (req,res){
 				var insert_scans = [];
 
 				for(var i=0; i<req.body.length;i++){
-					console.log("req.body[i].entry_time: "+ req.body[i].entry_time);
+					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					//passengers.push(req.body[i]);
 					distance.get(
 					  {
