@@ -420,12 +420,12 @@ app.post('/mobile', function (req,res){
 					//passengers.push(req.body[i]);
 					distance.get(
 					  {
-					     origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
-					  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
+					     origins: [this.req.body[i].entry_lat +','+ this.req.body[i].entry_log],
+					  destinations: [ this.req.body[i].exit_lat +','+ this.req.body[i].exit_log],
 					    mode: 'driving',
 					    units: 'metric'
 					  },
-					  function(err, data) {
+					  function(err, data, req.body[i]) {
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    var distance = data.distanceValue;
