@@ -430,7 +430,17 @@ app.post('/mobile', function (req,res){
 					pool.getConnection(function (err,connection){
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
 								console.log("Rows after initial query "+rows);
-								connection.query('select name, stop_latitude, stop_longitude from Stop where stop_ID in ?',rows, function (err, rows){
+								var ling_ling = '';
+								for(var i=0; i<rows.length;i++){
+									if(i == rows.length-1){
+										ling_ling += " stop_ID = "+rows[i].stop_ID;
+									}
+									else{
+										ling_ling += "stop_ID = "+rows[i].stop_ID + " OR ";
+									}
+								}
+								console.log('ling_ling: '+ling_ling);
+								connection.query('select name, stop_latitude, stop_longitude from Stop where stop_ID in '+ ling_ling, function (err, rows){
 									console.log("Rows after inner query "+rows);
 									if(rows.length < 1){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
