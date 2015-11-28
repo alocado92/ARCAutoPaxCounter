@@ -414,7 +414,17 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
-
+				for(var i=0; i<req.body.length;i++){
+					distance.get({
+											  origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
+											  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
+										      mode: 'driving',
+										      units: 'metric'
+									  	  },
+										  function(err, data) {
+										  	console.log("distanceValue: "+data.distanceValue);
+										  });
+				}
 				for(var i=0; i<req.body.length;i++){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time};
