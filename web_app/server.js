@@ -410,6 +410,7 @@ app.post('/mobile', function (req,res){
 			//res.send('OK');
 				var passengers =[];
 				for(var i=0; i<req.body.length;i++){
+					console.log("req.body[i]: "+ req.body[i]);
 					passengers.push(req.body[i]);
 				}
 				console.log("passenger req.body: "+ passengers);
