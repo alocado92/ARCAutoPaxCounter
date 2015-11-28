@@ -427,7 +427,7 @@ app.post('/mobile', function (req,res){
 					var orig_name = '';
 					
 					//passengers.push(req.body[i]);
-					pool.getConnection(function (err,connection){
+					pool.getConnection(function (req, err,connection){
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
 								console.log("Req.body: "+ req.body[0]);
 								console.log("Rows after initial query "+rows);
