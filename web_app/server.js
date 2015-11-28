@@ -418,13 +418,14 @@ app.post('/mobile', function (req,res){
 				for(var i=0; i<req.body.length;i++){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					//passengers.push(req.body[i]);
-					distance.get(
-					  {
+					var coord = {
 					     origins: [this.req.body[i].entry_lat +','+ this.req.body[i].entry_log],
 					  destinations: [ this.req.body[i].exit_lat +','+ this.req.body[i].exit_log],
 					    mode: 'driving',
 					    units: 'metric'
-					  },
+					  };
+					distance.get(
+					  coord,
 					  function(err, data, req.body[i]) {
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
