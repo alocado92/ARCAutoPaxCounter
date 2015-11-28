@@ -409,6 +409,7 @@ app.post('/mobile', function (req,res){
 			//console.log('Something went wrong with the options');
 			//res.send('OK');
 				var passengers = req.body;
+				console.log("passenger req.body: "+ req.body);
 				//console.log("passengers: "+ passengers[0]);
 				var stops = [];
 				var distances = [];
@@ -417,7 +418,7 @@ app.post('/mobile', function (req,res){
 				var insert_scans = [];
 
 				for(var passenger in passengers){
-					console.log("passenger: "+passenger);
+					console.log("passenger entry_time: "+passenger.entry_time);
 					insert_rows.push({entry_latitude: passenger.entry_lat, entry_longitude: passenger.entry_log,entry_time: passenger.entry_time,exit_latitude: passenger.exit_lat,exit_longitude: passenger.exit_log,exit_time: passenger.exit_time});
 					//insert_scans.push([passengers[i].tagID,passengers[i].entry_time]);
 					//insert_scans.push([passengers[i].tagID,passengers[i].exit_time]);
