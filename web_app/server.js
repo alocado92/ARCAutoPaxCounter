@@ -408,7 +408,7 @@ app.post('/mobile', function (req,res){
 		default:
 			//console.log('Something went wrong with the options');
 			//res.send('OK');
-				var passengers = req.body;
+				var passengers = JSON.stringify(req.body);
 				console.log("passengers: "+ passengers[0]);
 				var stops = [];
 				var distances = [];
