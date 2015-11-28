@@ -423,44 +423,57 @@ app.post('/mobile', function (req,res){
 				}*/
 				for(var i=0; i<req.body.length;i++){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
-					var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time, distance: geolib.getDistance(
-					    {latitude: req.body[i].entry_lat, longitude: req.body[i].entry_log},
-					    {latitude: req.body[i].exit_lat, longitude: req.body[i].exit_log}
-					)};
+					var dest_name = '';
+					var orig_name = '';
+					
 					//passengers.push(req.body[i]);
 					pool.getConnection(function (err,connection){
-					    	console.log("Inserting "+ queryval);
-					    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
-					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
-					    		console.log("i = "+i);
-					    		console.log("successfully inserted passenger with id: "+rows.insertId);
-					    		/*connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where ?',{passenger_ID: rows.insertId},function (err, rows){
-					    			console.log('selecting passenger with ID: ' +rows[0].passenger_ID);
-					    			//coord = ;
-									  distance.get(
-										  {
-											  origins: [rows[0].entry_latitude +', '+ rows[0].entry_longitude],
-											  destinations: [ rows[0].exit_latitude +', '+ rows[0].exit_longitude],
-										      mode: 'driving',
-										      units: 'metric'
-									  	  },
-										  function(err, data) {
-										    if (err) return console.log(err);
-										    console.log(data.distanceValue);
-										    var distance = data.distanceValue;
-										    console.log("Distance in meters: "+ distance);
-										    
-										    connection.query('Update Passenger Set ? where ?',[{distance: distance},{passenger_ID: rows.passenger_ID}], function (err,rows){
-										    	if(i >= req.body.length -1){
-										    		console.log('Updated successfully Passenger with ID: '+rows);
-										    		connection.release();
-										    	};
+							connection.query('select trip_ID from Trip where end_time is null', function (err, rows){
+								connection.query('select Stop.name, Stop.stop_latitude,Stop.stop_longitude, 
+								from Stop natural join Linked_to Route natural join Belongs inner join Trip
+								where ?',{Trip.trip_ID: rows[0].trip_ID}, function (err, rows){
+									if(rows.length < 1){
+										console.log('There are no active trips. Please add an active trip in order to register passengers');
+									}
+									else{
+										for(var j=0; j<rows.length;j++){
+											var dist = geolib.getDistance(
+											    {latitude: req.body[j].entry_lat, longitude: req.body[j].entry_log},
+											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
+											);
+											if(dist <= 7){
+												orig_name = rows[j].name;
+												break;
+											}
+										}
+										for(var j=0; j<rows.length;j++){
+											var dist = geolib.getDistance(
+											    {latitude: req.body[j].exit_lat, longitude: req.body[j].exit_log},
+											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
+											);
+											if(dist <= 7){
+												dest_name = rows[j].name;
+												break;
+											}
+										}
 
-											});
-					    		
-					    				});
-					    		});*/
-					    	});
+										var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time, distance: geolib.getDistance(
+										    {latitude: req.body[i].entry_lat, longitude: req.body[i].entry_log},
+										    {latitude: req.body[i].exit_lat, longitude: req.body[i].exit_log}
+										), dest_stop: dest_name, origin_stop: orig_name};
+										console.log("Inserting "+ queryval);
+								    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
+								    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
+								    		console.log("i = "+i);
+								    		console.log("successfully inserted passenger with id: "+rows.insertId);
+								    		connection.release();
+								    		
+								    	});
+
+									}
+								});
+							});
+					    	
 						});
 					
 					
