@@ -4,6 +4,7 @@ var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
+var geolib = require('geolib');
 var pool  = mysql.createPool({
 	connectionLimit : 100,
     host     : 'localhost',
@@ -416,18 +417,14 @@ app.post('/mobile', function (req,res){
 				var insert_scans = [];
 				for(var i=0; i<req.body.length;i++){
 					console.log(req.body[i].entry_lat.toString());
-					var coord = {
-											  origins: [req.body[i].entry_lat.toString() +', '+ req.body[i].entry_log.toString()],
-											  destinations: [ req.body[i].exit_lat.toString() +', '+ req.body[i].exit_log.toString()],
-										      mode: 'driving',
-										      units: 'metric'
-									  	  };
-					distance.get(coord,
-										  function(err, data) {
-										  	console.log("distanceValue: "+data.distanceValue);
-										  });
+					var distance = geolib.getDistance(
+					    {latitude: req.body[i].entry_lat, longitude: req.body[i].entry_log},
+					    {latitude: req.body[i].exit_lat, longitude: req.body[i].exit_log}
+					);
+					console.log(distance+ " meters");
+					
 				}
-				for(var i=0; i<req.body.length;i++){
+				/*for(var i=0; i<req.body.length;i++){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time};
 					//passengers.push(req.body[i]);
@@ -483,7 +480,7 @@ app.post('/mobile', function (req,res){
 
 					});*/
 					
-				}
+				}*/
 				//console.log("passenger req.body: "+ passengers);
 				//console.log("passengers: "+ passengers[0]);
 				
