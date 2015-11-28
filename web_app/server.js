@@ -415,12 +415,13 @@ app.post('/mobile', function (req,res){
 				var insert_rows = [];
 				var insert_scans = [];
 				for(var i=0; i<req.body.length;i++){
-					distance.get({
-											  origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
-											  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
+					var coord = {
+											  origins: [req.body[i].entry_lat +', '+ req.body[i].entry_log],
+											  destinations: [ req.body[i].exit_lat +', '+ req.body[i].exit_log],
 										      mode: 'driving',
 										      units: 'metric'
-									  	  },
+									  	  };
+					distance.get(coord,
 										  function(err, data) {
 										  	console.log("distanceValue: "+data.distanceValue);
 										  });
@@ -440,8 +441,8 @@ app.post('/mobile', function (req,res){
 					    			//coord = ;
 									  distance.get(
 										  {
-											  origins: [rows[0].entry_latitude +','+ rows[0].entry_longitude],
-											  destinations: [ rows[0].exit_latitude +','+ rows[0].exit_longitude],
+											  origins: [rows[0].entry_latitude +', '+ rows[0].entry_longitude],
+											  destinations: [ rows[0].exit_latitude +', '+ rows[0].exit_longitude],
 										      mode: 'driving',
 										      units: 'metric'
 									  	  },
