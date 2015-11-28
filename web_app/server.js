@@ -428,10 +428,8 @@ app.post('/mobile', function (req,res){
 					
 					//passengers.push(req.body[i]);
 					pool.getConnection(function (err,connection){
-							/*connection.query('select stop_ID from Stop natural join Linked_to natural join Belongs inner join Trip
- 								where end_time is null', function (err, rows){*/
-								connection.query('select a.name, a.stop_latitude,a.stop_longitude from Stop where stop_ID in select stop_ID from Stop natural join Linked_to natural join Belongs inner join Trip as a
- 								where end_time is null',rows, function (err, rows){
+							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
+								connection.query('select name, stop_latitude, stop_longitude from Stop where stop_ID in ?',rows, function (err, rows){
 									if(rows.length < 1){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
 									}
@@ -472,7 +470,7 @@ app.post('/mobile', function (req,res){
 
 									}
 								});
-							/*});*/
+							});
 					    	
 						});
 					
