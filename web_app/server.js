@@ -425,8 +425,8 @@ app.post('/mobile', function (req,res){
 					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
 					    		console.log("i = "+i);
 					    		console.log("successfully inserted passenger with id: "+rows.insertId);
-					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude from Passenger where Set ?',{passenger_ID: rows.insertId},function (err, rows){
-					    			console.log('selecting passenger with ID: ' +rows.insertId);
+					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where Set ?',{passenger_ID: rows.insertId},function (err, rows){
+					    			console.log('selecting passenger with ID: ' +rows.passenger_ID);
 					    			coord = {
 										  origins: [rows[0].entry_latitude +','+ rows[0].entry_longitude],
 										  destinations: [ rows[0].exit_latitude +','+ rows[0].exit_longitude],
@@ -441,7 +441,7 @@ app.post('/mobile', function (req,res){
 										    var distance = data.distanceValue;
 										    console.log("Distance in meters: "+ distance);
 										    
-										    connection.query('Update Passenger Set ? where ?',{distance: distance, passenger_ID: rows.insertId}, function (err,rows){
+										    connection.query('Update Passenger Set ? where ?',{distance: distance, passenger_ID: rows.passenger_ID}, function (err,rows){
 										    	if(i >= req.body.length -1){
 										    		console.log('Updated successfully Passenger with ID: '+rows.insertId);
 										    		connection.release();
