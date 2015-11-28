@@ -416,36 +416,59 @@ app.post('/mobile', function (req,res){
 				var insert_scans = [];
 
 				for(var i=0; i< passengers.length;i++){
-					insert_rows.push([passengers[i].entry_lat,passengers[i].entry_log,passengers[i].entry_time,passengers[i].exit_lat,passengers[i].exit_log,passengers[i].exit_time]);
-					insert_scans.push([passengers[i].tagID,passengers[i].entry_time]);
-					insert_scans.push([passengers[i].tagID,passengers[i].exit_time]);
+					insert_rows.push({entry_latitude: passengers[i].entry_lat, entry_longitude: passengers[i].entry_log,entry_time: passengers[i].entry_time,exit_latitude: passengers[i].exit_lat,exit_longitude: passengers[i].exit_log,exit_time: passengers[i].exit_time});
+					//insert_scans.push([passengers[i].tagID,passengers[i].entry_time]);
+					//insert_scans.push([passengers[i].tagID,passengers[i].exit_time]);
 				}
 
 				
-				
+				for(var i=0; i< insert_rows.length; i++){
+					distance.get(
+					  {
+					     origins: [insert_rows[i].entry_latitude +','+ insert_rows[i].entry_longitude],
+					  destinations: [ insert_rows[i].exit_latitude +','+ insert_rows[i].exit_longitude],
+					    mode: 'driving',
+					    units: 'metric'
+					  },
+					  function(err, data) {
+					    if (err) return console.log(err);
+					    console.log(data.distanceValue);
+					    var distance = data.distanceValue;
+					    pool.getConnection(function (err,connection){
+					    	console.log("Inserting "+ insert_rows[i]+ " with distance of "+distance);
+					    	var queryval = {entry_latitude: insert_rows[i].entry_latitude, entry_longitude: insert_rows[i].entry_longitude, entry_time: insert_rows[i].entry_time, exit_latitude: insert_rows[i].exit_latitude, exit_longitude: insert_rows[i].exit_longitude, exit_time: insert_rows[i].exit_time, distance: distance };
+					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
+					    		console.log("successfully inserted passenger with id: "+rows.insertId);
+					    		connection.release();
+					    	});
+					    });
+					    
 
-				pool.getConnection(function(err, connection) {
+					});
+				}
+
+				/*pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  			console.log(insert_rows);
-	  			console.log(insert_scans);
+		  			console.log(insert_rows);
+		  			console.log(insert_scans);
 
-	  		connection.query( 'Insert into Passenger (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
-	   			//manipulate rows
-	   			
-	   			console.log('Insert new passengers successful');
+			  		connection.query( 'Insert into Passenger (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
+			   			//manipulate rows
+			   			
+			   			console.log('Insert new passengers successful');
 
-	   			connection.query( 'Insert into Scan (tag_ID, scan_time) Values ?',insert_scans, function (err, rows) {
-	   			//manipulate rows
-	   			
-	   			console.log('Insert new scans successful');
-	   			
-	   			connection.release();
-	  		});
-	   			
-	   			
-	  		});
+			   			connection.query( 'Insert into Scan (tag_ID, scan_time) Values ?',insert_scans, function (err, rows) {
+			   			//manipulate rows
+			   			
+				   			console.log('Insert new scans successful');
+				   			
+				   			connection.release();
+			  			});
+			   			
+			   			
+			  		});
 	   		// And done with the connection.
-	    });
+	    		});*/
 
 				/*for(var i=0;i<passengers.length;i++){
 					distance.get(
