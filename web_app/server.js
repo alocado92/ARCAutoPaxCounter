@@ -427,14 +427,14 @@ app.post('/mobile', function (req,res){
 					    		console.log("successfully inserted passenger with id: "+rows.insertId);
 					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where ?',{passenger_ID: rows.insertId},function (err, rows){
 					    			console.log('selecting passenger with ID: ' +rows[0].passenger_ID);
-					    			coord = {
-										  origins: [rows[0].entry_latitude +','+ rows[0].entry_longitude],
-										  destinations: [ rows[0].exit_latitude +','+ rows[0].exit_longitude],
-									    mode: 'driving',
-									    units: 'metric'
-									  };
+					    			//coord = ;
 									  distance.get(
-										  coord,
+										  {
+											  origins: [rows[0].entry_latitude +','+ rows[0].entry_longitude],
+											  destinations: [ rows[0].exit_latitude +','+ rows[0].exit_longitude],
+										      mode: 'driving',
+										      units: 'metric'
+									  	  },
 										  function(err, data) {
 										    if (err) return console.log(err);
 										    console.log(data.distanceValue);
