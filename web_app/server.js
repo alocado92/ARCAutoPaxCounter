@@ -441,7 +441,7 @@ app.post('/mobile', function (req,res){
 										    var distance = data.distanceValue;
 										    console.log("Distance in meters: "+ distance);
 										    
-										    connection.query('Update Passenger Set ? where ?',{distance: distance, passenger_ID: rows.passenger_ID}, function (err,rows){
+										    connection.query('Update Passenger Set ? where ?',[{distance: distance},{passenger_ID: rows.passenger_ID}], function (err,rows){
 										    	if(i >= req.body.length -1){
 										    		console.log('Updated successfully Passenger with ID: '+rows);
 										    		connection.release();
