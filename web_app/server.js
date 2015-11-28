@@ -440,7 +440,7 @@ app.post('/mobile', function (req,res){
 									}
 								}
 								console.log('ling_ling: '+ling_ling);
-								connection.query('select name, stop_latitude, stop_longitude from Stop where stop_ID in '+ ling_ling, function (err, rows){
+								connection.query('select name, stop_latitude, stop_longitude from Stop where stop_ID in ('+ ling_ling+')', function (err, rows){
 									console.log("Rows after inner query "+rows);
 									if(rows.length < 1){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
