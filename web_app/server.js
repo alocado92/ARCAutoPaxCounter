@@ -447,11 +447,12 @@ app.post('/mobile', function (req,res){
 										    		connection.release();
 										    	};
 
-										});
+											});
+					    		
+					    				});
 					    		});
-					    		}
 					    	});
-					    });
+						});
 					/*var coord = {
 					     origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
 					  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
