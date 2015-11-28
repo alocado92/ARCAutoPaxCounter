@@ -419,8 +419,8 @@ app.post('/mobile', function (req,res){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					//passengers.push(req.body[i]);
 					var coord = {
-					     origins: [this.req.body[i].entry_lat +','+ this.req.body[i].entry_log],
-					  destinations: [ this.req.body[i].exit_lat +','+ this.req.body[i].exit_log],
+					     origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
+					  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
 					    mode: 'driving',
 					    units: 'metric'
 					  };
