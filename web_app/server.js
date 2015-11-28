@@ -445,7 +445,7 @@ app.post('/mobile', function (req,res){
 										    	if(i >= req.body.length -1){
 										    		console.log('Updated successfully Passenger with ID: '+rows.insertId);
 										    		connection.release();
-										    });
+										    	};
 
 										});
 					    		});
