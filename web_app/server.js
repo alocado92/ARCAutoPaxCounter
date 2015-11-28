@@ -415,18 +415,18 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
-				for(var i=0; i<req.body.length;i++){
+				/*for(var i=0; i<req.body.length;i++){
 					console.log(req.body[i].entry_lat.toString());
-					var distance = geolib.getDistance(
-					    {latitude: req.body[i].entry_lat, longitude: req.body[i].entry_log},
-					    {latitude: req.body[i].exit_lat, longitude: req.body[i].exit_log}
-					);
+					var distance = ;
 					console.log(distance+ " meters");
 					
-				}
-				/*for(var i=0; i<req.body.length;i++){
+				}*/
+				for(var i=0; i<req.body.length;i++){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
-					var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time};
+					var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time, distance: geolib.getDistance(
+					    {latitude: req.body[i].entry_lat, longitude: req.body[i].entry_log},
+					    {latitude: req.body[i].exit_lat, longitude: req.body[i].exit_log}
+					)};
 					//passengers.push(req.body[i]);
 					pool.getConnection(function (err,connection){
 					    	console.log("Inserting "+ queryval);
@@ -434,7 +434,7 @@ app.post('/mobile', function (req,res){
 					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
 					    		console.log("i = "+i);
 					    		console.log("successfully inserted passenger with id: "+rows.insertId);
-					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where ?',{passenger_ID: rows.insertId},function (err, rows){
+					    		/*connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where ?',{passenger_ID: rows.insertId},function (err, rows){
 					    			console.log('selecting passenger with ID: ' +rows[0].passenger_ID);
 					    			//coord = ;
 									  distance.get(
@@ -459,12 +459,12 @@ app.post('/mobile', function (req,res){
 											});
 					    		
 					    				});
-					    		});
+					    		});*/
 					    	});
 						});
 					
 					
-				}*/
+				}
 				//console.log("passenger req.body: "+ passengers);
 				//console.log("passengers: "+ passengers[0]);
 				
