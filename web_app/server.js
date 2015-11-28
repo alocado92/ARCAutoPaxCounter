@@ -409,7 +409,7 @@ app.post('/mobile', function (req,res){
 			//console.log('Something went wrong with the options');
 			//res.send('OK');
 				var passengers = req.body;
-				console.log("passengers: "passengers);
+				console.log("passengers: "+ passengers);
 				var stops = [];
 				var distances = [];
 				var origin_dest = [];
