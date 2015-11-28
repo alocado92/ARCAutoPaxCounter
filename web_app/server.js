@@ -426,7 +426,7 @@ app.post('/mobile', function (req,res){
 					  };
 					distance.get(
 					  coord,
-					  function(err, data, req.body[i]) {
+					  function(err, data) {
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    var distance = data.distanceValue;
