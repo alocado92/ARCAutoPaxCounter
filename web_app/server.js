@@ -417,8 +417,18 @@ app.post('/mobile', function (req,res){
 
 				for(var i=0; i<req.body.length;i++){
 					console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
+					var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time};
 					//passengers.push(req.body[i]);
-					var coord = {
+					pool.getConnection(function (err,connection){
+					    	console.log("Inserting "+ queryval);
+					    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
+					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
+					    		console.log("i = "+i);
+					    		console.log("successfully inserted passenger with id: "+rows.insertId);
+					    		if(i == req.body.length -1){connection.release();}
+					    	});
+					    });
+					/*var coord = {
 					     origins: [req.body[i].entry_lat +','+ req.body[i].entry_log],
 					  destinations: [ req.body[i].exit_lat +','+ req.body[i].exit_log],
 					    mode: 'driving',
@@ -430,18 +440,11 @@ app.post('/mobile', function (req,res){
 					    if (err) return console.log(err);
 					    console.log(data.distanceValue);
 					    var distance = data.distanceValue;
-					    var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time, distance: distance};
-					    pool.getConnection(function (err,connection){
-					    	console.log("Inserting "+ queryval);
-					    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
-					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
-					    		console.log("successfully inserted passenger with id: "+rows.insertId);
-					    		connection.release();
-					    	});
-					    });
+					    
+					    
 					    
 
-					});
+					});*/
 					
 				}
 				//console.log("passenger req.body: "+ passengers);
