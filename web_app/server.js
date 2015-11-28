@@ -425,7 +425,7 @@ app.post('/mobile', function (req,res){
 					    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
 					    		console.log("i = "+i);
 					    		console.log("successfully inserted passenger with id: "+rows.insertId);
-					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where Set ?',{passenger_ID: rows.insertId},function (err, rows){
+					    		connection.query('Select entry_latitude, entry_longitude, exit_latitude, exit_longitude, passenger_ID from Passenger where ?',{passenger_ID: rows.insertId},function (err, rows){
 					    			console.log('selecting passenger with ID: ' +rows[0].passenger_ID);
 					    			coord = {
 										  origins: [rows[0].entry_latitude +','+ rows[0].entry_longitude],
