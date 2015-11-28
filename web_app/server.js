@@ -58,8 +58,8 @@ app.get('/user', function (req, res) {
 	var check = '';
 	distance.get(
   {
-     origins: ['San Francisco, CA'],
-  destinations: ['San Diego, CA'],
+     origins: [18.2098309+', '+-67.1399166],
+  destinations: [18.2098309+', '+-67.1399136],
     mode: 'driving',
     units: 'imperial'
   },
