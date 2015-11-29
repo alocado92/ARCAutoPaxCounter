@@ -453,7 +453,7 @@ app.post('/mobile', function (req,res){
 									else{
 										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
-											console.log("test.body.log: "+ test.body[j].entry_log);
+											console.log("test.body.log: "+ test.body[j].entry_lat);
 											var dist = geolib.getDistance(
 											    {latitude: test.body[j].entry_lat, longitude: test.body[j].entry_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
