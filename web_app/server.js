@@ -33,7 +33,7 @@ distance.apiKey = 'AIzaSyCLWYwZfhXxvlaBHRTEEt40KooXr62LuxY';
 /*distance.apiKey = 'AIzaSyC7ZVsNOFln4BjoOK998A2pODHq70QzDOY';
 */
 //mysql create pool
-var trip = '';
+//var trip = '';
 //var pool = mysql.pool;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
@@ -471,12 +471,7 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
-				/*for(var i=0; i<req.body.length;i++){
-					console.log(req.body[i].entry_lat.toString());
-					var distance = ;
-					console.log(distance+ " meters");
-					
-				}*/
+				
 				for(var i=0; i<req.body.length;i++){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					
