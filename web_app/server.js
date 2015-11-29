@@ -452,7 +452,7 @@ app.post('/mobile', function (req,res){
 									else{
 										for(var j=0; j<rows.length;j++){
 											var dist = geolib.getDistance(
-											    {latitude: req.body[j].entry_lat, longitude: req.body[j].entry_log},
+											    {latitude: test.body[j].entry_lat, longitude: test.body[j].entry_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
 											);
 											if(dist <= 7){
@@ -462,7 +462,7 @@ app.post('/mobile', function (req,res){
 										}
 										for(var j=0; j<rows.length;j++){
 											var dist = geolib.getDistance(
-											    {latitude: req.body[j].exit_lat, longitude: req.body[j].exit_log},
+											    {latitude: test.body[j].exit_lat, longitude: test.body[j].exit_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
 											);
 											if(dist <= 7){
@@ -471,14 +471,14 @@ app.post('/mobile', function (req,res){
 											}
 										}
 
-										var queryval = {entry_latitude: req.body[i].entry_lat, entry_longitude: req.body[i].entry_log,entry_time: req.body[i].entry_time,exit_latitude: req.body[i].exit_lat,exit_longitude: req.body[i].exit_log,exit_time: req.body[i].exit_time, distance: geolib.getDistance(
-										    {latitude: req.body[i].entry_lat, longitude: req.body[i].entry_log},
-										    {latitude: req.body[i].exit_lat, longitude: req.body[i].exit_log}
+										var queryval = {entry_latitude: test.body[il].entry_lat, entry_longitude: test.body[il].entry_log,entry_time: test.body[il].entry_time,exit_latitude: test.body[il].exit_lat,exit_longitude: test.body[il].exit_log,exit_time: test.body[il].exit_time, distance: geolib.getDistance(
+										    {latitude: test.body[il].entry_lat, longitude: test.body[il].entry_log},
+										    {latitude: test.body[il].exit_lat, longitude: test.body[il].exit_log}
 										), dest_stop: dest_name, origin_stop: orig_name};
 										console.log("Inserting "+ queryval);
 								    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
 								    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
-								    		console.log("i = "+i);
+								    		console.log("i = "+il);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
 								    		connection.release();
 								    		
