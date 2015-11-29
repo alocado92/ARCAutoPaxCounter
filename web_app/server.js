@@ -445,11 +445,13 @@ app.post('/mobile', function (req,res){
 								}
 								console.log('ling_ling: '+ling_ling);
 								connection.query('select name, stop_latitude, stop_longitude from Stop where ('+ ling_ling+')', function (err, rows){
+
 									console.log("Rows after inner query "+rows);
 									if(rows.length < 1){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
 									}
 									else{
+										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
 											var dist = geolib.getDistance(
 											    {latitude: test.body[j].entry_lat, longitude: test.body[j].entry_log},
