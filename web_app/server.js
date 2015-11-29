@@ -549,7 +549,7 @@ app.post('/mobile', function (req,res){
 								    			console.log('Trip ID: '+ rows[0].trip_ID);
 								    			console.log('Passenger ID: '+ pass_id);
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
-								    			connection.query('Insert into Takes ?', relation, function (err, rows){
+								    			connection.query('Insert into Takes SET ?', relation , function (err, rows){
 								    				if(il >= test.body.length){connection.release();}
 								    			});
 								    		});
