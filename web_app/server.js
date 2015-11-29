@@ -479,6 +479,7 @@ app.post('/mobile', function (req,res){
 					//passengers.push(req.body[i]);
 					var il = i;
 					var count = 0;
+					var lim = req.body.length;
 					pool.getConnection(function (err, connection){
 							var dest_name = '';
 							var orig_name = '';
@@ -550,7 +551,7 @@ app.post('/mobile', function (req,res){
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
 								    			connection.query('Insert into Takes SET ?', relation , function (err, rows){
 								    				count++;
-								    				if(count >= test.body.length){connection.release();}
+								    				if(count >= lim){connection.release();}
 								    			});
 								    		});
 								    		
