@@ -454,8 +454,8 @@ app.post('/mobile', function (req,res){
 										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
 											//console.log("test.body.log: "+ test.body[j].entry_lat);
-											var lat = test.body[j].entry_lat;
-											var log = test.body[j].entry_log;
+											var lat = test.body[il].entry_lat;
+											var log = test.body[il].entry_log;
 											var lat1 = rows[j].stop_latitude;
 											var log1 = rows[j].stop_longitude;
 											var dist = geolib.getDistance(
@@ -469,7 +469,7 @@ app.post('/mobile', function (req,res){
 										}
 										for(var j=0; j<rows.length;j++){
 											var dist = geolib.getDistance(
-											    {latitude: test.body[j].exit_lat, longitude: test.body[j].exit_log},
+											    {latitude: test.body[il].exit_lat, longitude: test.body[il].exit_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
 											);
 											if(dist <= 7){
