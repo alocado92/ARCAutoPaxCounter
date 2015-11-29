@@ -133,7 +133,7 @@ app.get('/newUser', function (req,res){
 app.get('/editUser', function (req,res){
 	res.sendFile("public/edit_user.html", {"root": __dirname});
 });
-pp.get('/editTrip', function (req,res){
+app.get('/editTrip', function (req,res){
 	res.sendFile("public/edit_trip.html", {"root": __dirname});
 });
 app.get('/deleteUser', function (req,res){
