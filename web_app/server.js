@@ -463,6 +463,7 @@ app.post('/mobile', function (req,res){
 											    {latitude: lat , longitude: log},
 											    {latitude: lat1, longitude: log1}
 											);
+											console.log("dist: "+dist);
 											if(dist <= 7){
 												console.log("name: "+ rows[j].name);
 												orig_name = rows[j].name;
