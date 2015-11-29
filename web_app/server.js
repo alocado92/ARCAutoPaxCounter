@@ -471,18 +471,20 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
-
+				var loop = 0;
+				var lim = req.body.length;
 				pool.getConnection(function (err, connection){
 				console.log("Request length: "+req.body.length);
-				for(var i=0; i<req.body.length;i++){
+				//for(var i=0; i<req.body.length;i++){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
-					
-					var test = req.body[i];
+					function next(){
+					if(loop < lim){
+					var test = req.body[loop];
 					console.log("ENtry lat: "+ test.entry_lat);
 					//passengers.push(req.body[i]);
 					var il = i;
 					var count = 0;
-					var lim = req.body.length;
+					
 					
 							var dest_name = '';
 							var orig_name = '';
@@ -553,8 +555,10 @@ app.post('/mobile', function (req,res){
 								    			console.log('Passenger ID: '+ pass_id);
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
 								    			connection.query('Insert into Takes SET ?', relation , function (err, rows){
-								    				count++;
-								    				if(count >= lim){connection.release();}
+								    				/*count++;
+								    				if(count >= lim){}*/
+								    					loop++;
+								    				next();
 								    			});
 								    		});
 								    		
@@ -568,9 +572,15 @@ app.post('/mobile', function (req,res){
 								});
 							});
 					    	
-						
-					
-				}
+						}
+						else{
+							connection.release();
+						}
+					}
+
+					//first execution of next
+					next();
+				//}
 				});		  		
 	}
 
