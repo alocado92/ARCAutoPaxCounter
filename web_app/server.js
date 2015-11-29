@@ -475,7 +475,7 @@ app.post('/mobile', function (req,res){
 				for(var i=0; i<req.body.length;i++){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					
-					var test = req;
+					var test = req.body[i];
 					//passengers.push(req.body[i]);
 					var il = i;
 					var count = 0;
@@ -484,8 +484,8 @@ app.post('/mobile', function (req,res){
 							var orig_name = '';
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
 								console.log("il: "+ il);
-								
-								console.log("test.body.log: "+ test.body[il].entry_log);
+								//test.body[il]
+								console.log("test.body.log: "+ test.entry_log);
 								
 								console.log("Rows after initial query "+rows);
 								var ling_ling = '';
@@ -508,8 +508,8 @@ app.post('/mobile', function (req,res){
 										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
 											
-											var lat = test.body[il].entry_lat;
-											var log = test.body[il].entry_log;
+											var lat = test.entry_lat;
+											var log = test.entry_log;
 											var lat1 = rows[j].stop_latitude;
 											var log1 = rows[j].stop_longitude;
 											var dist = geolib.getDistance(
@@ -525,7 +525,7 @@ app.post('/mobile', function (req,res){
 										}
 										for(var j=0; j<rows.length;j++){
 											var dist = geolib.getDistance(
-											    {latitude: test.body[il].exit_lat, longitude: test.body[il].exit_log},
+											    {latitude: test.exit_lat, longitude: test.exit_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
 											);
 											if(dist <= 7){
@@ -534,9 +534,9 @@ app.post('/mobile', function (req,res){
 											}
 										}
 
-										var queryval = {entry_latitude: test.body[il].entry_lat, entry_longitude: test.body[il].entry_log,entry_time: test.body[il].entry_time,exit_latitude: test.body[il].exit_lat,exit_longitude: test.body[il].exit_log,exit_time: test.body[il].exit_time, distance: geolib.getDistance(
-										    {latitude: test.body[il].entry_lat, longitude: test.body[il].entry_log},
-										    {latitude: test.body[il].exit_lat, longitude: test.body[il].exit_log}
+										var queryval = {entry_latitude: test.entry_lat, entry_longitude: test.entry_log,entry_time: test.entry_time,exit_latitude: test.exit_lat,exit_longitude: test.exit_log,exit_time: test.exit_time, distance: geolib.getDistance(
+										    {latitude: test.entry_lat, longitude: test.entry_log},
+										    {latitude: test.exit_lat, longitude: test.exit_log}
 										), dest_stop: dest_name, origin_stop: orig_name};
 										console.log("Inserting "+ queryval);
 								    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
