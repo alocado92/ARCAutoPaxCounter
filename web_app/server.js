@@ -482,14 +482,14 @@ app.post('/mobile', function (req,res){
 					var test = req.body[loop];
 					console.log("ENtry lat: "+ test.entry_lat);
 					//passengers.push(req.body[i]);
-					var il = i;
+					//var il = i;
 					var count = 0;
 					
 					
 							var dest_name = '';
 							var orig_name = '';
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
-								console.log("il: "+ il);
+								//console.log("il: "+ il);
 								//test.body[il]
 								console.log("test.body.log: "+ test.entry_log);
 								
@@ -548,7 +548,7 @@ app.post('/mobile', function (req,res){
 								    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
 								    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
 								    		var pass_id = rows.insertId;
-								    		console.log("i = "+il);
+								    		//console.log("i = "+il);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
 								    		connection.query('Select trip_ID from Trip where end_time is null', function (err,rows){
 								    			console.log('Trip ID: '+ rows[0].trip_ID);
