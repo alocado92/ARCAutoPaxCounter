@@ -471,11 +471,12 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
-				
+				console.log("Request length: "+req.body.length);
 				for(var i=0; i<req.body.length;i++){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					
 					var test = req.body[i];
+					console.log("ENtry lat: "+ test.entry_lat);
 					//passengers.push(req.body[i]);
 					var il = i;
 					var count = 0;
