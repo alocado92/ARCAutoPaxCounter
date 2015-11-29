@@ -454,9 +454,13 @@ app.post('/mobile', function (req,res){
 										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
 											console.log("test.body.log: "+ test.body[j].entry_lat);
+											var lat = test.body[j].entry_lat;
+											var log = test.body[j].entry_log;
+											var lat1 = rows[j].stop_latitude;
+											var log1 = rows[j].stop_longitude;
 											var dist = geolib.getDistance(
-											    {latitude: test.body[j].entry_lat, longitude: test.body[j].entry_log},
-											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
+											    {latitude: lat , longitude: log},
+											    {latitude: lat1, longitude: log1}
 											);
 											if(dist <= 7){
 												orig_name = rows[j].name;
