@@ -167,6 +167,34 @@ app.post('/fetch', function (req,res){
 	
 });
 
+app.post('/fetch_trip', function (req,res){
+	var name = req.body.name;
+	var id = -1;
+	var start = '';
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( 'Select trip_ID, name, start_time from Trip where ?',{name: name} ,function (err, rows) {
+	   			//manipulate rows
+	   			console.log(rows.length);
+	   			if(rows.length>0){
+	   				id = rows[0].trip_ID;
+	   				start = rows[0].start_time;
+	   				name = rows[0].name;
+	   				
+	   			res.send({matched: true,name: name, start: start, id: id});}
+	   			else{
+	   				console.log('Unmatched query');
+	   				res.send({matched: false});
+	   			}
+	   			
+	   			connection.release();
+	  		});
+	   		// And done with the connection.
+	    });
+	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
+	
+});
+
 app.post('/delete', function (req,res){
 	var email = req.body.email;
 	console.log('Deleting user with email: '+email);
@@ -212,6 +240,31 @@ app.post('/edit', function (req,res){
 	    });
 	
 		console.log('Done editing user');
+		res.send({redirect: '/home'});
+	
+});
+app.post('/edit_trip', function (req,res){
+	var name = req.body.name;
+	var id = req.body.id;
+	console.log('Editing trip with id: '+id);
+	
+	
+	var post = {name: name};
+	var where = {trip_ID: id};
+	
+	pool.getConnection(function(err, connection) {
+	  		// Use the connection
+	  		connection.query( "Update Trip SET ? where ?",[post,where], function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('edited trip successful');
+	   			 
+	   			connection.release();
+	  		});
+	   		// And done with the connection.
+	    });
+	
+		console.log('Done editing trip');
 		res.send({redirect: '/home'});
 	
 });
@@ -432,6 +485,7 @@ app.post('/mobile', function (req,res){
 							var orig_name = '';
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
 								console.log("il: "+ il);
+								
 								console.log("test.body.log: "+ test.body[il].entry_log);
 								
 								console.log("Rows after initial query "+rows);
@@ -454,7 +508,7 @@ app.post('/mobile', function (req,res){
 									else{
 										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
-											//console.log("test.body.log: "+ test.body[j].entry_lat);
+											
 											var lat = test.body[il].entry_lat;
 											var log = test.body[il].entry_log;
 											var lat1 = rows[j].stop_latitude;
@@ -488,9 +542,19 @@ app.post('/mobile', function (req,res){
 										console.log("Inserting "+ queryval);
 								    	//var queryval = {entry_latitude: row.entry_latitude, entry_longitude: row.entry_longitude, entry_time: row.entry_time, exit_latitude: row.exit_latitude, exit_longitude: row.exit_longitude, exit_time: row.exit_time, distance: distance };
 								    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
+								    		var pass_id = rows.insertId;
 								    		console.log("i = "+il);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
-								    		connection.release();
+								    		connection.query('Select trip_ID from Trip where end_time is null', function (err,rows){
+								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
+								    			connection.query('Insert into Takes ?', relation, function (err, rows){
+								    				if(il >= test.body.length){connection.release();}
+								    			});
+								    		});
+								    		
+
+								    		
+								    		
 								    		
 								    	});
 
@@ -498,72 +562,13 @@ app.post('/mobile', function (req,res){
 								});
 							});
 					    	
-						});
+						});	
 					
-					
-				}
-				//console.log("passenger req.body: "+ passengers);
-				//console.log("passengers: "+ passengers[0]);
-				
-
-				
-
-				
-				
-
-				/*pool.getConnection(function(err, connection) {
-	  		// Use the connection
-		  			console.log(insert_rows);
-		  			console.log(insert_scans);
-
-			  		connection.query( 'Insert into Passenger (entry_latitude, entry_longitude, entry_time, exit_latitude, exit_longitude, exit_time) VALUES ?',insert_rows, function (err, rows) {
-			   			//manipulate rows
-			   			
-			   			console.log('Insert new passengers successful');
-
-			   			connection.query( 'Insert into Scan (tag_ID, scan_time) Values ?',insert_scans, function (err, rows) {
-			   			//manipulate rows
-			   			
-				   			console.log('Insert new scans successful');
-				   			
-				   			connection.release();
-			  			});
-			   			
-			   			
-			  		});
-	   		// And done with the connection.
-	    		});*/
-
-				/*for(var i=0;i<passengers.length;i++){
-					distance.get(
-					  {
-					     origins: [passengers[i].entry_lat +','+ passengers[i].entry_log],
-					  destinations: [ passengers[i].exit_lat +','+ passengers[i].exit_log],
-					    mode: 'driving',
-					    units: 'metric'
-					  },
-					  function(err, data) {
-					    if (err) return console.log(err);
-					    console.log(data.distanceValue);
-					    distances.push(data.distanceValue);
-					    if(i==passengers.length -1){
-						//res.send('OK');
-					}
-
-					});
-
-				}*/
-
-				/*pool.getConnection(function(err, connection) {
-
-				});*/
-	  
-	  		
-	  		
+				}	  		
 	}
 
 	
-	//console.log("Processed mobile data successfully");
+	
 	
 	
 });
