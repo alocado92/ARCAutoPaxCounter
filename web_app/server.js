@@ -505,7 +505,7 @@ app.post('/mobile', function (req,res){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
 									}
 									else{
-										console.log("test.body.log: "+ test.body[0].entry_lat);
+										console.log("test.body.log: "+ test.entry_lat);
 										for(var j=0; j<rows.length;j++){
 											
 											var lat = test.entry_lat;
