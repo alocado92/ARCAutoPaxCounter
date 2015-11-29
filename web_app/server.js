@@ -453,7 +453,7 @@ app.post('/mobile', function (req,res){
 									else{
 										console.log("test.body.log: "+ test.body[0].entry_lat);
 										for(var j=0; j<rows.length;j++){
-											console.log("test.body.log: "+ test.body[j].entry_lat);
+											//console.log("test.body.log: "+ test.body[j].entry_lat);
 											var lat = test.body[j].entry_lat;
 											var log = test.body[j].entry_log;
 											var lat1 = rows[j].stop_latitude;
