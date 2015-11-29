@@ -423,12 +423,13 @@ app.post('/mobile', function (req,res){
 				}*/
 				for(var i=0; i<req.body.length;i++){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
-					var dest_name = '';
-					var orig_name = '';
+					
 					var test = req;
 					//passengers.push(req.body[i]);
 					var il = i;
 					pool.getConnection(function (err, connection){
+							var dest_name = '';
+							var orig_name = '';
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
 								console.log("il: "+ il);
 								console.log("test.body.log: "+ test.body[il].entry_log);
@@ -463,6 +464,7 @@ app.post('/mobile', function (req,res){
 											    {latitude: lat1, longitude: log1}
 											);
 											if(dist <= 7){
+												console.log("name: "+ rows[j].name);
 												orig_name = rows[j].name;
 												break;
 											}
