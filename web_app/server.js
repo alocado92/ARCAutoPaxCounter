@@ -471,6 +471,8 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
+
+				pool.getConnection(function (err, connection){
 				console.log("Request length: "+req.body.length);
 				for(var i=0; i<req.body.length;i++){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
@@ -481,7 +483,7 @@ app.post('/mobile', function (req,res){
 					var il = i;
 					var count = 0;
 					var lim = req.body.length;
-					pool.getConnection(function (err, connection){
+					
 							var dest_name = '';
 							var orig_name = '';
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
