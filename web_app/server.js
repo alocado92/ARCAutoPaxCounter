@@ -425,11 +425,11 @@ app.post('/mobile', function (req,res){
 					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
 					var dest_name = '';
 					var orig_name = '';
-					
+					var test = req;
 					//passengers.push(req.body[i]);
-					pool.getConnection(function (err,connection,this.req){
+					pool.getConnection(function (err, connection){
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
-								console.log("Req.body.length: "+ req.body.length);
+								console.log("Req.body.length: "+ test);
 								console.log("Rows after initial query "+rows);
 								var ling_ling = '';
 								for(var i=0; i<rows.length;i++){
