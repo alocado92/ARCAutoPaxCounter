@@ -50,10 +50,12 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              row.push(0);
+                              if(data2.getColumnLabel(e) == res.data[f-1].dest){
+                                row.push(res.data[f-1].count);
+                              }
                             }
-                            else if(stop[e] == res.data[f-1].dest){
-                              row.push(res.data[f-1].count);
+                            else{
+                              row.push(0);
                             }
                           }
                           else{
@@ -139,10 +141,12 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              row.push(0);
+                              if(data2.getColumnLabel(e) == res.data[f-1].dest){
+                                row.push(res.data[f-1].count);
+                              }
                             }
-                            else if(stop[e] == res.data[f-1].dest){
-                              row.push(res.data[f-1].count);
+                            else{
+                              row.push(0);
                             }
                           }
                           else{
