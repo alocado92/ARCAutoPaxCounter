@@ -104,7 +104,7 @@ app.post('/graph1', function (req, res){
 			console.log('Route 1: '+route1);
 			connection.query('Select name from Stop natural join Linked_to natural join Route where route_name ='+route1.toString(), function (err, rows){
 				var result = [];
-				console.log('Size of row: '+rows);
+				console.log('Size of row: '+rows[0]);
 				for(var k=0; k<rows.length; k++){
 					result.push({stop: rows[k].name, origin: 0, destination: 0});
 				}
