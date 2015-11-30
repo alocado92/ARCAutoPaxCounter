@@ -53,9 +53,9 @@
                               if(data2.getColumnLabel(e+1) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
                               }
-                            }
-                            else{
-                              row.push(0);
+                              else{
+                                row.push(0);
+                              }
                             }
                           }
                           else{
@@ -144,9 +144,9 @@
                               if(data2.getColumnLabel(e+1) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
                               }
-                            }
-                            else{
-                              row.push(0);
+                              else{
+                                row.push(0);
+                              }
                             }
                           }
                           else{
