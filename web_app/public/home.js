@@ -55,7 +55,7 @@
                                   row[x]= (res.data[f-1].count);
                                 }
                                 else{
-                                  row.push(0);
+                                  row[x] = 0;
                                 }
                               }
                             }
@@ -156,7 +156,7 @@
                                   row[x]= (res.data[f-1].count);
                                 }
                                 else{
-                                  row.push(0);
+                                  row[x]=0;
                                 }
                               }
                             }
