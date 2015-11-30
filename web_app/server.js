@@ -112,6 +112,7 @@ app.post('/graph1', function (req, res){
 				}
 				console.log('Query: '+ query);
 				connection.query(query, function (err, rows){
+					console.log('Size of row: '+ rows.length);
 				if(rows.length > 0){
 					var stops = '';
 					for (var i=0; i< rows.length; i++){
