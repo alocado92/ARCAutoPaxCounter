@@ -59,7 +59,10 @@
                                 }
                               }
                             }
-                            row.push(0);
+                            else{
+                              row.push(0);
+                            }
+                            
                           }
                           data2.addRow(row);
                           break;
@@ -152,7 +155,9 @@
                                 }
                               }
                             }
-                            row.push(0);
+                            else{
+                              row.push(0);
+                            }
                           }
                           data2.addRow(row);
                           break;
