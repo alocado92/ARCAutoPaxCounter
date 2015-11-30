@@ -64,7 +64,7 @@
                             }
                             
                           }
-                          if(row.length == 12){
+                          if(row.length == stop.length+1){
                             data2.addRow(row);
                             break;
                           }
@@ -161,7 +161,7 @@
                               row.push(0);
                             }
                           }
-                         if(row.length == 12){
+                         if(row.length == stop.length+1){
                             data2.addRow(row);
                             break;
                           }
