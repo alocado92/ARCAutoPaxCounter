@@ -62,6 +62,7 @@
                             
                           }
                           data2.addRow(row);
+                          break;
                         }
                         
                       }
@@ -145,6 +146,7 @@
                               for(var x=1; x<stop.length+1;x++){
                                 if(data2.getColumnLabel(f-1) == res.data[x].dest){
                                   row.push(res.data[x].count);
+
                                 }
                                 else{
                                   row.push(0);
@@ -154,6 +156,7 @@
                             
                           }
                           data2.addRow(row);
+                          break;
                         }
                         
                       }
