@@ -80,20 +80,71 @@ app.get('/user', function (req, res) {
  
 });
 app.post('/graph1', function (req, res){
-	var type = req.body.type;
-	var date_begin = req.body.date1;
-	var date_end = req.body.date2;
+	var type = req.body.graph;
+	var date_begin = req.body.sdate;
+	var date_end = req.body.edate;
 	var route = req.body.route;
 	var graph_type ='';
 
-	if(type == 'Origin-Destination Matrix'){
-		graph_type = '';
+	if(type == '1'){
+		//graph_type = '';
+
 	}
-	else if (type == 'Net Passenger Flow'){
-		graph_type = '';
+	else if (type == '2'){
+		//graph_type = '';
+		var where = ' route_name= '+ route +' AND start_time >= '+ date_begin+' AND end_time <= ' + date_end+'';
+		pool.getConnection(function (err,connection){
+			var query = 'select dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
+			connection.query('Select name from Stop natural join Linked_to natural join Route where route_name ="'+route+'"', function (err,rows){
+				var result = [];
+				for(var k=0; k<rows.length; k++){
+					result.push({stop: rows[k].name, origin: 0, destination: 0});
+				}
+				connection.query(query, function (err, rows){
+				if(rows.length > 0){
+					var stops = '';
+					for (var i=0; i< rows.length; i++){
+						if(i == rows.length-1){
+							stops += " dest_stop = "+rows[i].dest_stop;
+						}
+						else{
+							stops += "dest_stop = "+rows[i].dest_stop + " OR ";
+						}
+
+					}
+					var query2 = 'SELECT COUNT(origin_stop) as "Net_Traffic_Origin", origin_stop, COUNT(dest_stop) as "Net_Traffic_Dest", dest_stop FROM Passenger WHERE ('+stops+') GROUP By origin_stop , dest_stop ';
+					connection.query(query2, function (err, rows){
+						console.log('Route name in query2: '+route);
+
+						for(var a=0;a<result.length;a++){
+							for(var b=0;b<rows.length;b++){
+								if(rows[b].origin_stop == result[a].stop){
+									result[a].origin += rows[b].Net_Traffic_Origin;
+									break;
+								}
+							}
+							for(var c=0;c<rows.length;c++){
+								if(rows[c].dest_stop == result[a].stop){
+									result[a].destination += rows[c].Net_Traffic_Dest;
+									break;
+								}
+							}
+						}
+						res.send({data: result});
+						connection.release();
+
+						
+					});
+				}
+				else{
+
+				}
+			});
+			});
+		});
 	}
 	else {
-		graph_type = '';
+		//graph_type = '';
 	}
 
 	var query = '';

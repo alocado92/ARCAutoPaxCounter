@@ -17,7 +17,7 @@
                 edate: vm.date2
             };
             console.log(data);
-            $http.post("/view1", data, {headers: {'Content-Type': 'application/json'} })
+            $http.post("/graph1", data, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
             console.log(response.data);
             
@@ -55,10 +55,10 @@
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
             else if(vm.gtype2 == '2'){
-                table.push(['Stop','In','Out']);
+                table.push(['Stop','Origin','Destination']);
             for (var i=0;i<res.data.length;i++){
-                console.log(res.data[i].name);
-              table.push([res.data[i].name.toString(),res.data[i].IN,res.data[i].OUT]);
+                console.log(res.data[i].stop);
+              table.push([res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination]);
             }
             console.log(table.toString());
             var graphData = new google.visualization.arrayToDataTable(table);
@@ -66,12 +66,12 @@
           
           chart: {
             title: 'Passenger Net Flow by stops',
-            subtitle: 'Passenger IN on left, Passenger out on right'
+            subtitle: 'Passenger Origin on left, Passenger Destination on right'
           },
            // Required for Material Bar Charts.
           series: {
-            0: { axis: 'IN' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'OUT' } // Bind series 1 to an axis named 'brightness'.
+            0: { axis: 'Origin' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'Destination' } // Bind series 1 to an axis named 'brightness'.
           }
         };
         var chart = new google.visualization.ColumnChart(document.getElementById("chart1"));
@@ -94,7 +94,7 @@
                 edate: vm.date4
             };
             console.log(data);
-            $http.post("/view1", data, {headers: {'Content-Type': 'application/json'} })
+            $http.post("/graph1", data, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
         	console.log(response.data);
         	
@@ -132,10 +132,10 @@
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
         	else if(vm.gtype2 == '2'){
-        		table.push(['Stop','In','Out']);
-        	for (var i=0;i<res.data.length;i++){
-	            console.log(res.data[i].name);
-              table.push([res.data[i].name.toString(),res.data[i].IN,res.data[i].OUT]);
+                table.push(['Stop','Origin','Destination']);
+            for (var i=0;i<res.data.length;i++){
+                console.log(res.data[i].stop);
+              table.push([res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination]);
             }
             console.log(table.toString());
             var graphData = new google.visualization.arrayToDataTable(table);
@@ -143,17 +143,17 @@
           
           chart: {
             title: 'Passenger Net Flow by stops',
-            subtitle: 'Passenger IN on left, Passenger out on right'
+            subtitle: 'Passenger Origin on left, Passenger Destination on right'
           },
            // Required for Material Bar Charts.
           series: {
-            0: { axis: 'IN' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'OUT' } // Bind series 1 to an axis named 'brightness'.
+            0: { axis: 'Origin' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'Destination' } // Bind series 1 to an axis named 'brightness'.
           }
         };
-      	var chart = new google.visualization.ColumnChart(document.getElementById("chart2"));
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart1"));
         chart.draw(graphData, options);
-        	}
+            }
         	else if (vm.gtype2 == '3'){
 
         	}
