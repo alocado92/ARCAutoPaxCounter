@@ -48,10 +48,10 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
-                          if(stop[e] == res[f].origin_stop){
-                            if(stop[f]==res[f].dest_stop){
+                          if(stop[e] == res[f].origin){
+                            if(stop[f]==res[f].dest){
 
-                              row[f]+=(res[f].Origin);
+                              row[f]+=(res[f].count);
                             }
                             
                           }
@@ -132,10 +132,10 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
-                          if(stop[e] == res[f].origin_stop){
-                            if(stop[f]==res[f].dest_stop){
+                          if(stop[e] == res[f].origin){
+                            if(stop[f]==res[f].dest){
 
-                              row[f]+=(res[f].Origin);
+                              row[f]+=(res[f].count);
                             }
                             
                           }
