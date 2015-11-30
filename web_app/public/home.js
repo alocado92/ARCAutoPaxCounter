@@ -51,11 +51,12 @@
                           if(typeof res.data[f-1] != 'undefined'){
                           if(stop[e] == res.data[f-1].origin ){
                             if(stop[e]==res.data[f-1].dest){
-                              row.push(0);
+                              row.push(res.data[f-1].count);
                               
                             }
                             else{
-                              row.push(res.data[f-1].count);
+                              
+                              row.push(0);
                             }
                             
                           }
@@ -148,10 +149,12 @@
                           if(typeof res.data[f-1] != 'undefined'){
                           if(stop[e] == res.data[f-1].origin ){
                             if(stop[e]==res.data[f-1].dest){
+                              row.push(res.data[f-1].count);
                               
                             }
                             else{
-                              row.push(res.data[f-1].count);
+                              
+                              row.push(0);
                             }
                             
                           }
