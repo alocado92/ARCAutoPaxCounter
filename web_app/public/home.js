@@ -47,12 +47,15 @@
                       for(var e=0;e<stop.length;e++){
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
-                          row.push(0);
+                          //row.push(0);
                           if(res.data[f-1]){
                           if(stop[e] == res.data[f-1].origin){
                             if(stop[e]==res.data[f-1].dest){
-
-                              row[f]+=(res.data[f-1].count);
+                              row.push(0);
+                              
+                            }
+                            else{
+                              row[f]=(res.data[f-1].count);
                             }
                             
                           }
@@ -135,15 +138,18 @@
                       for(var e=0;e<stop.length;e++){
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
-                          row.push(0);
+                          //row.push(0);
                           if(res.data[f-1]){
                           if(stop[e] == res.data[f-1].origin){
                             if(stop[e]==res.data[f-1].dest){
-
-                              row[f]+=(res.data[f-1].count);
+                              row.push(0);
+                              
+                            }
+                            else{
+                              row[f]=(res.data[f-1].count);
                             }
                             
-                         }
+                          }
                         }
                         }
                         data2.addRow(row);
