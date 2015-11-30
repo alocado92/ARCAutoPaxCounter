@@ -48,7 +48,7 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
-                          if(res.data[f-1]){
+                          //if(res.data[f-1]){
                           if(stop[e] == res.data[f-1].origin){
                             if(stop[e]==res.data[f-1].dest){
                               row.push(0);
@@ -60,7 +60,7 @@
                             
                           }
 
-                        }
+                        //}
                         else{
                             row.push(0);
                           }
@@ -143,7 +143,7 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
-                          if(res.data[f-1]){
+                          //if(res.data[f-1]){
                           if(stop[e] == res.data[f-1].origin){
                             if(stop[e]==res.data[f-1].dest){
                               row.push(0);
@@ -155,7 +155,7 @@
                             
                           }
 
-                        }
+                        //}
                         else{
                             row.push(0);
                           }
