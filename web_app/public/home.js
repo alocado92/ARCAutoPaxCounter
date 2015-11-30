@@ -46,11 +46,11 @@
                       data2.addColumn('number', 'Vita');*/
                       for(var e=0;e<stop.length;e++){
                         var row = [stop[e].toString()];
-                        for(var f=1;f<res.data.length+1;f++){
+                        for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              for(var x=1; x<stop.length+1;x++){
+                              for(var x=1; x<res.data.length+1;x++){
                                 if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
                                   row[x]= (res.data[f-1].count);
                                 }
@@ -147,11 +147,11 @@
                       
                       for(var e=0;e<stop.length;e++){
                         var row = [stop[e].toString()];
-                        for(var f=1;f<res.data.length+1;f++){
+                        for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              for(var x=1; x<stop.length+1 ;x++){
+                              for(var x=1; x<res.data.length+1 ;x++){
                                 if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
                                   row[x]= (res.data[f-1].count);
                                 }
