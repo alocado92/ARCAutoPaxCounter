@@ -111,7 +111,7 @@ app.post('/graph1', function (req, res){
 				console.log('Route name: '+route1);
 				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip NATURAL JOIN Belongs NATURAL JOIN Route where start_time >= "'+date_begin+'" AND end_time <= "'+date_end+'" AND route_name= "' +route1+'"',function (err,rows){
 						var pass_id = '';
-						console.log('Rows length: '+rows.length);
+						console.log('Rows length: '+rows);
 						for (var i=0; i< rows.length; i++){
 							if(i == rows.length-1){
 								pass_id += " passenger_ID = '"+rows[i].passenger_ID+"'";
@@ -147,7 +147,7 @@ app.post('/graph1', function (req, res){
 										}
 									}
 								}*/
-								console.log('Rows length c: '+rows.length);
+								console.log('Rows length c: '+rows);
 								for(var c=0; c<rows.length;c++){
 									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
 								}
