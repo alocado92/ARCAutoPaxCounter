@@ -117,10 +117,10 @@ app.post('/graph1', function (req, res){
 					var stops = '';
 					for (var i=0; i< rows.length; i++){
 						if(i == rows.length-1){
-							stops += " dest_stop = "+rows[i].dest_stop;
+							stops += " dest_stop = '"+rows[i].dest_stop+"'";
 						}
 						else{
-							stops += "dest_stop = "+rows[i].dest_stop + " OR ";
+							stops += "dest_stop = '"+rows[i].dest_stop + "' OR ";
 						}
 
 					}
