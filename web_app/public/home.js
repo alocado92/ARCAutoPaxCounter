@@ -167,7 +167,7 @@
                           else{
                             row.push(0);
                           }
-                         if(row.length == stop.length+1){
+                         if(row.length == stop.length){
                             data2.addRow(row);
                             break;
                           }
