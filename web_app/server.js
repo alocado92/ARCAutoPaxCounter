@@ -101,7 +101,7 @@ app.post('/graph1', function (req, res){
 			console.log('Date End: '+date_end);
 			var where = ' (route_name= "'+ route.toString() +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
 			console.log('Where: '+where);
-			var query = 'select dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
+			var query = 'select distinct dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
 			var route1 = route;
 			console.log('Route 1: '+route1);
 			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
