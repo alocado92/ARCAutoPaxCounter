@@ -152,7 +152,7 @@ app.post('/graph1', function (req, res){
 					});
 				}
 				else{
-
+					res.send({data: result});
 				}
 			});
 			});
