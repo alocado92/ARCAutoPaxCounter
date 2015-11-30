@@ -131,9 +131,9 @@ app.post('/graph1', function (req, res){
 									parada_id += "dest_stop = '"+rows[i].passenger_ID + "' OR ";
 								}	
 							}
-							console.log('Parada_id: '+parada_id);
+							/*console.log('Parada_id: '+parada_id);
 							console.log('Parada_id1: '+parada_id1);
-							console.log('Pass_id: '+pass_id);
+							console.log('Pass_id: '+pass_id);*/
 							connection.query('SELECT COUNT(origin_stop) as "Origin", origin_stop, dest_stop FROM Passenger WHERE (('+pass_id+') ) Group By (dest_stop) ORDER By (origin_stop)', function (err, rows){
 								/*for(var a=0;a<stops_name.length;a++){
 									for(var b=0; b<stops_name.length;b++){

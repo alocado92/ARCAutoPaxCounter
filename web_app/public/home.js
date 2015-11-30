@@ -22,11 +22,18 @@
             console.log(response.data);
             
             var res = response.data;
+            var stop = response.stops;
             var table = new Array();
             var data2 = new google.visualization.DataTable();
                       // Add columns
-                      data2.addColumn('string', 'Origin/Destination');
-                      data2.addColumn('number', 'Fisica');
+
+            if (vm.gtype2 == '1'){
+                  data2.addColumn('string', 'Origin/Destination');
+                      for(var d=0;d<stop.length;d++){
+                        data2.addColumn('number', stop[d].toString());
+                      }
+                      
+                      /*data2.addColumn('number', 'Fisica');
                       data2.addColumn('number', 'PatioCentral');
                       data2.addColumn('number', 'Biblioteca');
                       data2.addColumn('number', 'CentroEstudiante');
@@ -36,9 +43,23 @@
                       data2.addColumn('number', 'CITAI');
                       data2.addColumn('number', 'EdificioA');
                       data2.addColumn('number', 'Empresas');
-                      data2.addColumn('number', 'Vita');
+                      data2.addColumn('number', 'Vita');*/
+                      for(var e=0;e<stop.length;e++){
+                        var row = [stop[e].toString()];
+                        for(var f=0;f<stop.length;f++){
+                          if(stop[e] == res[e].origin_stop){
+                            if(stop[f]==res[f].dest_stop){
+                              row.push(res[f].Origin);
+                            }
+                            else{
+                              row.push(0);
+                            }
+                          }
+                        }
+                        data2.addRow(row);
+                      }
 
-                      data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
+                      /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
                         data2.addRow(['PatioCentral',4,0,3,6,4,5,4,6,422,34,55]);
                         data2.addRow(['Biblioteca',11,22,0,44,55,66,77,88,5,3,5]);
                         data2.addRow(['CentroEstudiante',21,11,22,0,4,5,6,7,8,9,7]);
@@ -48,9 +69,7 @@
                         data2.addRow(['CITAI',1,2,3,4,5,6,7,0,8,9,11]);
                         data2.addRow(['EdificioA',2,3,4,5,6,7,8,9,0,12,11]);
                         data2.addRow(['Empresas',1,2,3,4,5,6,7,8,9,0,13]);
-                        data2.addRow(['Vita',2,3,4,5,6,7,8,9,10,11,0]);
-            if (vm.gtype2 == '1'){
-                
+                        data2.addRow(['Vita',2,3,4,5,6,7,8,9,10,11,0]);*/
                       var table2 = new google.visualization.Table(document.getElementById('chart1'));
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
