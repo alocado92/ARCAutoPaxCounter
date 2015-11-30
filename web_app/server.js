@@ -106,6 +106,9 @@ app.post('/graph1', function (req, res){
 					//result.push(fila);
 				}
 				//console.log('Initialized result: '+result);
+				console.log('Sdate: '+ date_begin);
+				console.log('Edate: '+ date_end);
+				console.log('Route name: '+route1);
 				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip NATURAL JOIN Belongs NATURAL JOIN Route where start_time >= "'+date_begin+'" AND end_time <= "'+date_end+'" AND route_name= "' +route1+'"',function (err,rows){
 						var pass_id = '';
 						console.log('Rows length: '+rows.length);
