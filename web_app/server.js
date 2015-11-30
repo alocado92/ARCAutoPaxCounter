@@ -100,12 +100,12 @@ app.post('/graph1', function (req, res){
 				for(var i=0;i<rows.length;i++){
 					var fila = [];
 					stops_name.push(rows[i].name);
-					for(var j=0;rows.length;j++){
+					/*for(var j=0;rows.length;j++){
 						fila.push(0);
-					}
-					result.push(fila);
+					}*/
+					//result.push(fila);
 				}
-				console.log('Initialized result: '+result);
+				//console.log('Initialized result: '+result);
 				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip where start_time >= "'+date_begin.toString()+'" AND end_time <= "'+date_end.toString()+'"' ,function (err,rows){
 						var pass_id = '';
 						for (var i=0; i< rows.length; i++){
@@ -134,7 +134,7 @@ app.post('/graph1', function (req, res){
 							console.log('Parada_id1: '+parada_id1);
 							console.log('Pass_id: '+pass_id);
 							connection.query('SELECT COUNT(origin_stop) as "Origin", origin_stop, dest_stop FROM Passenger WHERE (('+pass_id+') AND ('+parada_id+') AND ('+parada_id1+')) Group By (dest_stop) ORDER By (origin_stop)', function (err, rows){
-								for(var a=0;a<stops_name.length;a++){
+								/*for(var a=0;a<stops_name.length;a++){
 									for(var b=0; b<stops_name.length;b++){
 										if(stops_name[a] == rows[b].origin_stop){
 											if(stops_name[b]==rows[b].dest_stop){
@@ -142,6 +142,9 @@ app.post('/graph1', function (req, res){
 											}
 										}
 									}
+								}*/
+								for(var c=0; c<rows.length;c++){
+									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
 								}
 								console.log('Finished result: '+result);
 								res.send({data: result, stops: stops_name});
