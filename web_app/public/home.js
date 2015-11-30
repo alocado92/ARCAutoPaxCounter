@@ -143,19 +143,17 @@
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
-                          if(stop[e] == res.data[f-1].origin ){
-                            row.push(0);
-                            
-                            
+                            if(stop[e] == res.data[f-1].origin ){
+                              row.push(0);
+                            }
+                            if else(stop[e] == res.data[f-1].dest){
+                              row.push(res.data[f-1].count);
+                            }
+                            else{
+                              row.push(0);
+                            }
                           }
-                      
                           else{
-                            
-                            row.push(res.data[f-1].count);
-                          }
-
-                        }
-                        else{
                             row.push(0);
                           }
                         }
