@@ -96,6 +96,7 @@ app.post('/graph1', function (req, res){
 		console.log('Route: '+route);
 		var where = ' route_name= '+ route +' AND start_time >= '+ date_begin+' AND end_time <= ' + date_end+'';
 		pool.getConnection(function (err,connection){
+			console.log('Route: '+route);
 			var query = 'select dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
 			connection.query('Select name from Stop natural join Linked_to natural join Route where route_name ='+route, function (err,rows){
 				var result = [];
