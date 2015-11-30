@@ -158,7 +158,7 @@ app.post('/graph1', function (req, res){
 								else{
 									console.log('Unmatched query');
 									res.send({data: result, stops: stops_name});
-								connection.release();}
+								connection.release();
 								}
 							});
 

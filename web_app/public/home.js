@@ -148,7 +148,6 @@
                           if(typeof res.data[f-1] != 'undefined'){
                           if(stop[e] == res.data[f-1].origin ){
                             if(stop[e]==res.data[f-1].dest){
-                              row.push(0);
                               
                             }
                             else{
