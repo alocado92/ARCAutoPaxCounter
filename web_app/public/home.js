@@ -51,7 +51,7 @@
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
                               for(var x=1; x<stop.length+1;x++){
-                                if(stop[x] == res.data[f-1].dest){//data2.getColumnLabel(x)
+                                if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
                                   row[x]= (res.data[f-1].count);
                                 }
                                 else{
@@ -152,7 +152,7 @@
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
                               for(var x=1; x<stop.length+1 ;x++){
-                                if(stop[x] == res.data[f-1].dest){//data2.getColumnLabel(x)
+                                if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
                                   row[x]= (res.data[f-1].count);
                                 }
                                 else{
