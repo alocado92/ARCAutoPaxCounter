@@ -68,7 +68,7 @@
                             data2.addRow(row);
                             break;
                           }
-                        }
+                          }
                         
                       }
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
@@ -163,7 +163,7 @@
                           }
                          if(row.length == 12){
                             data2.addRow(row);
-                            break;}
+                            break;
                           }
                         }
                          
