@@ -22,7 +22,7 @@
             console.log('Dimelo: '+response.data);
             
             var res = response.data;
-            var stop = response.stops;
+            var stop = res.stops;
             var table = new Array();
             var data2 = new google.visualization.DataTable();
                       // Add columns
@@ -120,7 +120,7 @@
         	console.log(response.data);
         	
         	var res = response.data;
-          var stop = response.stops;
+          var stop = res.stops;
         	var table = new Array();
             var data2 = new google.visualization.DataTable();
                      
