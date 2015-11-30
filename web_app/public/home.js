@@ -50,7 +50,7 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              if(data2.getColumnLabel(e) == res.data[f-1].dest){
+                              if(data2.getColumnLabel(f) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
                               }
                             }
@@ -141,7 +141,7 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              if(data2.getColumnLabel(e) == res.data[f-1].dest){
+                              if(data2.getColumnLabel(f) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
                               }
                             }
