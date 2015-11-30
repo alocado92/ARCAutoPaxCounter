@@ -147,7 +147,7 @@ app.post('/graph1', function (req, res){
 								for(var c=0; c<rows.length;c++){
 									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
 								}
-								console.log('Rows: '+ rows);
+								console.log('Rows: '+ rows.length);
 								console.log('Finished result: '+result);
 								res.send({data: result, stops: stops_name});
 								connection.release();
