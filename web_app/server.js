@@ -108,6 +108,7 @@ app.post('/graph1', function (req, res){
 				for(var k=0; k<rows.length; k++){
 					result.push({stop: rows[k].name, origin: 0, destination: 0});
 				}
+				console.log('Query: '+ query);
 				connection.query(query, function (err, rows){
 				if(rows.length > 0){
 					var stops = '';
