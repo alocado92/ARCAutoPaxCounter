@@ -102,7 +102,7 @@ app.post('/graph1', function (req, res){
 			var query = 'select dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
 			var route1 = route;
 			console.log('Route 1: '+route1);
-			connection.query('Select name from Stop natural join Linked_to natural join Route where route_name ='+route1.toString(), function (err, rows){
+			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
 				var result = [];
 				console.log('Size of row: '+rows[0]);
 				for(var k=0; k<rows.length; k++){
