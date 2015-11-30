@@ -50,8 +50,11 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              if(data2.getColumnLabel(f) == res.data[f-1].dest){
+                              if(data2.getColumnLabel(e+1) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
+                              }
+                              else{
+                                row.push(0);
                               }
                             }
                             else{
@@ -141,8 +144,11 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              if(data2.getColumnLabel(f) == res.data[f-1].dest){
+                              if(data2.getColumnLabel(e+1) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
+                              }
+                              else{
+                                row.push(0);
                               }
                             }
                             else{
@@ -152,7 +158,6 @@
                           else{
                             row.push(0);
                           }
-                        }
                         data2.addRow(row);
                       }
                       var table2 = new google.visualization.Table(document.getElementById('chart2'));
