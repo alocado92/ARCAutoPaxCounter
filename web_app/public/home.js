@@ -50,11 +50,13 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              if(stop[f-1] == res.data[e].dest){
-                                row.push(res.data[e].count);
+                              for(var x=1; x<stop.length;x++){
+                                if(data2.getColumnLabel(x) == res.data[f-1].dest){
+                                  row.push(res.data[f-1].count);
                               }
                               else{
                                 row.push(0);
+                              }
                               }
                             }
                             else{
@@ -144,11 +146,13 @@
                           //row.push(0);
                           if(typeof res.data[f-1] != 'undefined'){
                             if(stop[e] == res.data[f-1].origin ){
-                              if(stop[f-1] == res.data[e].dest){
-                                row.push(res.data[e].count);
+                              for(var x=1; x<stop.length;x++){
+                                if(data2.getColumnLabel(x) == res.data[f-1].dest){
+                                  row.push(res.data[f-1].count);
                               }
                               else{
                                 row.push(0);
+                              }
                               }
                             }
                             else{
