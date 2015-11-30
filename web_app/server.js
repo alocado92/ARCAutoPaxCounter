@@ -94,7 +94,7 @@ app.post('/graph1', function (req, res){
 		pool.getConnection(function (err, connection){
 			var where_time = ' start_time >= "'+ date_begin+'" AND end_time <= "' + date_end+'")';
 			var route1 = route;
-			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
+			connection.query('Select name from Stop natural join Linked_to natural join Route where ? ORDER By (name)',{route_name: route1.toString()}, function (err, rows){
 				var result = [];
 				var stops_name =[]
 				for(var i=0;i<rows.length;i++){

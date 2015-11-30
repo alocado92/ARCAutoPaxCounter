@@ -54,12 +54,10 @@
                             
                             
                           }
-                          else if(stop[e]==res.data[f-1].dest){
-                              row.push(res.data[f-1].count);
-                              
-                            }
+                      
                           else{
-                            row.push(0);
+                            
+                            row.push(res.data[f-1].count);
                           }
 
                         }
@@ -150,12 +148,10 @@
                             
                             
                           }
-                          else if(stop[e]==res.data[f-1].dest){
-                              row.push(res.data[f-1].count);
-                              
-                            }
+                      
                           else{
-                            row.push(0);
+                            
+                            row.push(res.data[f-1].count);
                           }
 
                         }
