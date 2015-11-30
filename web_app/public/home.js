@@ -120,6 +120,7 @@
         	console.log(response.data);
         	
         	var res = response.data;
+          var stop = response.stops;
         	var table = new Array();
             var data2 = new google.visualization.DataTable();
                      
