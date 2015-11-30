@@ -48,6 +48,7 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
+                          if(res[f]){
                           if(stop[e] == res[f-1].origin){
                             if(stop[f]==res[f-1].dest){
 
@@ -55,6 +56,7 @@
                             }
                             
                           }
+                        }
                         }
                         data2.addRow(row);
                       }
@@ -132,6 +134,7 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
+                          if(res[f]){
                           if(stop[e] == res[f-1].origin){
                             if(stop[f]==res[f-1].dest){
 
@@ -139,6 +142,7 @@
                             }
                             
                           }
+                        }
                         }
                         data2.addRow(row);
                       }
