@@ -117,7 +117,7 @@ app.post('/graph1', function (req, res){
 								pass_id += "passenger_ID = '"+rows[i].passenger_ID + "' OR ";
 							}	
 						}
-						console.log('Content of pass_ID: '+pass_ID);
+						console.log('Content of pass_ID: '+pass_id);
 						connection.query('select name from Stop NATURAL JOIN Linked_to NATURAL JOIN Route where route_name ="'+route1+'"',function (err,rows){
 							var parada_id = '';
 							var parada_id1 = '';
