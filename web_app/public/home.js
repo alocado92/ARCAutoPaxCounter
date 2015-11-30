@@ -55,9 +55,6 @@
                             else if(stop[e] == res.data[f-1].dest){
                               row.push(res.data[f-1].count);
                             }
-                            else{
-                              row.push(0);
-                            }
                           }
                           else{
                             row.push(0);
@@ -146,9 +143,6 @@
                             }
                             else if(stop[e] == res.data[f-1].dest){
                               row.push(res.data[f-1].count);
-                            }
-                            else{
-                              row.push(0);
                             }
                           }
                           else{
