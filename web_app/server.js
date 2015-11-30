@@ -89,6 +89,70 @@ app.post('/graph1', function (req, res){
 
 	if(type == '1'){
 		//graph_type = '';
+		console.log('Route: '+route);
+
+		pool.getConnection(function (err, connection){
+			var where_time = ' start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
+			var route1 = route;
+			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
+				var result = [];
+				var stops_name =[]
+				for(var i=0;i<rows.length;i++){
+					var fila = [];
+					stops_name.push(rows[i].name);
+					for(var j=0;rows.length;j++){
+						fila.push(0);
+					}
+					result.push(fila);
+				}
+				console.log('Initialized result: '+result);
+				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip where start_time >= "'+date_begin.toString()+'" AND end_time <= "'+date_end.toString()+'"' ,function (err,rows){
+						var pass_id = '';
+						for (var i=0; i< rows.length; i++){
+							if(i == rows.length-1){
+								pass_id += " passenger_ID = '"+rows[i].passenger_ID+"'";
+							}
+							else{
+								pass_id += "passenger_ID = '"+rows[i].passenger_ID + "' OR ";
+							}	
+						}
+						console.log('Content of pass_ID: '+pass_ID);
+						connection.query('select name from Stop NATURAL JOIN Linked_to NATURAL JOIN Route where route_name ="'+route1+'"',function (err,rows){
+							var parada_id = '';
+							var parada_id1 = '';
+							for (var i=0; i< rows.length; i++){
+								if(i == rows.length-1){
+									parada_id += " origin_stop = '"+rows[i].passenger_ID+"'";
+									parada_id1 += " dest_stop = '"+rows[i].passenger_ID+"'";
+								}
+								else{
+									parada_id += "origin_stop = '"+rows[i].passenger_ID + "' OR ";
+									parada_id += "dest_stop = '"+rows[i].passenger_ID + "' OR ";
+								}	
+							}
+							console.log('Parada_id: '+parada_id);
+							console.log('Parada_id1: '+parada_id1);
+							console.log('Pass_id: '+pass_id);
+							connection.query('SELECT COUNT(origin_stop) as "Origin", origin_stop, dest_stop FROM Passenger WHERE (('+pass_id+') AND ('+parada_id+') AND ('+parada_id1+')) Group By (dest_stop) ORDER By (origin_stop)', function (err, rows){
+								for(var a=0;a<stops_name.length;a++){
+									for(var b=0; b<stops_name.length;b++){
+										if(stops_name[a] == rows[b].origin_stop){
+											if(stops_name[b]==rows[b].dest_stop){
+												result[a][b] = rows[b].Origin;
+											}
+										}
+									}
+								}
+								console.log('Finished result: '+result);
+								res.send({data: result, stops: stops_name});
+								connection.release();
+							});
+
+							
+						});	
+				});
+			});
+		});
 
 	}
 	else if (type == '2'){
