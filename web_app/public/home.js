@@ -135,7 +135,7 @@
                 table.push(['Stop','Origin','Destination']);
             for (var i=0;i<res.data.length;i++){
                 console.log(res.data[i].stop);
-              table.push({res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination});
+              table.push([res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination]);
             }
             console.log(table.toString());
             var graphData = new google.visualization.arrayToDataTable(table);
