@@ -84,6 +84,7 @@ app.post('/graph1', function (req, res){
 	var date_begin = req.body.sdate;
 	var date_end = req.body.edate;
 	var route = req.body.route;
+	console.log('Route: '+route);
 	var graph_type ='';
 
 	if(type == '1'){
@@ -92,10 +93,11 @@ app.post('/graph1', function (req, res){
 	}
 	else if (type == '2'){
 		//graph_type = '';
+		console.log('Route: '+route);
 		var where = ' route_name= '+ route +' AND start_time >= '+ date_begin+' AND end_time <= ' + date_end+'';
 		pool.getConnection(function (err,connection){
 			var query = 'select dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
-			connection.query('Select name from Stop natural join Linked_to natural join Route where route_name ="'+route+'"', function (err,rows){
+			connection.query('Select name from Stop natural join Linked_to natural join Route where route_name ='+route, function (err,rows){
 				var result = [];
 				for(var k=0; k<rows.length; k++){
 					result.push({stop: rows[k].name, origin: 0, destination: 0});
