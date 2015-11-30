@@ -49,12 +49,12 @@
                         data2.addRow(['EdificioA',2,3,4,5,6,7,8,9,0,12,11]);
                         data2.addRow(['Empresas',1,2,3,4,5,6,7,8,9,0,13]);
                         data2.addRow(['Vita',2,3,4,5,6,7,8,9,10,11,0]);
-            if (vm.gtype2 == '1'){
+            if (vm.gtype == '1'){
                 
                       var table2 = new google.visualization.Table(document.getElementById('chart1'));
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
-            else if(vm.gtype2 == '2'){
+            else if(vm.gtype == '2'){
                 table.push(['Stop','Origin','Destination']);
             for (var i=0;i<res.data.length;i++){
                 console.log(res.data[i].stop);
