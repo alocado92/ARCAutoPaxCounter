@@ -67,7 +67,7 @@
                           else{
                             row.push(0);
                           }
-                          if(row.length == stop.length){
+                          if(row.length == stop.length+1){
                             data2.addRow(row);
                             break;
                           }
@@ -167,7 +167,7 @@
                           else{
                             row.push(0);
                           }
-                         if(row.length == stop.length){
+                         if(row.length == stop.length+1){
                             data2.addRow(row);
                             break;
                           }
