@@ -52,7 +52,7 @@
                             if(stop[e] == res.data[f-1].origin ){
                               row.push(0);
                             }
-                            if else(stop[e] == res.data[f-1].dest){
+                            else if(stop[e] == res.data[f-1].dest){
                               row.push(res.data[f-1].count);
                             }
                             else{
@@ -144,7 +144,7 @@
                             if(stop[e] == res.data[f-1].origin ){
                               row.push(0);
                             }
-                            if else(stop[e] == res.data[f-1].dest){
+                            else if(stop[e] == res.data[f-1].dest){
                               row.push(res.data[f-1].count);
                             }
                             else{
