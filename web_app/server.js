@@ -146,7 +146,7 @@ app.post('/graph1', function (req, res){
 											}
 										}
 									}
-								}*/if(typeof rows.length != 'undefined'){
+								}*/if(typeof rows != 'undefined'){
 								console.log('Rows length c: '+rows.length);
 								for(var c=0; c<rows.length;c++){
 									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
