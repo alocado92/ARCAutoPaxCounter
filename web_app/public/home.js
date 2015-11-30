@@ -49,7 +49,7 @@
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
                           //if(res.data[f-1]){
-                          if(stop[e] == res.data[f-1].origin){
+                          if(stop[e] == res.data[f-1].origin && !res.data[f-1]){
                             if(stop[e]==res.data[f-1].dest){
                               row.push(0);
                               
@@ -144,7 +144,7 @@
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
                           //if(res.data[f-1]){
-                          if(stop[e] == res.data[f-1].origin){
+                          if(stop[e] == res.data[f-1].origin && !res.data[f-1]){
                             if(stop[e]==res.data[f-1].dest){
                               row.push(0);
                               
