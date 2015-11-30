@@ -94,7 +94,7 @@ app.post('/graph1', function (req, res){
 	else if (type == '2'){
 		//graph_type = '';
 		console.log('Route: '+route);
-		var where = ' route_name= '+ route +' AND start_time >= '+ date_begin+' AND end_time <= ' + date_end+'';
+		var where = ' route_name= '+ route +' AND start_time >= '+ date_begin.toString()+' AND end_time <= ' + date_end.toString()+'';
 		pool.getConnection(function (err,connection){
 			console.log('Route: '+route);
 			console.log('Date Begin: ' +date_begin);
