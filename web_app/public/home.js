@@ -127,6 +127,7 @@
                       data2.addColumn('string', 'Origin/Destination');
                       for(var d=0;d<stop.length;d++){
                         data2.addColumn('number', stop[d].toString());
+                        console.log('Columns: '+stop[d].toString());
                       }
                       
                       
@@ -135,7 +136,9 @@
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
                           if(res[f]){
+                            console.log('Origin: '+res[f-1].origin);
                           if(stop[e] == res[f-1].origin){
+                            console.log('Dest: '+res[f-1].dest);
                             if(stop[f]==res[f-1].dest){
 
                               row[f]+=(res[f-1].count);
