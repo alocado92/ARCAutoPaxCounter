@@ -64,7 +64,7 @@
                           else{
                             row.push(0);
                           }
-                        }
+                        
                         data2.addRow(row);
                       }
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
