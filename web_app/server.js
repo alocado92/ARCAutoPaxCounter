@@ -125,7 +125,7 @@ app.post('/graph1', function (req, res){
 
 					}
 					console.log('Content of Stops: '+stops);
-					var query2 = 'SELECT COUNT(origin_stop) as "Net_Traffic_Origin", origin_stop, COUNT(dest_stop) as "Net_Traffic_Dest", dest_stop FROM Passenger WHERE ('+stops+') GROUP By (origin_stop , dest_stop)';
+					var query2 = 'SELECT COUNT(origin_stop) as "Net_Traffic_Origin", origin_stop, COUNT(dest_stop) as "Net_Traffic_Dest", dest_stop FROM Passenger WHERE ('+stops+') GROUP By (origin_stop)';
 					connection.query(query2, function (err, rows){
 						console.log('Route name in query2: '+route);
 						console.log('Rows length: '+rows.length);
