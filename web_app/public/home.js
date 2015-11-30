@@ -48,8 +48,8 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
-                          //if(res.data[f-1]){
-                          if(stop[e] == res.data[f-1].origin && res.data[f-1]){
+                          if(typeof res.data[f-1] != 'undefined'){
+                          if(stop[e] == res.data[f-1].origin ){
                             if(stop[e]==res.data[f-1].dest){
                               row.push(0);
                               
@@ -60,14 +60,13 @@
                             
                           }
 
-                        //}
+                        }
                         else{
                             row.push(0);
                           }
                         }
                         data2.addRow(row);
                       }
-
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
                         data2.addRow(['PatioCentral',4,0,3,6,4,5,4,6,422,34,55]);
                         data2.addRow(['Biblioteca',11,22,0,44,55,66,77,88,5,3,5]);
@@ -143,8 +142,8 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           //row.push(0);
-                          //if(res.data[f-1]){
-                          if(stop[e] == res.data[f-1].origin && res.data[f-1]){
+                          if(typeof res.data[f-1] != 'undefined'){
+                          if(stop[e] == res.data[f-1].origin ){
                             if(stop[e]==res.data[f-1].dest){
                               row.push(0);
                               
@@ -155,7 +154,7 @@
                             
                           }
 
-                        //}
+                        }
                         else{
                             row.push(0);
                           }
