@@ -59,6 +59,9 @@
                             }
                             
                           }
+                          else{
+                            row.push(0);
+                          }
                         }
                         }
                         data2.addRow(row);
@@ -149,6 +152,9 @@
                               row.push(res.data[f-1].count);
                             }
                             
+                          }
+                          else{
+                            row.push(0);
                           }
                         }
                         }
