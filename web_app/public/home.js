@@ -46,7 +46,7 @@
                       data2.addColumn('number', 'Vita');*/
                       for(var e=0;e<stop.length;e++){
                         var row = [stop[e].toString()];
-                        for(var f=0;f<stop.length;f++){
+                        for(var f=1;f<stop.length+1;f++){
                           if(stop[e] == res[f].origin_stop){
                             if(stop[f]==res[f].dest_stop){
                               row.push(res[f].Origin);
@@ -130,7 +130,7 @@
                       
                       for(var e=0;e<stop.length;e++){
                         var row = [stop[e].toString()];
-                        for(var f=0;f<stop.length;f++){
+                        for(var f=1;f<stop.length+1;f++){
                           if(stop[e] == res[f].origin_stop){
                             if(stop[f]==res[f].dest_stop){
                               row.push(res[f].Origin);
@@ -139,6 +139,7 @@
                               row.push(0);
                             }
                           }
+
                         }
                         data2.addRow(row);
                       }
