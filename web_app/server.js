@@ -106,8 +106,9 @@ app.post('/graph1', function (req, res){
 					//result.push(fila);
 				}
 				//console.log('Initialized result: '+result);
-				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip where start_time >= "'+date_begin.toString()+'" AND end_time <= "'+date_end.toString()+'"' ,function (err,rows){
+				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip where start_time >= "'+date_begin+'" AND end_time <= "'+date_end+'"' ,function (err,rows){
 						var pass_id = '';
+						console.log('Rows length: '+rows.length);
 						for (var i=0; i< rows.length; i++){
 							if(i == rows.length-1){
 								pass_id += " passenger_ID = '"+rows[i].passenger_ID+"'";
