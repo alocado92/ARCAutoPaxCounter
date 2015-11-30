@@ -57,6 +57,9 @@
                                 row.push(0);
                               }
                             }
+                            else{
+                              row.push(0);
+                            } 
                           }
                           else{
                             row.push(0);
@@ -148,6 +151,9 @@
                                 row.push(0);
                               }
                             }
+                            else{
+                              row.push(0);
+                            } 
                           }
                           else{
                             row.push(0);
