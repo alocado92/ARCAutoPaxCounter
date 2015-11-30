@@ -48,11 +48,11 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
-                          if(res[f]){
-                          if(stop[e] == res[f-1].origin){
-                            if(stop[f]==res[f-1].dest){
+                          if(res.data[f-1]){
+                          if(stop[e] == res.data[f-1].origin){
+                            if(stop[f]==res.data[f-1].dest){
 
-                              row[f]+=(res[f-1].count);
+                              row[f]+=(res.data[f-1].count);
                             }
                             
                           }
@@ -136,13 +136,11 @@
                         var row = [stop[e].toString()];
                         for(var f=1;f<stop.length+1;f++){
                           row.push(0);
-                          if(res[f]){
-                            console.log('Origin: '+res[f-1].origin);
-                          if(stop[e] == res[f-1].origin){
-                            console.log('Dest: '+res[f-1].dest);
-                            if(stop[f]==res[f-1].dest){
+                          if(res.data[f-1]){
+                          if(stop[e] == res.data[f-1].origin){
+                            if(stop[f]==res.data[f-1].dest){
 
-                              row[f]+=(res[f-1].count);
+                              row[f]+=(res.data[f-1].count);
                             }
                             
                           }
