@@ -53,9 +53,6 @@
                               if(data2.getColumnLabel(e+1) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
                               }
-                              else{
-                                row.push(0);
-                              }
                             }
                             else{
                               row.push(0);
@@ -64,7 +61,7 @@
                           else{
                             row.push(0);
                           }
-                        
+                        }
                         data2.addRow(row);
                       }
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
@@ -147,9 +144,6 @@
                               if(data2.getColumnLabel(e+1) == res.data[f-1].dest){
                                 row.push(res.data[f-1].count);
                               }
-                              else{
-                                row.push(0);
-                              }
                             }
                             else{
                               row.push(0);
@@ -158,6 +152,7 @@
                           else{
                             row.push(0);
                           }
+                        }
                         data2.addRow(row);
                       }
                       var table2 = new google.visualization.Table(document.getElementById('chart2'));
