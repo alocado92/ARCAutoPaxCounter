@@ -19,7 +19,7 @@
             console.log(data);
             $http.post("/graph1", data, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
-            console.log(response.data);
+            console.log('Dimelo: '+response.data);
             
             var res = response.data;
             var stop = response.stops;
