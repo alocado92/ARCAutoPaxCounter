@@ -172,7 +172,7 @@
             1: { axis: 'Destination' } // Bind series 1 to an axis named 'brightness'.
           }
         };
-        var chart = new google.visualization.ColumnChart(document.getElementById("chart1"));
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart2"));
         chart.draw(graphData, options);
             }
         	else if (vm.gtype2 == '3'){
