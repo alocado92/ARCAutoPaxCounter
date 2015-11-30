@@ -94,11 +94,13 @@ app.post('/graph1', function (req, res){
 	else if (type == '2'){
 		//graph_type = '';
 		console.log('Route: '+route);
-		var where = ' route_name= '+ route.toString() +' AND start_time >= '+ date_begin.toString()+' AND end_time <= ' + date_end.toString()+'';
+		
 		pool.getConnection(function (err,connection){
 			console.log('Route: '+route);
 			console.log('Date Begin: ' +date_begin);
 			console.log('Date End: '+date_end);
+			var where = ' (route_name= '+ route.toString() +' AND start_time >= '+ date_begin.toString()+' AND end_time <= ' + date_end.toString()+')';
+			console.log('Where: '+where);
 			var query = 'select dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
 			var route1 = route;
 			console.log('Route 1: '+route1);
