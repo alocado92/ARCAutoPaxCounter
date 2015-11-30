@@ -61,9 +61,9 @@
                             }
                             
                           }
-                          
+                          data2.addRow(row);
                         }
-                        data2.addRow(row);
+                        
                       }
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
                         data2.addRow(['PatioCentral',4,0,3,6,4,5,4,6,422,34,55]);
@@ -153,9 +153,9 @@
                             }
                             
                           }
-                          
+                          data2.addRow(row);
                         }
-                        data2.addRow(row);
+                        
                       }
                       var table2 = new google.visualization.Table(document.getElementById('chart2'));
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
