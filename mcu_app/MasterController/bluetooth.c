@@ -17,6 +17,7 @@
 uint8_t bluetoothMessage[MESSAGESIZE];
 int flagRX = FALSE;
 int flagRXDiag;
+int flagRXStop = FALSE;
 
 unsigned int counterBlue = 0;
 
@@ -50,6 +51,10 @@ __interrupt void USCI_A0_ISR(void){
 			else if (UCA0RXBUF == 'D'){
 				flagRXDiag = TRUE;
 				diagnosticProtocol();
+			}
+			else if (UCA0RXBUF == 'S'){
+				flagRXStop = TRUE;
+				arcLogicInit();
 			}
 			break;
 		case 4: break;

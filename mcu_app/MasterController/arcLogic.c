@@ -34,7 +34,7 @@ unsigned int flagFinish = FALSE;
 //********************************
 //          Functions
 //********************************
-//Initialize idStatus abd id buffer
+//Initialize idStatus and id buffer
 void arcLogicInit(){
 	int i;
 	int j = 0;
@@ -44,6 +44,9 @@ void arcLogicInit(){
 			id[i][j] = 0x00;
 			j++;
 		}
+	}
+	if (flagRXStop == TRUE){
+		flagRXStop = FALSE;
 	}
 }
 
@@ -57,10 +60,13 @@ void rfidOperation(){
 			counterDiagFalse++;
 			//Send through bluetooth
 			UCA0TXBUF = '0';
-			int i;
-			for(i = 0; i < IDLEN; i++){
-				while(!(UCA0IFG & UCTXIFG));
-			    UCA0TXBUF = id[index][i];
+			sendTagID(index);
+			if(flagRX == FALSE){
+				UCA0TXBUF = '0';
+				sendTagID(index);
+			}
+			else if (flagRX == TRUE){
+				flagRX = FALSE;
 			}
 		}
 		else if(flagDiag == TRUE){
@@ -69,10 +75,13 @@ void rfidOperation(){
 			//Send through bluetooth
 			flagDiag = FALSE;
 			UCA0TXBUF = '1';
-			int i;
-			for(i = 0; i < IDLEN; i++){
-				while(!(UCA0IFG & UCTXIFG));
-			    UCA0TXBUF = id[index][i];
+			sendTagID(index);
+			if(flagRX == FALSE){
+				UCA0TXBUF = '1';
+				sendTagID(index);
+			}
+			else if (flagRX == TRUE){
+				flagRX = FALSE;
 			}
 			diagnosticProtocol();
 		}
@@ -82,27 +91,42 @@ void rfidOperation(){
 		if(flagDiag == FALSE){
 			counterDiagFalse++;
 			UCA0TXBUF = '0';
-			int i;
-			//Send through bluetooth
-			for(i = 0; i < IDLEN; i++){
-				while(!(UCA0IFG & UCTXIFG));
-			    UCA0TXBUF = id[newIndex][i];
+			sendTagID(newIndex);
+			if(flagRX == FALSE){
+				UCA0TXBUF = '0';
+				sendTagID(newIndex);
+			}
+			else if (flagRX == TRUE){
+				flagRX = FALSE;
 			}
 		}
 		else if(flagDiag == TRUE){
 			counterDiagTrue++;
 			flagTagEnterDiag = TRUE;
 			UCA0TXBUF = '1';
-			int i;
-			//Send through bluetooth
-			for(i = 0; i < IDLEN; i++){
-				while(!(UCA0IFG & UCTXIFG));
-			    UCA0TXBUF = id[newIndex][i];
+			sendTagID(newIndex);
+			if(flagRX == FALSE){
+				UCA0TXBUF = '1';
+				sendTagID(newIndex);
+			}
+			else if (flagRX == TRUE){
+				flagRX = FALSE;
 			}
 			diagnosticProtocol();
 		}
 	}
 }
+
+void sendTagID(int index){
+	int i;
+	//Send through bluetooth
+	for(i = 0; i < IDLEN; i++){
+		while(!(UCA0IFG & UCTXIFG));
+	    UCA0TXBUF = id[index][i];
+	}
+
+}
+
 
 //PAXNUM = 5 for now
 int getIndex(uint8_t idPax[IDLEN]){

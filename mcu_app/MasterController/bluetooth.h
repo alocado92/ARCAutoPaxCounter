@@ -27,6 +27,7 @@
 extern uint8_t bluetoothMessage[MESSAGESIZE];
 extern int flagRX;
 extern int flagRXDiag;
+extern int flagRXStop;
 
 //********************************
 //		Defines Functions

@@ -23,7 +23,7 @@
 #define LIVE		0x01
 #define ERROR		0x02
 
-#define PAXNUM		 5
+#define PAXNUM		 80
 #define IDLEN        12
 #define BLUELEN	     13
 
@@ -42,6 +42,7 @@ int getIndex(uint8_t idPax[IDLEN]);
 uint8_t getStatus(int index);
 int addID(int index, uint8_t idPax[IDLEN]);
 void diagnosticProtocol();
+void sendTagID(int index);					//NEW
 
 
 #endif /* ARCLOGIC_H_ */
