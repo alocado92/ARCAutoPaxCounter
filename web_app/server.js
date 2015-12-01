@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({
 var allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, attachment');
 
 	// intercept OPTIONS method
 	if ('OPTIONS' == req.method) {
@@ -71,12 +71,7 @@ app.post('/download', function (req,res){
 			console.log('Results: '+result);
 			var file = './public/data.json';
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
-				res.writeHead(200, {
-    'Content-Type': 'application/json',
-     
-    'Content-Disposition': 'attachment '
-
-  });
+				
 				res.download(__dirname+'/public/data.json');
 			});
 			connection.release();
