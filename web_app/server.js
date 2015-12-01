@@ -55,10 +55,7 @@ var allowCrossDomain = function(req, res, next) {
 };
 app.use(allowCrossDomain);
 app.use(express.static(path.join('./public')));
-app.get("/download", function (req, res) {
-    // Resolve the file path etc... 
-    
-});
+
 app.post('/download', function (req,res){
 	var start_time = req.body.start_time;
 	var end_time = req.body.end_time;
