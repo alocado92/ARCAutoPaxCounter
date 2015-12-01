@@ -73,7 +73,7 @@ app.post('/download', function (req,res){
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
 				response.writeHead(200, {
     'Content-Type': 'audio/mpeg',
-     modification-date="date_object",
+     
     'Content-Disposition: attachment; 
      filename=output.mp3' 
 
