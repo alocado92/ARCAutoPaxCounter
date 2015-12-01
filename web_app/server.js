@@ -54,7 +54,10 @@ var allowCrossDomain = function(req, res, next) {
 };
 app.use(allowCrossDomain);
 app.use(express.static(path.join('./public')));
-
+app.get("/download", function (req, res) {
+    // Resolve the file path etc... 
+    res.download(__dirname+'/public/data.json');
+});
 app.post('/download', function (req,res){
 	var start_time = req.body.start_time;
 	var end_time = req.body.end_time;
@@ -72,7 +75,7 @@ app.post('/download', function (req,res){
 			var file = './public/data.json';
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
 				
-				res.download(__dirname+'/public/data.json');
+				
 			});
 			connection.release();
 		});
