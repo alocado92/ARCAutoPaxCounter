@@ -72,7 +72,7 @@ app.post('/download', function (req,res){
 			var file = './public/data.json';
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
 				
-				res.download('/public/data.json');
+				res.download(__dirname+'/public/data.json');
 			});
 			connection.release();
 		});
