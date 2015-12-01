@@ -15,7 +15,8 @@ var pool  = mysql.createPool({
 var md5 = require('md5');
 var hasher = require('./hashandmatch.js');
 var hash = new hasher();
-
+var jsonfile = require('jsonfile');
+var util = require('util');
 var bunyan = require('bunyan');
 var log = bunyan.createLogger({
 	name: 'ARC AutoPaxCounter',
@@ -54,7 +55,36 @@ var allowCrossDomain = function(req, res, next) {
 app.use(allowCrossDomain);
 app.use(express.static(path.join('./public')));
 
+app.post('/download', function (req,res){
+	var start_time = req.body.start_time;
+	var end_time = req.body.end_time;
+	pool.getConnection(function (err, connection){
+		console.log('Start time: '+start_time);
+		console.log('End time: '+end_time);
 
+		var query = 'Select entry_time, entry_latitude, entry_longitude, exit_time, exit_latitude, exit_longitude, distance, dest_stop, origin_stop, name as "study_name", start_time, end_time, route_name
+		from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where (start_time >= "'+start_time+'" AND end_time <= "'+end_time+'") ORDER By ("study_name")';
+		connection.query(query, function (err, rows){
+			var result = [];
+			for(var i=0;i<rows.length;i++){
+				result.push({entry_time: rows[i].entry_time, entry_latitude: rows[i].entry_latitude, entry_longitude: rows[i].entry_longitude, exit_time: rows[i].exit_time, exit_latitude: rows[i].exit_latitude, exit_longitude: rows[i].exit_longitude, distance: rows[i].distance, dest_stop: rows[i].dest_stop, origin_stop: rows[i].origin_stop, study_name: rows[i].study_name, start_time: rows[i].start_time, end_time: rows[i].end_time, route_name: rows[i].route_name});
+			}
+			console.log('Results: '+result);
+			var file = './public/data.json';
+			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
+				res.download('./public/data.json','data.json', function(err){
+					if (err){
+						console.log('Error downloading file: '+err);
+					}
+					else{
+						console.log('Download file completed');
+					}
+				})
+			});
+			connection.release();
+		});
+	});
+});
 app.get('/user', function (req, res) {
 	var check = '';
 	distance.get(
@@ -273,6 +303,9 @@ app.get('/remind', function (req,res){
 });
 app.get('/newUser', function (req,res){
 	res.sendFile("public/add_user.html", {"root": __dirname});
+});
+app.get('/export', function (req,res){
+	res.sendFile("public/export.html", {"root": __dirname});
 });
 app.get('/editUser', function (req,res){
 	res.sendFile("public/edit_user.html", {"root": __dirname});
