@@ -25,7 +25,8 @@
                         
                         console.log(response);
                         //console.log('email');
-                        
+                        console.log(response.data.redirect);
+                        window.location = response.data.redirect;
                         return response;
                     });
             }
