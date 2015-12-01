@@ -25,7 +25,7 @@
                         
                         console.log(response);
                         //console.log('email');
-                        $window.open(response.data);
+                        
                         return response;
                     });
             }
