@@ -51,9 +51,9 @@
                         var check2=1;
                         row.push(stop[i].toString());
                         for(var j=1; j<(stop.length+1); j++){
-                          for(var k=0; k< res.length; k++){
-                            if((res[k].origin == stop[i])&&(res[k].dest == stop[j-1])){
-                              row.push(res[k].count);
+                          for(var k=0; k< res.data.length; k++){
+                            if((res.data[k].origin == stop[i])&&(res.data[k].dest == stop[j-1])){
+                              row.push(res.data[k].count);
                               check1 =0;
                             }
                           }
@@ -143,9 +143,9 @@
                         var check2=1;
                         row.push(stop[i].toString());
                         for(var j=1; j<(stop.length+1); j++){
-                          for(var k=0; k< res.length; k++){
-                            if((res[k].origin == stop[i])&&(res[k].dest == stop[j-1])){
-                              row.push(res[k].count);
+                          for(var k=0; k< res.data.length; k++){
+                            if((res.data[k].origin == stop[i])&&(res.data[k].dest == stop[j-1])){
+                              row.push(res.data[k].count);
                               check1 =0;
                             }
                           }
