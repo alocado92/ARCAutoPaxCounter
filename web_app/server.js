@@ -43,7 +43,8 @@ app.use(bodyParser.urlencoded({
 var allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, attachment');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+	res.setHeader('Content-disposition', 'attachment; filename=data.json');
 
 	// intercept OPTIONS method
 	if ('OPTIONS' == req.method) {
@@ -56,7 +57,7 @@ app.use(allowCrossDomain);
 app.use(express.static(path.join('./public')));
 app.get("/download", function (req, res) {
     // Resolve the file path etc... 
-    res.download(__dirname+'/public/data.json');
+    
 });
 app.post('/download', function (req,res){
 	var start_time = req.body.start_time;
@@ -74,7 +75,7 @@ app.post('/download', function (req,res){
 			console.log('Results: '+result);
 			var file = './public/data.json';
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
-				
+				res.download(__dirname+'/public/data.json');
 				
 			});
 			connection.release();
