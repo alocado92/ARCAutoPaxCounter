@@ -74,7 +74,7 @@ app.post('/download', function (req,res){
 				response.writeHead(200, {
     'Content-Type': 'application/json',
      
-    'Content-Disposition: attachment; '
+    'Content-Disposition': 'attachment '
 
   });
 				res.download(__dirname+'/public/data.json');
