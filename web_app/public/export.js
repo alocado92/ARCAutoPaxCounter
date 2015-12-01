@@ -23,7 +23,7 @@
                 $http.post("/download", data, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
                         
-                        console.log(response.data);
+                        console.log(response);
                         //console.log('email');
                         
                         return response;
