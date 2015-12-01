@@ -44,41 +44,28 @@
                       data2.addColumn('number', 'EdificioA');
                       data2.addColumn('number', 'Empresas');
                       data2.addColumn('number', 'Vita');*/
-                      for(var e=0;e<stop.length;e++){
-                        var row = [stop[e].toString()];
-                        for(var f=1;f<stop.length+1;f++){
-                          //row.push(0);
-                          if(typeof res.data[f-1] != 'undefined'){
-                            if(stop[e] == res.data[f-1].origin ){
-                              for(var x=1; x<stop.length+1;x++){
-                                if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
-                                  if(counter == res.data.length-1){
-                                    continue;
-                                  }
-                                  row[x]= (res.data[f-1].count);
-                                  counter++;
-                                  
-                                }
-                                else{
-                                  row[x] = 0;
-                                }
-                              }
+                      
+                      for(var i=0; i<stop.length;i++){
+                        var row= [];
+                        var check1=1;
+                        var check2=1;
+                        row.push(stop[i].toString());
+                        for(var j=1; j<(stop.length+1); j++){
+                          for(var k=0; k< res.length; k++){
+                            if((res[k].origin == stop[i])&&(res[k].dest == stop[j-1])){
+                              row.push(res[k].count);
+                              check1++;
                             }
-                            else{
-                              row.push(0);
-                            }
-                            
                           }
-                          else{
+                          if((check1-check2) != 0){
                             row.push(0);
+                            check2++;
                           }
-                          if(row.length == stop.length+1){
-                            data2.addRow(row);
-                            break;
-                          }
-                          }
-                        
+                        }
+                        data2.addRow(row);
                       }
+
+                      
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
                         data2.addRow(['PatioCentral',4,0,3,6,4,5,4,6,422,34,55]);
                         data2.addRow(['Biblioteca',11,22,0,44,55,66,77,88,5,3,5]);
@@ -150,39 +137,24 @@
                       }
                       var counter =0;
                       
-                      for(var e=0;e<stop.length;e++){
-                        var row = [stop[e].toString()];
-                        for(var f=1;f<stop.length+1;f++){
-                          //row.push(0);
-                          if(typeof res.data[f-1] != 'undefined'){
-                            if(stop[e] == res.data[f-1].origin ){
-                              for(var x=1; x<stop.length+1 ;x++){
-                                if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
-                                  if(counter == res.data.length-1){
-                                    continue;
-                                  }
-                                  row[x]= (res.data[f-1].count);
-                                  counter++;
-                                  
-                                }
-                                else{
-                                  row[x]=0;
-                                }
-                              }
-                            }
-                            else{
-                              row.push(0);
+                      for(var i=0; i<stop.length;i++){
+                        var row= [];
+                        var check1=1;
+                        var check2=1;
+                        row.push(stop[i].toString());
+                        for(var j=1; j<(stop.length+1); j++){
+                          for(var k=0; k< res.length; k++){
+                            if((res[k].origin == stop[i])&&(res[k].dest == stop[j-1])){
+                              row.push(res[k].count);
+                              check1++;
                             }
                           }
-                          else{
+                          if((check1-check2) != 0){
                             row.push(0);
-                          }
-                         if(row.length == stop.length+1){
-                            data2.addRow(row);
-                            break;
+                            check2++;
                           }
                         }
-                         
+                        data2.addRow(row);
                       }
                       var table3 = new google.visualization.Table(document.getElementById('chart2'));
                       table3.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
