@@ -71,7 +71,13 @@ app.post('/download', function (req,res){
 			console.log('Results: '+result);
 			var file = './public/data.json';
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
-				res.setHeader('Content-disposition', 'attachment; filename=data.json');
+				response.writeHead(200, {
+    'Content-Type': 'audio/mpeg',
+     modification-date="date_object",
+    'Content-Disposition: attachment; 
+     filename=output.mp3' 
+
+  });
 				res.download(__dirname+'/public/data.json');
 			});
 			connection.release();
