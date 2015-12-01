@@ -184,8 +184,8 @@
                         }
                          
                       }
-                      var table2 = new google.visualization.Table(document.getElementById('chart2'));
-                      table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
+                      var table3 = new google.visualization.Table(document.getElementById('chart2'));
+                      table3.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
         	else if(vm.gtype2 == '2'){
                 table.push(['Stop','Origin','Destination']);
@@ -195,7 +195,7 @@
             }
             console.log(table.toString());
             var graphData = new google.visualization.arrayToDataTable(table);
-            var options = {
+            var options2 = {
           
           chart: {
             title: 'Passenger Net Flow by stops',
@@ -208,7 +208,7 @@
           }
         };
         var chart = new google.visualization.ColumnChart(document.getElementById("chart2"));
-        chart.draw(graphData, options);
+        chart.draw(graphData, options2);
             }
         	else if (vm.gtype2 == '3'){
 
