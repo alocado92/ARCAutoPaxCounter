@@ -133,7 +133,7 @@
                 edate: vm.date4
             };
             console.log(data2);
-            $http.post("/graph1", data2, {headers: {'Content-Type': 'application/json'} })
+            $http.post("/graph2", data2, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
         	console.log(response.data);
         	

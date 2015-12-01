@@ -105,6 +105,170 @@ app.get('/user', function (req, res) {
   
  
 });
+app.post('/graph2', function (req, res){
+	var type = req.body.graph;
+	var date_begin = req.body.sdate;
+	var date_end = req.body.edate;
+	var route = req.body.route;
+	console.log('Route: '+route);
+	var graph_type ='';
+
+	if(type == '1'){
+		//graph_type = '';
+		console.log('Route: '+route);
+
+		pool.getConnection(function (err, connection){
+			var where_time = ' start_time >= "'+ date_begin+'" AND end_time <= "' + date_end+'")';
+			var route1 = route;
+			connection.query('Select name from Stop natural join Linked_to natural join Route where ? ORDER By (name)',{route_name: route1.toString()}, function (err, rows){
+				var result = [];
+				var stops_name =[]
+				for(var i=0;i<rows.length;i++){
+					var fila = [];
+					stops_name.push(rows[i].name);
+					/*for(var j=0;rows.length;j++){
+						fila.push(0);
+					}*/
+					//result.push(fila);
+				}
+				//console.log('Initialized result: '+result);
+				console.log('Sdate: '+ date_begin);
+				console.log('Edate: '+ date_end);
+				console.log('Route name: '+route1);
+				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip NATURAL JOIN Belongs NATURAL JOIN Route where start_time >= "'+date_begin+'" AND end_time <= "'+date_end+'" AND route_name= "' +route1+'"',function (err,rows){
+						var pass_id = '';
+						console.log('Rows length: '+rows);
+						for (var i=0; i< rows.length; i++){
+							if(i == rows.length-1){
+								pass_id += " passenger_ID = '"+rows[i].passenger_ID+"'";
+							}
+							else{
+								pass_id += "passenger_ID = '"+rows[i].passenger_ID + "' OR ";
+							}	
+						}
+						console.log('Content of pass_ID: '+pass_id);
+						connection.query('select name from Stop NATURAL JOIN Linked_to NATURAL JOIN Route where route_name ="'+route1+'"',function (err,rows){
+							var parada_id = '';
+							var parada_id1 = '';
+							for (var i=0; i< rows.length; i++){
+								if(i == rows.length-1){
+									parada_id += " origin_stop = '"+rows[i].passenger_ID+"'";
+									parada_id1 += " dest_stop = '"+rows[i].passenger_ID+"'";
+								}
+								else{
+									parada_id += "origin_stop = '"+rows[i].passenger_ID + "' OR ";
+									parada_id += "dest_stop = '"+rows[i].passenger_ID + "' OR ";
+								}	
+							}
+							/*console.log('Parada_id: '+parada_id);
+							console.log('Parada_id1: '+parada_id1);
+							console.log('Pass_id: '+pass_id);*/
+							connection.query('SELECT COUNT(origin_stop) as "Origin", origin_stop, dest_stop FROM Passenger WHERE ('+pass_id+')  Group By (dest_stop) ORDER By (origin_stop)', function (err, rows){
+								/*for(var a=0;a<stops_name.length;a++){
+									for(var b=0; b<stops_name.length;b++){
+										if(stops_name[a] == rows[b].origin_stop){
+											if(stops_name[b]==rows[b].dest_stop){
+												result[a][b] = rows[b].Origin;
+											}
+										}
+									}
+								}*/if(typeof rows != 'undefined'){
+								console.log('Rows length c: '+rows.length);
+								for(var c=0; c<rows.length;c++){
+									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
+								}
+								console.log('Rows: '+ rows.length);
+								console.log('Finished result[0]: '+result[0].count);
+								res.send({data: result, stops: stops_name});
+								connection.release();}
+								else{
+									console.log('Unmatched query');
+									res.send({data: result, stops: stops_name});
+								connection.release();
+								}
+							});
+
+							
+						});	
+				});
+			});
+		});
+
+	}
+	else if (type == '2'){
+		//graph_type = '';
+		console.log('Route: '+route);
+		
+		pool.getConnection(function (err,connection){
+			console.log('Route: '+route);
+			console.log('Date Begin: ' +date_begin);
+			console.log('Date End: '+date_end);
+			var where = ' (route_name= "'+ route.toString() +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
+			console.log('Where: '+where);
+			var query = 'select distinct dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
+			var route1 = route;
+			console.log('Route 1: '+route1);
+			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
+				var result = [];
+				console.log('Size of row: '+rows.length);
+				for(var k=0; k<rows.length; k++){
+					result.push({stop: rows[k].name, origin: 0, destination: 0});
+				}
+				console.log('Query: '+ query);
+				connection.query(query, function (err, rows){
+					console.log('Size of row: '+ rows.length);
+				if(rows.length > 0){
+					var stops = '';
+					for (var i=0; i< rows.length; i++){
+						if(i == rows.length-1){
+							stops += " dest_stop = '"+rows[i].dest_stop+"'";
+						}
+						else{
+							stops += "dest_stop = '"+rows[i].dest_stop + "' OR ";
+						}
+
+					}
+					console.log('Content of Stops: '+stops);
+					var query2 = 'SELECT COUNT(origin_stop) as "Net_Traffic_Origin", origin_stop, COUNT(dest_stop) as "Net_Traffic_Dest", dest_stop FROM Passenger WHERE ('+stops+') GROUP By (origin_stop)';
+					connection.query(query2, function (err, rows){
+						console.log('Route name in query2: '+route);
+						console.log('Rows length: '+rows.length);
+
+						for(var a=0;a<result.length;a++){
+							for(var b=0;b<rows.length;b++){
+								if(rows[b].origin_stop == result[a].stop){
+									result[a].origin += rows[b].Net_Traffic_Origin;
+									break;
+								}
+							}
+							for(var c=0;c<rows.length;c++){
+								if(rows[c].dest_stop == result[a].stop){
+									result[a].destination += rows[c].Net_Traffic_Dest;
+									break;
+								}
+							}
+						}
+						console.log(result);
+						res.send({data: result});
+						connection.release();
+
+						
+					});
+				}
+				else{
+					res.send({data: result});
+				}
+			});
+			});
+		});
+	}
+	else {
+		//graph_type = '';
+	}
+
+	var query = '';
+	
+});
 app.post('/graph1', function (req, res){
 	var type = req.body.graph;
 	var date_begin = req.body.sdate;
