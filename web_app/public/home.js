@@ -126,14 +126,14 @@
         });
         };
         vm.createView2 = function() {
-        		data = {
+        		var data2 = {
                 route: vm.route2,
                 graph: vm.gtype2,
                 sdate: vm.date3,
                 edate: vm.date4
             };
-            console.log(data);
-            $http.post("/graph1", data, {headers: {'Content-Type': 'application/json'} })
+            console.log(data2);
+            $http.post("/graph1", data2, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
         	console.log(response.data);
         	
