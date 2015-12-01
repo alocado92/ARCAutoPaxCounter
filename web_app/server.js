@@ -808,7 +808,7 @@ app.post('/mobile', function (req,res){
 				var origin_dest = [];
 				var insert_rows = [];
 				var insert_scans = [];
-				var loop = 0;
+				var loop = 1;
 				var lim = req.body.length;
 				pool.getConnection(function (err, connection){
 				console.log("Request length: "+req.body.length);
@@ -820,7 +820,7 @@ app.post('/mobile', function (req,res){
 					console.log("ENtry lat: "+ test.entry_lat);
 					//passengers.push(req.body[i]);
 					//var il = i;
-					var count = 0;
+					var count = 1;
 					
 					
 							var dest_name = '';
