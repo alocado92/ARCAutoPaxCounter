@@ -19,7 +19,7 @@
                 start_time: vm.start_time,
                 end_time: vm.end_time
             };
-            if(vm.start_time && vm.end_time && (vm.start_time < vm.end_time ){
+            if(vm.start_time && vm.end_time && (vm.start_time < vm.end_time )){
                 $http.post("/download", data, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
                         
