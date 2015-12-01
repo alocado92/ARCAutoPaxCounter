@@ -65,7 +65,7 @@
                         data2.addRow(row);
                       }
 
-                      
+
                       /*data2.addRow(['Fisica',0,2,3,4,5,6,7,8,9,12,13]);
                         data2.addRow(['PatioCentral',4,0,3,6,4,5,4,6,422,34,55]);
                         data2.addRow(['Biblioteca',11,22,0,44,55,66,77,88,5,3,5]);
@@ -146,12 +146,12 @@
                           for(var k=0; k< res.length; k++){
                             if((res[k].origin == stop[i])&&(res[k].dest == stop[j-1])){
                               row.push(res[k].count);
-                              check1++;
+                              check1 =0;
                             }
                           }
-                          if((check1-check2) != 0){
+                          if((check1) != 0){
                             row.push(0);
-                            check2++;
+                            check1++;
                           }
                         }
                         data2.addRow(row);
