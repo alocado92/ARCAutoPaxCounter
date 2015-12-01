@@ -63,7 +63,7 @@ app.post('/download', function (req,res){
 		console.log('End time: '+end_time);
 
 		var query = 'Select entry_time, entry_latitude, entry_longitude, exit_time, exit_latitude, exit_longitude, distance, dest_stop, origin_stop, name , start_time, end_time, route_name
-		from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where (start_time >= "'+start_time+'" AND end_time <= "'+end_time+'") ORDER By (name)';
+		from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where (start_time >= "'+start_time+'" AND end_time <= "'+end_time+'") ';
 		connection.query(query, function (err, rows){
 			var result = [];
 			for(var i=0;i<rows.length;i++){
