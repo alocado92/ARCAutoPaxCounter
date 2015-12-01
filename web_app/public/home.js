@@ -54,12 +54,12 @@
                           for(var k=0; k< res.length; k++){
                             if((res[k].origin == stop[i])&&(res[k].dest == stop[j-1])){
                               row.push(res[k].count);
-                              check1++;
+                              check1 =0;
                             }
                           }
-                          if((check1-check2) != 0){
+                          if((check1) != 0){
                             row.push(0);
-                            check2++;
+                            check1++;
                           }
                         }
                         data2.addRow(row);
