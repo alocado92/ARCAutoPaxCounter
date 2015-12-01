@@ -1,5 +1,110 @@
 (function() {
 	var homeApp = angular.module('home_app');
+  homeApp.controller('homeController2',['$http', function($http){
+    var vm = this;
+    var data = {
+                route: vm.route,
+                graph: vm.gtype,
+                sdate: vm.date1,
+                edate: vm.date2
+            };
+    // calling our create view function.
+        
+        vm.createView2 = function() {
+            var data2 = {
+                route: vm.route2,
+                graph: vm.gtype2,
+                sdate: vm.date3,
+                edate: vm.date4
+            };
+            console.log(data2);
+            $http.post("/graph2", data2, {headers: {'Content-Type': 'application/json'} })
+        .then(function (response) {
+          console.log(response.data);
+          
+          var res = response.data;
+          var stop = res.stops;
+          var table = new Array();
+            var data2 = new google.visualization.DataTable();
+                     
+            if (vm.gtype2 == '1'){
+                      data2.addColumn('string', 'Origin/Destination');
+                      for(var d=0;d<stop.length;d++){
+                        data2.addColumn('number', stop[d].toString());
+                        console.log('Columns: '+stop[d].toString());
+                      }
+                      var counter =0;
+                      
+                      for(var e=0;e<stop.length;e++){
+                        var row = [stop[e].toString()];
+                        for(var f=1;f<stop.length+1;f++){
+                          //row.push(0);
+                          if(typeof res.data[f-1] != 'undefined'){
+                            if(stop[e] == res.data[f-1].origin ){
+                              for(var x=1; x<stop.length+1 ;x++){
+                                if(data2.getColumnLabel(x) == res.data[f-1].dest){//data2.getColumnLabel(x)
+                                  if(counter == res.data.length-1){
+                                    continue;
+                                  }
+                                  row[x]= (res.data[f-1].count);
+                                  counter++;
+                                  
+                                }
+                                else{
+                                  row[x]=0;
+                                }
+                              }
+                            }
+                            else{
+                              row.push(0);
+                            }
+                          }
+                          else{
+                            row.push(0);
+                          }
+                         if(row.length == stop.length+1){
+                            data2.addRow(row);
+                            break;
+                          }
+                        }
+                         
+                      }
+                      var table3 = new google.visualization.Table(document.getElementById('chart2'));
+                      table3.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
+            }
+          else if(vm.gtype2 == '2'){
+                table.push(['Stop','Origin','Destination']);
+            for (var i=0;i<res.data.length;i++){
+                console.log(res.data[i].stop);
+              table.push([res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination]);
+            }
+            console.log(table.toString());
+            var graphData = new google.visualization.arrayToDataTable(table);
+            var options2 = {
+          
+          chart: {
+            title: 'Passenger Net Flow by stops',
+            subtitle: 'Passenger Origin on left, Passenger Destination on right'
+          },
+           // Required for Material Bar Charts.
+          series: {
+            0: { axis: 'Origin' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'Destination' } // Bind series 1 to an axis named 'brightness'.
+          }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart2"));
+        chart.draw(graphData, options2);
+            }
+          else if (vm.gtype2 == '3'){
+
+          }
+          else {
+            
+          }
+            return response;
+        });
+        };
+  }]);
 	homeApp.controller('homeController',['$http', function($http){
 		var vm = this;
 		var data = {
