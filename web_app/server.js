@@ -793,6 +793,30 @@ app.post('/mobile', function (req,res){
 		break;
 		case 'delete':
 		//res.send('OK');
+			var study_name = req.body.study;
+			pool.getConnection(function (err,connection){
+				console.log('Deleting data related to study: '+ study_name);
+				connection.query('Select passenger_ID from Takes natural join Trip where (name = "'+study_name+'")',function (err, rows){
+					var pass_ids = '';
+					console.log('Passenger ids to be added: '+ rows.toString());
+					for(var i=0;i<rows.length;i++){
+
+						if(i == rows.length-1){
+							pass_ids += 'passenger_ID = '+rows[i].passenger_ID;
+						}
+						else{
+							pass_ids += "passenger_ID = "+rows[i].passenger_ID + " OR ";
+						}
+					}
+					console.log('Pass_ids: '+pass_ids);
+					connection.query('Delete from Passenger where ('+pass_ids+')',function (err,rows){
+						console.log('On to delete from Trip with name: '+ study_name);
+						connection.query('Delete from Trip where name = "'+study_name+'"', function (err,rows){
+							console.log('Delete Trip should be successful');
+						});
+					});
+				});
+			});
 		break;
 		case 'diagnostic':
 		//res.send('OK');
