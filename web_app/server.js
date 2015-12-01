@@ -71,7 +71,7 @@ app.post('/download', function (req,res){
 			console.log('Results: '+result);
 			var file = './public/data.json';
 			jsonfile.writeFile(file, result, {spaces: 2}, function(err){
-				response.writeHead(200, {
+				res.writeHead(200, {
     'Content-Type': 'application/json',
      
     'Content-Disposition': 'attachment '
