@@ -20,7 +20,7 @@
                 end_time: vm.end_time
             };
             if(vm.start_time && vm.end_time && (vm.start_time < vm.end_time )){
-                $http.post("/download", data, {headers: {'Content-Type': 'application/json'} })
+                $http.post("/download", data, {headers: {'Content-Type': 'application/json', 'Accept': 'application/json'} })
                     .then(function (response) {
                         
                         console.log(response);
