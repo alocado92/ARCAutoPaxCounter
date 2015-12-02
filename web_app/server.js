@@ -475,7 +475,7 @@ app.post('/login', function (req, res){
 		sess.email = mail;
 		sess.is_admin = is_admin;
 		sess.fname = name;
-		res.send({redirect: '/home'});
+		res.redirect('/home');
 	}
 	else{
 		//kick out
