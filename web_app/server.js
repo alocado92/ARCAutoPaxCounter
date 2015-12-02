@@ -861,7 +861,7 @@ app.post('/mobile', function (req,res){
 	  		var para1 = {trip_ID: id,route_ID: r_id };
 	  		connection.query( query1,para1, function (err, rows) {
 	   			//manipulate rows
-	   			if(!rows.insertId){
+	   			if(!rows){
 	   				res.send('INVALID');
 	   			}
 	   			else{
