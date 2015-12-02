@@ -885,7 +885,7 @@ app.post('/mobile', function (req,res){
 		break;
 		case 'verify':
 			var r_name = req.body.route;
-			getConnection(function(err, connection){
+			pool.getConnection(function(err, connection){
 				connection.query('Select route_ID from Route where route_name = "'+r_name+'"',function(err,rows){
 					if(!rows||rows.length <1){
 						res.send('INVALID');
