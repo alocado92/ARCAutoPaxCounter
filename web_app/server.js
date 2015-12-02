@@ -1007,7 +1007,7 @@ app.get('/home', function (req,res){
 	console.log(sess.email);
 	console.log(req.session.email);
 	if(sess.email){
-		res.sendFile(path.join(__dirname+'/home.html'));
+		res.sendFile(path.join(__dirname+'public/home.html'));
 	}
 	else{
 		req.session = null;
