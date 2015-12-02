@@ -1006,8 +1006,8 @@ app.post('/mobile', function (req,res){
 app.get('/home', function (req,res){
 	console.log(sess.email);
 	console.log(req.session.email);
-	if(sess.email){
-		res.sendFile(path.join(__dirname+'/public/home.html'));
+	if(sess.email != null){
+		res.sendfile("public/home.html", {"root": __dirname});
 	}
 	else{
 		req.session = null;
