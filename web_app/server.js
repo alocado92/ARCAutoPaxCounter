@@ -1008,7 +1008,7 @@ app.get('/home', function (req,res){
 	console.log(req.session.email);
 	if(sess.email){
 		console.log('Sess.email'+sess.email);
-		redirect();
+		redirect(req,res);
 		//res.sendFile("public/home.html", {"root": __dirname});
 	}
 	else{
