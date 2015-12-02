@@ -636,7 +636,31 @@ app.post('/add', function (req,res){
 	   			
 	   			console.log('Insert new user successful');
 	   			completed =1;
-	   			connection.release();
+	   			var transporter = nodemailer.createTransport({
+			    service: 'Gmail',
+				    auth: 
+				    {
+				        user: 'arc.innovations.group@gmail.com',
+				        pass: 'AutoPaxCounter'
+				    }
+				});
+	   			var mailOptions = {
+
+				    from: 'arc.innovations.group@gmail.com', // sender address
+				    to: 'alexis.figueroa4@upr.edu' , // list of receivers
+				    subject: 'Welcome to the ARC AutoPaxCounter Web Experience', // Subject line
+				    text: "Hi "+fname+",\n\nYour account credentials for the AutoPaxCounter system are as follows. Username:"+ user+" and Password = "+password+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n\nBest Regards,\n\nARC Dev Team." 
+				    
+					};
+					transporter.sendMail(mailOptions, function (error, info){
+				    if(error){
+				        console.log(error);
+				    }else{
+				        console.log('Message sent');
+				        connection.release();
+				    }
+				});
+	   			//connection.release();
 	  		});
 	   		// And done with the connection.
 	    });
