@@ -475,7 +475,7 @@ app.post('/login', function (req, res){
 		sess.email = mail;
 		sess.is_admin = is_admin;
 		sess.fname = name;
-		console.log(sess.fname);
+		console.log('First name of session: '+sess.fname);
 		res.redirect('/home');
 	}
 	else{
