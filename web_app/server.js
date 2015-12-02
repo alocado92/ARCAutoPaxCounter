@@ -660,7 +660,7 @@ app.post('/forgot', function (req,res){
 	    }
 	});
 	pool.getConnection(function (err, connection){
-		var query = 'select username, count(email) as userCount where set ?';
+		var query = 'select username, count(email) as userCount where ?';
 		var para = {email: email};
 
 		connection.query(query, para, function (err,rows){
