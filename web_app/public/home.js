@@ -55,6 +55,7 @@
                             if((res.data[k].origin == stop[i])&&(res.data[k].dest == stop[j-1])){
                               row.push(res.data[k].count);
                               check1 =0;
+                              break;
                             }
                             else{check1 =1;}
                           }
@@ -148,6 +149,7 @@
                             if((res.data[k].origin == stop[i])&&(res.data[k].dest == stop[j-1])){
                               row.push(res.data[k].count);
                               check1 =0;
+                              break;
                             }
                             else{check1++;}
                           }
