@@ -825,9 +825,9 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	if(req.body){
+	/*if(req.body){
 		res.send('OK');
-	}
+	}*/
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
@@ -851,7 +851,7 @@ app.post('/mobile', function (req,res){
 	   			id = rows.insertId;
 	   			console.log(id);
 
-	   			connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
+	   			connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
 	   			//manipulate rows
 	   			r_id = rows[0].route_ID;
 	   			console.log('fetch route_ID successful ' + r_id);
@@ -861,7 +861,12 @@ app.post('/mobile', function (req,res){
 	  		var para1 = {trip_ID: id,route_ID: r_id };
 	  		connection.query( query1,para1, function (err, rows) {
 	   			//manipulate rows
-	   			
+	   			if(!rows.insertId){
+	   				res.send('INVALID');
+	   			}
+	   			else{
+	   				res.send('OK');
+	   			}
 	   			console.log('Insert new belongs successful');
 	   			
 	   			
@@ -878,28 +883,50 @@ app.post('/mobile', function (req,res){
 	   		connection.release();
 	    });
 		break;
+		case 'verify':
+			var r_name = req.body.route;
+			getConnection(function(err, connection){
+				connection.query('Select route_ID from Route where route_name = "'+r_name+'"',function(err,rows){
+					if(!rows||rows.length <1){
+						res.send('INVALID');
+					}
+					else{
+						res.send('OK');
+					}
+					connection.release();
+				});
+			});
+		break;
 		case 'stop':
 		var end_date = req.body.dateTime;
 		query = 'update Trip SET ? where ?';
 		var t_ID = 0;
-		
+		var name = req.body.study;
 
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select trip_ID from Trip where end_time is NULL', function (err, rows) {
+	  		connection.query( 'Select trip_ID from Trip where (end_time is NULL AND name="'+name+'")', function (err, rows) {
 	   			//manipulate rows
-	   			t_id = rows[0].trip_ID;
-	   			var para = {trip_ID: t_id};
-	   			console.log('Stop study update successful');
-	   			//connection.release();
-
-	   			connection.query( query,[{end_time: end_date},para], function (err, rows) {
-	   			//manipulate rows
-	   			
-	   			console.log('Stop study update successful');
-	   			//res.send('OK');
-	   			connection.release();
-	  		});
+	   			if(rows)
+	   			{
+					t_id = rows[0].trip_ID;
+		   			var para = {trip_ID: t_id};
+		   			console.log('Stop study update successful');
+		   			//connection.release();
+	
+		   			connection.query( query,[{end_time: end_date},para], function (err, rows) {
+		   			//manipulate rows
+		   			
+		   			console.log('Stop study update successful');
+		   			res.send('OK');
+		   			connection.release();
+		   			});
+	   			}
+	   			else{
+	   				res.send('INVALID');
+	   				connection.release();
+	   			}
+	  		
 	  		});
 	  		
 	  	});
@@ -926,13 +953,22 @@ app.post('/mobile', function (req,res){
 						console.log('On to delete from Trip with name: '+ study_name);
 						connection.query('Delete from Trip where name = "'+study_name+'"', function (err,rows){
 							console.log('Delete Trip should be successful');
+							if(!err)
+							{
+								res.send('OK');
+							}
+							else{
+								res.send('INVALID');
+							}
+							connection.release();
+
 						});
 					});
 				});
 			});
 		break;
 		case 'diagnostic':
-		//res.send('OK');
+		res.send('OK');
 	  		
 
 		break;
@@ -958,7 +994,7 @@ app.post('/mobile', function (req,res){
 					//passengers.push(req.body[i]);
 					//var il = i;
 					var count = 1;
-					
+					var counter=1;
 					
 							var dest_name = '';
 							var orig_name = '';
@@ -1030,7 +1066,9 @@ app.post('/mobile', function (req,res){
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
 								    			connection.query('Insert into Takes SET ?', relation , function (err, rows){
 								    				/*count++;
+
 								    				if(count >= lim){}*/
+								    					if(rows.insertId){counter++;}
 								    					loop++;
 								    				next();
 								    			});
@@ -1048,6 +1086,12 @@ app.post('/mobile', function (req,res){
 					    	
 						}
 						else{
+							if(counter == loop){
+								res.send('OK');
+							}
+							else{
+								res.send('INVALID');
+							}
 							connection.release();
 						}
 					}
