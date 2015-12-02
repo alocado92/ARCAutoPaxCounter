@@ -662,7 +662,7 @@ app.post('/forgot', function (req,res){
 	pool.getConnection(function (err, connection){
 		var query = 'select username, count(email) as userCount where ?';
 		var para = {email: email};
-
+		console.log(query+ para.toString());
 		connection.query(query, para, function (err,rows){
 			console.log('Searching for a valid email address. COUNT should be 1. Got: '+rows[0].userCount);
 
