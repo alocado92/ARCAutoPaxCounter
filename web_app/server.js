@@ -447,7 +447,7 @@ app.post('/graph1', function (req, res){
 var sess;
 
 app.post('/login', function (req, res){
-	
+	sess = req.session;
 	console.log('wassap');
 	var exists = 0;
 	var username = req.body.uName;
@@ -996,7 +996,7 @@ app.post('/mobile', function (req,res){
 	
 });
 app.get('/home', function (req,res){
-	sess = req.session;
+	
 	if(sess.user){
 		res.sendFile("public/home.html", {"root": __dirname});
 	}
