@@ -171,12 +171,7 @@
             }
             console.log(table.toString());
             var graphData = new google.visualization.arrayToDataTable(table);
-            var options2 = {
-          
-          chart: {
-            title: 'Passenger Net Flow by stops',
-            subtitle: 'Passenger Origin on left, Passenger Destination on right'
-          },
+            var options2 = { title: 'Passenger Net Flow',
            // Required for Material Bar Charts.
           series: {
             0: { axis: 'Origin' }, // Bind series 0 to an axis named 'distance'.
