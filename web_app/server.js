@@ -496,21 +496,70 @@ app.post('/login', function (req, res){
 });
 app.get('/remind', function (req,res){
 	res.sendFile("public/forgot.html", {"root": __dirname});
+
 });
 app.get('/newUser', function (req,res){
-	res.sendFile("public/add_user.html", {"root": __dirname});
+	
+	if(sess != null && sess.is_admin == 1){
+		res.sendFile("public/add_user.html", {"root": __dirname});
+	}
+	else if(sess != null && sess.is_admin != 1){
+		console.log('You are not admin. Get away.');
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 app.get('/export', function (req,res){
-	res.sendFile("public/export.html", {"root": __dirname});
+	
+	if(sess != null ){
+		res.sendFile("public/export.html", {"root": __dirname});
+	}
+	
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 app.get('/editUser', function (req,res){
-	res.sendFile("public/edit_user.html", {"root": __dirname});
+	//res.sendFile("public/edit_user.html", {"root": __dirname});
+	if(sess != null && sess.is_admin == 1){
+		res.sendFile("public/edit_user.html", {"root": __dirname});
+	}
+	else if(sess != null && sess.is_admin != 1){
+		console.log('You are not admin. Get away.');
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 app.get('/editTrip', function (req,res){
-	res.sendFile("public/edit_trip.html", {"root": __dirname});
+	//res.sendFile("public/edit_trip.html", {"root": __dirname});
+	if(sess != null && sess.is_admin == 1){
+		res.sendFile("public/edit_trip.html", {"root": __dirname});
+	}
+	else if(sess != null && sess.is_admin != 1){
+		console.log('You are not admin. Get away.');
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 app.get('/deleteUser', function (req,res){
-	res.sendFile("public/delete_user.html", {"root": __dirname});
+	//res.sendFile("public/delete_user.html", {"root": __dirname});
+	if(sess != null && sess.is_admin == 1){
+		res.sendFile("public/delete_user.html", {"root": __dirname});
+	}
+	else if(sess != null && sess.is_admin != 1){
+		console.log('You are not admin. Get away.');
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 app.post('/fetch', function (req,res){
 	var email = req.body.email;
@@ -541,6 +590,17 @@ app.post('/fetch', function (req,res){
 	    });
 	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
 	
+});
+app.get('/logout',function (req,res){
+	if(sess != null ){
+		req.session = null;
+		res.sendFile("public/login.html", {"root": __dirname});
+	}
+	
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 
 app.post('/fetch_trip', function (req,res){
