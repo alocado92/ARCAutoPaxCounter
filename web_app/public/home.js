@@ -56,10 +56,11 @@
                               row.push(res.data[k].count);
                               check1 =0;
                             }
+                            else{check1 =1;}
                           }
                           if((check1) != 0){
                             row.push(0);
-                            check1++;
+                            //check1++;
                           }
                         }
                         data2.addRow(row);
@@ -148,6 +149,7 @@
                               row.push(res.data[k].count);
                               check1 =0;
                             }
+                            else{check1++;}
                           }
                           if((check1) != 0){
                             row.push(0);
