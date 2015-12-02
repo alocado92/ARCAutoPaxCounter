@@ -680,7 +680,7 @@ app.post('/forgot', function (req,res){
 				    from: 'arc.innovations.group@gmail.com', // sender address
 				    to: 'alexis.figueroa4@upr.edu' , // list of receivers
 				    subject: 'Your forgotten credentials', // Subject line
-				    text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username:"+ user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/. Best Regards, ARC Dev Team." 
+				    text: "Hi User,\n your account credentials for the AutoPaxCounter system is as follows. Username:"+ user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n Best Regards,\n ARC Dev Team." 
 				    
 					};
 					transporter.sendMail(mailOptions, function (error, info){
