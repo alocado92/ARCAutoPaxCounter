@@ -466,24 +466,27 @@ app.post('/login', function (req, res){
 	   			mail = rows[0].email;
 	   			is_admin = rows[0].is_admin;
 	   			name = rows[0].f_name;
+
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
 	   		console.log(exists);
+
+	   		console.log(exists);
+			if(exists){
+				console.log('User session will be created here');
+				sess.email = mail;
+				sess.is_admin = is_admin;
+				sess.fname = name;
+				console.log('First name of session: '+sess.fname);
+				res.redirect('/home');
+			}
+			else{
+				//kick out
+				console.log('Kick out');
+			}
 	    });
-	console.log(exists);
-	if(exists){
-		console.log('User session will be created here');
-		sess.email = mail;
-		sess.is_admin = is_admin;
-		sess.fname = name;
-		console.log('First name of session: '+sess.fname);
-		res.redirect('/home');
-	}
-	else{
-		//kick out
-		console.log('Kick out');
-	}	
+
 
 
 	console.log('User: '+username +'\n'+'PW: '+hashed);
