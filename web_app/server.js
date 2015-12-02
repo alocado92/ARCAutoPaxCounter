@@ -861,12 +861,12 @@ app.post('/mobile', function (req,res){
 	  		var para1 = {trip_ID: id,route_ID: r_id };
 	  		connection.query( query1,para1, function (err, rows) {
 	   			//manipulate rows
-	   			if(!rows){
+	   			/*if(!rows){
 	   				res.send('INVALID');
 	   			}
 	   			else{
 	   				res.send('OK');
-	   			}
+	   			}*/
 	   			console.log('Insert new belongs successful');
 	   			
 	   			
@@ -879,7 +879,7 @@ app.post('/mobile', function (req,res){
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
-	   		//res.send('OK');
+	   		res.send('OK');
 	   		connection.release();
 	    });
 		break;
