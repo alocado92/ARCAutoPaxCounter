@@ -1007,22 +1007,13 @@ app.get('/home', function (req,res){
 	console.log(sess.email);
 	console.log(req.session.email);
 	if(sess.email){
-		console.log('Sess.email'+sess.email);
-		redirect(req,res);
-		//res.sendFile("public/home.html", {"root": __dirname});
+		res.sendFile(path.join(__dirname+'/home.html'));
 	}
 	else{
 		req.session = null;
 		res.redirect('/');
 	}
-	
-
 });
-
-function redirect(req,res){
-	console.log(__dirname);
-	res.sendFile("public/home.html", {"root": __dirname});
-}
 
 
 app.get('/admins',function (req,res){
