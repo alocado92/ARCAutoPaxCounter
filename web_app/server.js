@@ -650,7 +650,7 @@ app.post('/forgot', function (req,res){
 	var email = req.body.email;
 	var exists = 0;
 	var user = '';
-	var tempPass = 'epicMealTime';
+	//var tempPass = 'epicMealTime';
 	var transporter = nodemailer.createTransport({
     service: 'Gmail',
 	    auth: 
@@ -658,6 +658,44 @@ app.post('/forgot', function (req,res){
 	        user: 'arc.innovations.group@gmail.com',
 	        pass: 'AutoPaxCounter'
 	    }
+	});
+	pool.getConnection(function (err, connection){
+		var query = 'select username, count(email) as userCount where set ?';
+		var para = {email: email};
+
+		connection.query(query, para, function (err,rows){
+			console.log('Searching for a valid email address. COUNT should be 1. Got: '+rows[0].userCount);
+
+			exists = rows[0].userCount;
+			var user = rows[0].username;
+			if(exists == 1){
+				var tempPass = 'epicMealTime';
+				var hashedPass = hash.Hash(tempPass);
+				connection.query( 'update User set ? where ?',[{password: hashedPass},{email: email}], function (err, rows) {
+	   			//manipulate rows
+	   			console.log('updated password for reset email');
+
+	   			var mailOptions = {
+
+				    from: 'arc.innovations.group@gmail.com', // sender address
+				    to: 'alexis.figueroa4@upr.edu' , // list of receivers
+				    subject: 'Your forgotten credentials', // Subject line
+				    text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username:"+ user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/. Best Regards, ARC Dev Team." 
+				    
+					};
+					transporter.sendMail(mailOptions, function (error, info){
+				    if(error){
+				        console.log(error);
+				    }else{
+				        console.log('Message sent');
+				        connection.release();
+				    }
+				});
+
+	   			
+	  		});
+			}
+		});
 	});
 	/*pool.getConnection(function(err, connection) {
 	  		// Use the connection
