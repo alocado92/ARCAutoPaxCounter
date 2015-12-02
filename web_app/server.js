@@ -469,8 +469,10 @@ app.post('/login', function (req, res){
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
+	   		console.log(exists);
 	    });
-	if(exists == 1){
+	console.log(exists);
+	if(exists){
 		console.log('User session will be created here');
 		sess.email = mail;
 		sess.is_admin = is_admin;
