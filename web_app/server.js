@@ -475,7 +475,7 @@ app.post('/login', function (req, res){
 					sess.is_admin = is_admin;
 					sess.fname = name;
 					console.log('First name of session: '+sess.fname);
-					res.redirect('/home');
+					res.send({redirect: '/home'});
 				}
 				else{
 					//kick out
@@ -1007,7 +1007,7 @@ app.get('/home', function (req,res){
 	console.log(sess.email);
 	console.log(req.session.email);
 	if(sess.email != null){
-		res.sendfile("public/home.html", {"root": __dirname});
+		res.sendFile("public/home.html", {"root": __dirname});
 	}
 	else{
 		req.session = null;
