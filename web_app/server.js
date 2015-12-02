@@ -996,6 +996,7 @@ app.post('/mobile', function (req,res){
 	
 });
 app.get('/home', function (req,res){
+	sess = req.session;
 	if(sess.user){
 		res.sendFile("public/home.html", {"root": __dirname});
 	}
