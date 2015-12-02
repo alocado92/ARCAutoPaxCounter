@@ -449,7 +449,7 @@ var sess;
 app.post('/login', function (req, res){
 	sess = req.session;
 	console.log('wassap');
-	var exists = 0;
+	var exists;
 	var username = req.body.uName;
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
