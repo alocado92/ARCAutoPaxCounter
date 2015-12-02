@@ -27,6 +27,8 @@ var log = bunyan.createLogger({
 });
 var distance = require('google-distance');
 
+var session = require('express-session');
+
 //API Key for on-remote server testing
 distance.apiKey = 'AIzaSyCLWYwZfhXxvlaBHRTEEt40KooXr62LuxY';
 
@@ -36,6 +38,13 @@ distance.apiKey = 'AIzaSyCLWYwZfhXxvlaBHRTEEt40KooXr62LuxY';
 //mysql create pool
 //var trip = '';
 //var pool = mysql.pool;
+app.use(session({
+  cookieName: 'session',
+  secret: 'capstone alexis nestor xandel cristina rosedany',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ 
    extended: true 
@@ -433,6 +442,10 @@ app.post('/graph1', function (req, res){
 	var query = '';
 	
 });
+
+
+var sess;
+
 app.post('/login', function (req, res){
 	
 	console.log('wassap');
@@ -440,22 +453,37 @@ app.post('/login', function (req, res){
 	var username = req.body.uName;
 	var password = req.body.pword;
 	var hashed = hash.Hash(password);
+	var is_admin = -1;
+	var name='';
+	var mail='';
 	log.info({User: username,Pass: hashed},'successful login detected!');
 	pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'select count(*) as userCount from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
+	  		connection.query( 'select count(email) as userCount, f_name, email, is_admin from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
 	   			//manipulate rows
 	   			console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
 	   			exists = rows[0].userCount;
+	   			mail = rows[0].email;
+	   			is_admin = rows[0].is_admin;
+	   			name = rows[0].f_name;
 	   			connection.release();
 	  		});
 	   		// And done with the connection.
 	    });
 	if(exists == 1){
 		console.log('User session will be created here');
+		sess.email = mail;
+		sess.is_admin = is_admin;
+		sess.fname = name;
+		res.send({redirect: '/home'});
+	}
+	else{
+		//kick out
 	}	
+
+
 	console.log('User: '+username +'\n'+'PW: '+hashed);
-	res.send({redirect: '/home'});
+	
 	
 });
 app.get('/remind', function (req,res){
@@ -669,104 +697,59 @@ app.post('/add', function (req,res){
 		res.send({redirect: '/home'});
 	}
 });
-app.post('/forgot', function (req,res){
-	console.log('entered send email server handler: '+req.body.email);
-	var email = req.body.email;
-	var exists = 0;
-	var user = '';
-	//var tempPass = 'epicMealTime';
-	var transporter = nodemailer.createTransport({
-    service: 'Gmail',
-	    auth: 
-	    {
-	        user: 'arc.innovations.group@gmail.com',
-	        pass: 'AutoPaxCounter'
-	    }
-	});
-	pool.getConnection(function (err, connection){
-		var query = 'select username, count(*) as userCount from User where ?';
-		var para = {email: email};
-		console.log(query+ JSON.stringify(para));
-		connection.query(query, para, function (err,rows){
-			console.log('Searching for a valid email address. COUNT should be 1. Got: '+rows[0].userCount);
+	app.post('/forgot', function (req,res){
+		console.log('entered send email server handler: '+req.body.email);
+		var email = req.body.email;
+		var exists = 0;
+		var user = '';
+		//var tempPass = 'epicMealTime';
+		var transporter = nodemailer.createTransport({
+	    service: 'Gmail',
+		    auth: 
+		    {
+		        user: 'arc.innovations.group@gmail.com',
+		        pass: 'AutoPaxCounter'
+		    }
+		});
+		pool.getConnection(function (err, connection){
+			var query = 'select username, count(*) as userCount from User where ?';
+			var para = {email: email};
+			console.log(query+ JSON.stringify(para));
+			connection.query(query, para, function (err,rows){
+				console.log('Searching for a valid email address. COUNT should be 1. Got: '+rows[0].userCount);
 
-			exists = rows[0].userCount;
-			var user = rows[0].username;
-			if(exists == 1){
-				var tempPass = 'epicMealTime';
-				var hashedPass = hash.Hash(tempPass);
-				connection.query( 'update User set ? where ?',[{password: hashedPass},{email: email}], function (err, rows) {
-	   			//manipulate rows
-	   			console.log('updated password for reset email');
+				exists = rows[0].userCount;
+				var user = rows[0].username;
+				if(exists == 1){
+					var tempPass = 'epicMealTime';
+					var hashedPass = hash.Hash(tempPass);
+					connection.query( 'update User set ? where ?',[{password: hashedPass},{email: email}], function (err, rows) {
+		   			//manipulate rows
+		   			console.log('updated password for reset email');
 
-	   			var mailOptions = {
+		   			var mailOptions = {
 
-				    from: 'arc.innovations.group@gmail.com', // sender address
-				    to: 'alexis.figueroa4@upr.edu' , // list of receivers
-				    subject: 'Your forgotten credentials', // Subject line
-				    text: "Hi User,\n your account credentials for the AutoPaxCounter system is as follows. Username:"+ user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n Best Regards,\n ARC Dev Team." 
-				    
-					};
-					transporter.sendMail(mailOptions, function (error, info){
-				    if(error){
-				        console.log(error);
-				    }else{
-				        console.log('Message sent');
-				        connection.release();
-				    }
-				});
+					    from: 'arc.innovations.group@gmail.com', // sender address
+					    to: 'alexis.figueroa4@upr.edu' , // list of receivers
+					    subject: 'Your forgotten credentials', // Subject line
+					    text: "Hi User,\n your account credentials for the AutoPaxCounter system is as follows. Username:"+ user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n Best Regards,\n ARC Dev Team." 
+					    
+						};
+						transporter.sendMail(mailOptions, function (error, info){
+					    if(error){
+					        console.log(error);
+					    }else{
+					        console.log('Message sent');
+					        connection.release();
+					    }
+					});
 
-	   			
-	  		});
-			}
+		   			
+		  		});
+				}
+			});
 		});
 	});
-	/*pool.getConnection(function(err, connection) {
-	  		// Use the connection
-	  		connection.query( 'select count(*) as userCount from User where email ="'+email+'"', function (err, rows) {
-	   			//manipulate rows
-	   			
-	   			exists = rows[0].userCount;
-	   			connection.release();
-	  		});
-	   		// And done with the connection (for now...).
-	    });
-	if (exists == 1){
-		//send email with updated credentials
-		var hashedPass = hash.Hash(tempPass);
-		pool.getConnection(function(err, connection) {
-	  		// Use the connection
-	  		connection.query( 'update User set password ="'+hashedPass+'" where email ="'+email+'"', function (err, rows) {
-	   			//manipulate rows
-	   			console.log('updated password for reset email');
-	   			connection.release();
-	  		});
-
-	   		// And done with the connection (for now...).
-	    });*/
-	    /*var mailOptions = {
-
-    from: 'arc.innovations.group@gmail.com', // sender address
-    to: 'alexis.figueroa4@upr.edu' , // list of receivers
-    subject: 'Your forgotten credentials', // Subject line
-    text: "Hi User, your account credentials for the AutoPaxCounter system is as follows. Username: Tester1 and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account." 
-    
-	};
-	transporter.sendMail(mailOptions, function (error, info){
-    if(error){
-        console.log(error);
-    }else{
-        console.log('Message sent: ' + info.response);
-    }*/
-//});
-	/*}
-	else {
-		//error message sent to client
-		console.log('Email did not match');
-		
-	}*/
-	
-});
 app.get('/', function (req,res){
 	
 	res.sendFile("public/login.html", {"root": __dirname});
@@ -1013,7 +996,13 @@ app.post('/mobile', function (req,res){
 	
 });
 app.get('/home', function (req,res){
-	res.sendFile("public/home.html", {"root": __dirname});
+	if(sess.user){
+		res.sendFile("public/home.html", {"root": __dirname});
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 	
 });
 app.get('/admins',function (req,res){
