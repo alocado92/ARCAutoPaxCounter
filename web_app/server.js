@@ -1019,9 +1019,11 @@ app.get('/home', function (req,res){
 
 });
 
-function redirect(){
+function redirect(req,res){
 	res.sendFile("public/home.html", {"root": __dirname});
 }
+
+
 app.get('/admins',function (req,res){
 		var query = 'Select * from User';
 		pool.getConnection(function(err, connection) {
