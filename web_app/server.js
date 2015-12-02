@@ -1020,6 +1020,7 @@ app.get('/home', function (req,res){
 });
 
 function redirect(req,res){
+	console.log(__dirname);
 	res.sendFile("public/home.html", {"root": __dirname});
 }
 
