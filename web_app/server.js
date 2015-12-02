@@ -1086,12 +1086,7 @@ app.post('/mobile', function (req,res){
 					    	
 						}
 						else{
-							if(counter == loop){
-								res.send('OK');
-							}
-							else{
-								res.send('INVALID');
-							}
+							res.send('OK');
 							connection.release();
 						}
 					}
