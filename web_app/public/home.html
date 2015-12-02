@@ -41,19 +41,19 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-ex-collapse">
           <ul class="nav navbar-nav navbar-right">
-             <li class="active">
+             <li >
              <a href="http://arcinnovations.ece.uprm.edu:3000/export">Export Data</a>
             </li>
-            <li class="active">
+            <li >
              <a href="http://arcinnovations.ece.uprm.edu:3000/newUser">Add User</a>
             </li>
-            <li class="active">
+            <li >
              <a href="http://arcinnovations.ece.uprm.edu:3000/editUser">Edit User</a>
             </li>
-            <li class="active">
+            <li >
              <a href="http://arcinnovations.ece.uprm.edu:3000/deleteUser">Delete User</a>
             </li>
-            <li class="active">
+            <li >
              <a href="http://arcinnovations.ece.uprm.edu:3000/editTrip"> Edit Trip</a>
             </li>
             <li>
@@ -68,9 +68,11 @@
         <div class="col-md-6">
           <div class="row">
             <div class="col-md-3">
-              <input type="datetime-local" ng-model="ctrl.date1" required>
+              <label class="control-label" for="date1">Start Date</label>
+              <input type="datetime-local" id="date1" ng-model="ctrl.date1" required>
               <div class="btn-group btn-group-md " id="graph_type1">
-               <select id="routeOptions" ng-model="ctrl.gtype" required>
+                <label class="control-label" for="GraphOptions">Graph type options</label>
+               <select id="GraphOptions" ng-model="ctrl.gtype" required>
                   <option value="1" selected>Origin-Destination Matrix</option>
                   <option value="2">Passenger Net Flow</option>
                   
@@ -80,10 +82,11 @@
           </div>
           <div class="row">
             <div class="col-md-3">
-              <input type="datetime-local" ng-model="ctrl.date2" required>
+              <label class="control-label" for="date2">End Date</label>
+              <input type="datetime-local" id="date2" ng-model="ctrl.date2" required>
             
               <div class="btn-group btn-group-md" id="route1">
-                
+                <label class="control-label" for="routeOptions">Route Options</label>
                 <select id="routeOptions" ng-model="ctrl.route" required>
                   <option value="Terrace" selected>Terrace</option>
                   <option value="Civil">Civil</option>
@@ -105,10 +108,12 @@
         <div class="col-md-6">
           <div class="row">
             <div class="col-md-3">
-              <input type="datetime-local" ng-model="ctrl.date3" required>
+              <label class="control-label" for="date3">Start Date</label>
+              <input type="datetime-local" id="date3" ng-model="ctrl.date3" required>
             
               <div class="btn-group btn-group-md" id="graph_type2" >
-                <select id="routeOptions" ng-model="ctrl.gtype2" required>
+                <label class="control-label" for="GraphOptions2">Graph type options</label>
+                <select id="GraphOptions2" ng-model="ctrl.gtype2" required>
                   <option value="1" selected>Origin-Destination Matrix</option>
                   <option value="2">Passenger Net Flow</option>
                   
@@ -118,9 +123,11 @@
           </div>
           <div class="row">
             <div class="col-md-3">
-              <input type="datetime-local" ng-model="ctrl.date4" required>
+              <label class="control-label" for="date4">End Date</label>
+              <input type="datetime-local" id="date4"ng-model="ctrl.date4" required>
             
               <div class="btn-group btn-group-md" id="route2">
+                <label class="control-label" for="RouteOptions2">Route Options</label>
                 <select id="routeOptions2" ng-model="ctrl.route2" required>
                   <option value="Terrace" selected>Terrace</option>
                   <option value="Civil">Civil</option>
