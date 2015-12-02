@@ -720,7 +720,7 @@ app.post('/forgot', function (req,res){
 
 	   		// And done with the connection (for now...).
 	    });*/
-	    var mailOptions = {
+	    /*var mailOptions = {
 
     from: 'arc.innovations.group@gmail.com', // sender address
     to: 'alexis.figueroa4@upr.edu' , // list of receivers
@@ -733,8 +733,8 @@ app.post('/forgot', function (req,res){
         console.log(error);
     }else{
         console.log('Message sent: ' + info.response);
-    }
-});
+    }*/
+//});
 	/*}
 	else {
 		//error message sent to client
