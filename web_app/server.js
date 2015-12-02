@@ -649,7 +649,7 @@ app.post('/add', function (req,res){
 				    from: 'arc.innovations.group@gmail.com', // sender address
 				    to: 'alexis.figueroa4@upr.edu' , // list of receivers
 				    subject: 'Welcome to the ARC AutoPaxCounter Web Experience', // Subject line
-				    text: "Hi "+fname+",\n\nYour account credentials for the AutoPaxCounter system are as follows. Username:"+ user+" and Password = "+password+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n\nBest Regards,\n\nARC Dev Team." 
+				    text: "Hi "+fname+",\n\nYour account credentials for the AutoPaxCounter system are as follows. Username:"+ username+" and Password = "+password+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n\nBest Regards,\n\nARC Dev Team." 
 				    
 					};
 					transporter.sendMail(mailOptions, function (error, info){
