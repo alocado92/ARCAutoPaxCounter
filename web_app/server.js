@@ -480,6 +480,7 @@ app.post('/login', function (req, res){
 	}
 	else{
 		//kick out
+		console.log('Kick out');
 	}	
 
 
