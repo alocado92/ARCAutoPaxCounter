@@ -1008,14 +1008,20 @@ app.get('/home', function (req,res){
 	console.log(req.session.email);
 	if(sess.email){
 		console.log('Sess.email'+sess.email);
-		res.sendFile("public/home.html", {"root": __dirname});
+		redirect();
+		//res.sendFile("public/home.html", {"root": __dirname});
 	}
 	else{
 		req.session = null;
 		res.redirect('/');
 	}
 	
+
 });
+
+function redirect(){
+	res.sendFile("public/home.html", {"root": __dirname});
+}
 app.get('/admins',function (req,res){
 		var query = 'Select * from User';
 		pool.getConnection(function(err, connection) {
