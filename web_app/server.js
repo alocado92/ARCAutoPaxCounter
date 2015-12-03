@@ -825,14 +825,15 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	if(req.body){
+	/*if(req.body){
 		res.send('OK');
-	}
+	}*/
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
 	switch(option){
 		case 'create':
+
 			var route = req.body.route;
 			var begin_date = req.body.dateTime;
 			var t_name = req.body.study;
@@ -844,39 +845,83 @@ app.post('/mobile', function (req,res){
 			var r_id = 0;
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( query,para, function (err, rows) {
-	   			//manipulate rows
-	   			
-	   			console.log('Insert new trip successful');
-	   			id = rows.insertId;
-	   			console.log(id);
 
-	   			connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
-	   			//manipulate rows
-	   			r_id = rows[0].route_ID;
-	   			console.log('fetch route_ID successful ' + r_id);
+	  		var timequery = 'Select Date(start_time) as final_date, trip_ID from Trip where end_time is null';
+	  			connection.query(timequery, function (err,rows){
+//bregar
+					var date = rows[0].final_date;
+					console.log(date);
 
-	   			var query1 = 'Insert into Belongs SET ?';
-	  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
-	  		var para1 = {trip_ID: id,route_ID: r_id };
-	  		connection.query( query1,para1, function (err, rows) {
+					//var time = rows[0].final_time
+					var ID = rows[0].trip_ID;
+					var datetime = date + ' 23:59:59';
+					console.log(datetime);
+
+					var end_query = 'Update Trip SET ? WHERE ?';
+					connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
+						connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
 	   			
-	   			console.log('Insert new belongs successful');
-	   			
-	   			
-	  		});
-	   			
-	  		});
-	  		});
+			   			console.log('Insert new trip successful');
+			   			id = rows.insertId;
+			   			console.log(id);
+			   			//console.log("date: "+date);
+			   			connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
+			   			//manipulate rows
+				   			r_id = rows[0].route_ID;
+				   			console.log('fetch route_ID successful ' + r_id);
+
+				   			var query1 = 'Insert into Belongs SET ?';
+					  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
+					  		var para1 = {trip_ID: id,route_ID: r_id };
+					  		connection.query( query1,para1, function (err, rows) {
+				   			//manipulate rows
+				   			/*if(!rows){
+				   				res.send('INVALID');
+				   			}
+				   			else{
+				   				res.send('OK');
+				   			}*/
+				   				console.log('Insert new belongs successful');
+				   			
+				   			
+				  			});
+			   			
+			  			});
+			   			//console("time: "+time);
+			   			
+			   			
+	  				});
+			   				
+			   			});
+	  				
+	  			});
 	  		
 
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
-	   		//res.send('OK');
+	   		res.send('OK');
 	   		connection.release();
 	    });
+		break;
+		case 'verify':
+			var r_name = req.body.route;
+			pool.getConnection(function(err, connection){
+				connection.query('Select route_ID from Route where route_name = "'+r_name+'"',function(err,rows){
+					if(!rows||rows.length <1){
+						res.send('INVALID');
+					}
+					else{
+						res.send('OK');
+					}
+					connection.release();
+				});
+			});
+		break;
+		case 'edit':
+			res.send('OK');
+
 		break;
 		case 'stop':
 		var end_date = req.body.dateTime;
