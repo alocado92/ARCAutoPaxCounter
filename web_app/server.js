@@ -851,23 +851,27 @@ app.post('/mobile', function (req,res){
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
 
-	  		var timequery = 'Select CONCAT(Date(start_time)," ",MAX(exit_time)) as "final_date", trip_ID from Passenger natural join Takes natural join Trip where end_time is null';
+	  		var timequery = 'Select Date(start_time) as "final_date", trip_ID from Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
 //bregar
 					var date = rows[0].final_date;
+					console.log(date);
+
 					//var time = rows[0].final_time
 					var ID = rows[0].trip_ID;
+					var datetime = date + ' 23:59:59';
+					console.log(datetime);
+
 					var end_query = 'Update Trip SET ? WHERE ?';
-	  				connection.query( query,para, function (err, rows) {
+					connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
+						connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
 	   			
 			   			console.log('Insert new trip successful');
 			   			id = rows.insertId;
 			   			console.log(id);
-			   			console.log("date: "+date);
-			   			//console("time: "+time);
-			   			connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
-			   				connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
+			   			//console.log("date: "+date);
+			   			connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
 			   			//manipulate rows
 				   			r_id = rows[0].route_ID;
 				   			console.log('fetch route_ID successful ' + r_id);
@@ -889,9 +893,13 @@ app.post('/mobile', function (req,res){
 				  			});
 			   			
 			  			});
-			   			});
+			   			//console("time: "+time);
+			   			
 			   			
 	  				});
+			   				
+			   			});
+	  				
 	  			});
 	  		
 
