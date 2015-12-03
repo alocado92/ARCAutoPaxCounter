@@ -859,7 +859,7 @@ app.post('/mobile', function (req,res){
 			   			console.log('Insert new trip successful');
 			   			id = rows.insertId;
 			   			console.log(id);
-			   			console("New end time: " date.toString()+time.toString());
+			   			console("New end time: " +date.toString()+time.toString());
 			   			connection.query(end_query, [{end_time: date.toString()+time.toString()},{trip_ID: ID}], function (err,rows){
 			   				connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
 			   			//manipulate rows
