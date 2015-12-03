@@ -823,6 +823,11 @@ app.get('/', function (req,res){
 	
 	res.sendFile("public/login.html", {"root": __dirname});
 });
+app.get('/addRoute', function (req,res){
+	
+	res.sendFile("public/addRoute.html", {"root": __dirname});
+});
+
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
