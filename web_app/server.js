@@ -959,7 +959,23 @@ app.post('/mobile', function (req,res){
 			});
 		break;
 		case 'edit':
-			res.send('OK');
+			
+			var change_capacity = req.body.capacity;
+			var change_study = req.body.study;
+			var change_type = req.body.type;
+			var time = req.body.dateTime:
+
+			var query = 'Update from Trip SET ? where ?';
+			var para = [{vehicle_type: change_type},{name: change_study, start_time: time}];
+			getConnection(function (err, connection){
+				connection.query(query,para, function (err,rows){
+					
+					//change vehicle
+					res.send('OK');
+
+
+				});
+			});
 
 		break;
 		case 'stop':
