@@ -850,7 +850,7 @@ app.post('/mobile', function (req,res){
 	  			connection.query(timequery, function (err,rows){
 //bregar			
 					console.log('Dame el row:' + rows[0]);
-					if(rows){
+					if(typeof rows[0] !== 'undefined'){
 						var date = rows[0].final_date;
 					console.log(date);
 
