@@ -500,8 +500,8 @@ app.get('/remind', function (req,res){
 
 });
 app.get('/newUser', function (req,res){
-	
-	if(sess != null && sess.is_admin == 1){
+	console.log(sess.is_admin);
+	if(sess.is_admin == 1){
 		res.sendFile("public/add_user.html", {"root": __dirname});
 	}
 	else if(sess != null && sess.is_admin != 1){
@@ -1105,7 +1105,7 @@ app.post('/mobile', function (req,res){
 											    {latitude: lat1, longitude: log1}
 											);
 											console.log("dist: "+dist);
-											if(dist <= 7){
+											if(dist <= 45){
 												console.log("name: "+ rows[j].name);
 												orig_name = rows[j].name;
 												break;
@@ -1116,7 +1116,7 @@ app.post('/mobile', function (req,res){
 											    {latitude: test.exit_lat, longitude: test.exit_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
 											);
-											if(dist <= 7){
+											if(dist <= 45){
 												dest_name = rows[j].name;
 												break;
 											}
