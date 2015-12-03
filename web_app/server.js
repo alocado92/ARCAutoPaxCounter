@@ -883,7 +883,7 @@ app.post('/mobile', function (req,res){
 				   				res.send('OK');
 				   			}*/
 				   				console.log('Insert new belongs successful');
-				   			res.send('OK');
+				   			
 				   			
 				  			});
 			   			
@@ -901,14 +901,15 @@ app.post('/mobile', function (req,res){
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
-	   		
+	   		res.send('OK');
 	   		connection.release();
 	    });
 		break;
 		case 'verify':
 			var r_name = req.body.route;
+			console.log('r_name: '+ r_name);
 			pool.getConnection(function(err, connection){
-				connection.query('Select route_ID from Route where route_name = "'+r_name+'"',function(err,rows){
+				connection.query('Select route_ID from Route where route_name = '+r_name+'',function(err,rows){
 					if(!rows||rows.length <1){
 						res.send('INVALID');
 					}
