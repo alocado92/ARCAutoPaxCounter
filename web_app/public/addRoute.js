@@ -13,12 +13,13 @@
             
       vm.fetch = function(){
 
-                        data1 = {data: 0};
+                        var data1 = {data: 0};
                             $http.post("/fetchRoute", data1, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
                        // var responses = JSON.stringify(response.stops);
+                       var res = response.data;
                         console.log('Response: '+response.data);
-                        for(var i=0;i<response.data.stops.length; i++){
+                        for(var i=0;i<response.data.length; i++){
                                 vm.stop.push({name: response.data.stops[i].name, lat: response.data.stops[i].latitude, long: response.data.stops[i].longitude, num : response.data.stops[i].id});
                         }
                         vm.canShow = true;
