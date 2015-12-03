@@ -1153,7 +1153,7 @@ app.post('/fetchRoute', function (req ,res){
 			var result = [];
 
 			for(var i=0; i< rows.length; i++){
-				result.push({name: rows[0].name; latitude: rows[0].stop_latitude; longitude: rows[0].stop_longitude; id: rows[0].stop_ID});
+				result.push({name: rows[0].name, latitude: rows[0].stop_latitude, longitude: rows[0].stop_longitude, id: rows[0].stop_ID});
 			}
 
 			res.send({data: result});
