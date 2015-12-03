@@ -856,7 +856,7 @@ app.post('/mobile', function (req,res){
 
 					//var time = rows[0].final_time
 					var ID = rows[0].trip_ID;
-					var datetime = new Date(date.toString()).addHours(23);
+					var datetime = new Date(Date.parse(date.replace('-','/','g'))).addHours(23).toISOString().slice(0, 19).replace('T', ' ');
 					console.log(datetime);
 
 					var end_query = 'Update Trip SET ? WHERE ?';
