@@ -12,7 +12,7 @@
             var data = {
                 start_time: vm.start_time,
                 end_time: vm.end_time
-            };
+            
       vm.fetch = function(){
 
                         data1 = {data: 0};
