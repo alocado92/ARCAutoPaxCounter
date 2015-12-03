@@ -410,13 +410,13 @@ app.post('/graph1', function (req, res){
 						for(var a=0;a<result.length;a++){
 							for(var b=0;b<rows.length;b++){
 								if(rows[b].origin_stop == result[a].stop){
-									result[a].origin += rows[b].Net_Traffic_Origin;
+									result[a].origin += 1;
 									break;
 								}
 							}
 							for(var c=0;c<rows.length;c++){
 								if(rows[c].dest_stop == result[a].stop){
-									result[a].destination += rows[c].Net_Traffic_Dest;
+									result[a].destination += 1;
 									break;
 								}
 							}
