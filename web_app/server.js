@@ -846,7 +846,7 @@ app.post('/mobile', function (req,res){
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
 
-	  		var timequery = 'Select Date(start_time) as final_date, trip_ID from Trip where end_time is null';
+	  		var timequery = 'Select DATE_ADD(start_time, INTERVAL 23 HOUR) as final_date, trip_ID from Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
 //bregar			
 					console.log('Dame el row:' + rows[0]);
@@ -856,8 +856,8 @@ app.post('/mobile', function (req,res){
 
 					//var time = rows[0].final_time
 					var ID = rows[0].trip_ID;
-					var datetime = new Date(Date.parse(JSON.stringify(rows[0].final_date))).addHours(23);
-					console.log(datetime);
+					//var datetime = new Date(Date.parse(JSON.stringify(rows[0].final_date))).addHours(23);
+					//console.log(datetime);
 
 					var end_query = 'Update Trip SET ? WHERE ?';
 					connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
