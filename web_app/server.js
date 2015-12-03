@@ -376,7 +376,7 @@ app.post('/graph1', function (req, res){
 			console.log('Route: '+route);
 			console.log('Date Begin: ' +date_begin);
 			console.log('Date End: '+date_end);
-			var where = ' (route_name= "'+ route.toString() +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
+			var where = ' (route_name= "'+ route +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
 			console.log('Where: '+where);
 			var query = 'select distinct dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
 			var route1 = route;
@@ -825,9 +825,9 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	if(req.body){
+	/*if(req.body){
 		res.send('OK');
-	}
+	}*/
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
@@ -942,7 +942,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Stop study update successful');
-	   			//res.send('OK');
+	   			res.send('OK');
 	   			connection.release();
 	  		});
 	  		});
@@ -950,7 +950,7 @@ app.post('/mobile', function (req,res){
 	  	});
 		break;
 		case 'delete':
-		//res.send('OK');
+		res.send('OK');
 			var study_name = req.body.study;
 			pool.getConnection(function (err,connection){
 				console.log('Deleting data related to study: '+ study_name);
@@ -977,7 +977,7 @@ app.post('/mobile', function (req,res){
 			});
 		break;
 		case 'diagnostic':
-		//res.send('OK');
+		res.send('OK');
 	  		
 
 		break;
@@ -1094,6 +1094,7 @@ app.post('/mobile', function (req,res){
 						}
 						else{
 							connection.release();
+							res.send('OK');
 						}
 					}
 
