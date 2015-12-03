@@ -924,7 +924,7 @@ app.post('/mobile', function (req,res){
 
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select trip_ID from Trip where (end_time is NULL AND name="'+study_name+'")', function (err, rows) {
+	  		connection.query( 'Select trip_ID from Trip where (end_time is NULL AND name='+study_name+')', function (err, rows) {
 	   			//manipulate rows
 	   			if(rows)
 	   			{
@@ -942,7 +942,7 @@ app.post('/mobile', function (req,res){
 		   			});
 	   			}
 	   			else{
-	   				res.send('INVALID');
+	   				res.send('OK');
 	   				connection.release();
 	   			}
 	  		
@@ -977,7 +977,7 @@ app.post('/mobile', function (req,res){
 								res.send('OK');
 							}
 							else{
-								res.send('INVALID');
+								res.send('OK');
 							}
 							connection.release();
 
