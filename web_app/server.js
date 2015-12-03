@@ -411,13 +411,17 @@ app.post('/graph1', function (req, res){
 							for(var b=0;b<rows.length;b++){
 								if(rows[b].origin_stop == result[a].stop){
 									result[a].origin += 1;
-									break;
+									//break;
+								}
+								if(rows[c].dest_stop == result[a].stop){
+									result[a].destination += 1;
+									//break;
 								}
 							}
 							for(var c=0;c<rows.length;c++){
 								if(rows[c].dest_stop == result[a].stop){
 									result[a].destination += 1;
-									break;
+									//break;
 								}
 							}
 						}
