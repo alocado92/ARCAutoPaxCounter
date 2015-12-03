@@ -1,5 +1,5 @@
  (function() {
-	 var app = angular.module('route_app',[]);
+	 var app = angular.module('route_app');
 	 
     // Controller function and passing $http service and $scope var.
     	app.controller('routeController',['$http','$window',function($http,$window) {
