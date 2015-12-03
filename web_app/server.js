@@ -1034,8 +1034,13 @@ app.post('/mobile', function (req,res){
 			});
 		break;
 		case 'diagnostic':
-		res.send('OK');
-	  		
+		//res.send('OK');
+	  		pool.getConnection(function (err,connection){
+	  			connection.query('Select * from Trip', function (err, rows){
+	  				res.send('OK');
+	  				connection.release();
+	  			});
+	  		});
 
 		break;
 		default:
