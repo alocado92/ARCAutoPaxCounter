@@ -376,7 +376,7 @@ app.post('/graph1', function (req, res){
 			console.log('Route: '+route);
 			console.log('Date Begin: ' +date_begin);
 			console.log('Date End: '+date_end);
-			var where = ' (route_name= "'+ route +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
+			var where = ' (route_name= "'+ route.toString() +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
 			console.log('Where: '+where);
 			var query = 'select distinct dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
 			var route1 = route;
@@ -825,15 +825,14 @@ app.get('/', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	/*if(req.body){
+	if(req.body){
 		res.send('OK');
-	}*/
+	}
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
 	switch(option){
 		case 'create':
-
 			var route = req.body.route;
 			var begin_date = req.body.dateTime;
 			var t_name = req.body.study;
@@ -845,84 +844,39 @@ app.post('/mobile', function (req,res){
 			var r_id = 0;
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
-
-	  		var timequery = 'Select Date(start_time) as final_date, trip_ID from Trip where end_time is null';
-	  			connection.query(timequery, function (err,rows){
-//bregar
-					var date = rows[0].final_date;
-					console.log(date);
-
-					//var time = rows[0].final_time
-					var ID = rows[0].trip_ID;
-					var datetime = date + ' 23:59:59';
-					console.log(datetime);
-
-					var end_query = 'Update Trip SET ? WHERE ?';
-					connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
-						connection.query( query,para, function (err, rows) {
+	  		connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
 	   			
-			   			console.log('Insert new trip successful');
-			   			id = rows.insertId;
-			   			console.log(id);
-			   			//console.log("date: "+date);
-			   			connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
-			   			//manipulate rows
-				   			r_id = rows[0].route_ID;
-				   			console.log('fetch route_ID successful ' + r_id);
+	   			console.log('Insert new trip successful');
+	   			id = rows.insertId;
+	   			console.log(id);
 
-				   			var query1 = 'Insert into Belongs SET ?';
-					  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
-					  		var para1 = {trip_ID: id,route_ID: r_id };
-					  		connection.query( query1,para1, function (err, rows) {
-				   			//manipulate rows
-				   			/*if(!rows){
-				   				res.send('INVALID');
-				   			}
-				   			else{
-				   				res.send('OK');
-				   			}*/
-				   				console.log('Insert new belongs successful');
-				   			
-				   			
-				  			});
-			   			
-			  			});
-			   			//console("time: "+time);
-			   			
-			   			
-	  				});
-			   				
-			   			});
-	  				
-	  			});
+	   			connection.query( 'Select route_ID from Route where route_name = "'+route+'"', function (err, rows) {
+	   			//manipulate rows
+	   			r_id = rows[0].route_ID;
+	   			console.log('fetch route_ID successful ' + r_id);
+
+	   			var query1 = 'Insert into Belongs SET ?';
+	  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
+	  		var para1 = {trip_ID: id,route_ID: r_id };
+	  		connection.query( query1,para1, function (err, rows) {
+	   			//manipulate rows
+	   			
+	   			console.log('Insert new belongs successful');
+	   			
+	   			
+	  		});
+	   			
+	  		});
+	  		});
 	  		
 
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
-	   		res.send('OK');
+	   		//res.send('OK');
 	   		connection.release();
 	    });
-		break;
-		case 'verify':
-			var r_name = req.body.route;
-			console.log('r_name: '+ r_name);
-			pool.getConnection(function(err, connection){
-				connection.query('Select route_ID from Route where route_name = '+r_name+'',function(err,rows){
-					if(!rows||rows.length <1){
-						res.send('INVALID');
-					}
-					else{
-						res.send('OK');
-					}
-					connection.release();
-				});
-			});
-		break;
-		case 'edit':
-			res.send('OK');
-
 		break;
 		case 'stop':
 		var end_date = req.body.dateTime;
@@ -943,7 +897,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Stop study update successful');
-	   			res.send('OK');
+	   			//res.send('OK');
 	   			connection.release();
 	  		});
 	  		});
@@ -951,7 +905,7 @@ app.post('/mobile', function (req,res){
 	  	});
 		break;
 		case 'delete':
-		res.send('OK');
+		//res.send('OK');
 			var study_name = req.body.study;
 			pool.getConnection(function (err,connection){
 				console.log('Deleting data related to study: '+ study_name);
@@ -978,7 +932,7 @@ app.post('/mobile', function (req,res){
 			});
 		break;
 		case 'diagnostic':
-		res.send('OK');
+		//res.send('OK');
 	  		
 
 		break;
@@ -1095,7 +1049,6 @@ app.post('/mobile', function (req,res){
 						}
 						else{
 							connection.release();
-							res.send('OK');
 						}
 					}
 
