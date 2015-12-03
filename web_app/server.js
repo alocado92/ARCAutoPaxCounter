@@ -1091,6 +1091,7 @@ app.post('/mobile', function (req,res){
 								    	connection.query('Insert into Passenger Set ?',queryval, function (err, rows){
 								    		var pass_id = rows.insertId;
 								    		//console.log("i = "+il);
+								    		cosole.log('Pass ID = '+pass_id);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
 								    		connection.query('Select trip_ID from Trip where end_time is null AND name ='+study_name, function (err,rows){
 								    			//console.log(pass_ID);
