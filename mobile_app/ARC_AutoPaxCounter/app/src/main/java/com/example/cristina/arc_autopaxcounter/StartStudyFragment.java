@@ -1,19 +1,25 @@
 package com.example.cristina.arc_autopaxcounter;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,19 +28,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
-
-import im.delight.android.location.SimpleLocation;
+import java.util.List;
+//import im.delight.android.location.SimpleLocation;
 
 
 /**
@@ -50,12 +57,12 @@ public class StartStudyFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final long TIME_THRESHOLD = 5000;
-
     public static final String HTTP_CREATE = "create";
     public static final String HTTP_EDIT = "edit";
     public static final String DIAGNOSTIC = "diagnostic";
     public static final String HTTP_STOP = "stop";
     public static final String HTTP_DISCARD = "delete";
+    public static final String HTTP_VERIFY = "verify";
 
     private View myView;
     private Menu menu;
@@ -65,12 +72,13 @@ public class StartStudyFragment extends Fragment {
     private TextView capacity;
     private Button startB;
     private Button stopB;
+    private TableLayout tableL;
+    private TableLayout tableTitle;
+    private TextView batchCount;
     private OnFragmentInteractionListener mListener;
-
     private Study studyInformation;
-    private SimpleLocation location;
-    private Passenger passenger;
-    private BluetoothDevice btDevice;
+    //private SimpleLocation location;
+    private LocationManager lManager;
     private EditText routeET;
     private EditText vehicleTypeET;
     private EditText capacityET;
@@ -84,11 +92,14 @@ public class StartStudyFragment extends Fragment {
     public static final String BT_DATA = "My bluetooth data";
     public static final String STUDY_FIRST_WRITE = "First passenger write";
     public static final String STOP_STUDY = "Stop study";
+    public static final String VERIFY_ROUTE = "Verify route";
     private MyServiceReceiver receiver;
     private boolean isStudyStarted;
     private boolean isDiagnostic;
     private boolean isFirstWriteToSDcard;
     private boolean sentAckBT_DP;
+    private String fileName;
+    private GPS myGps;
 
     /**
      * Use this factory method to create a new instance of
@@ -114,10 +125,7 @@ public class StartStudyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            btDevice = getArguments().getParcelable("BTdevice");
-            ARC_Bluetooth arc_bluetooth = new ARC_Bluetooth(true);
-        }*/
+        lManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (savedInstanceState != null) {
             tableH = (HashMap<String, Passenger>) savedInstanceState.getSerializable("table");
@@ -126,50 +134,34 @@ public class StartStudyFragment extends Fragment {
             isFirstWriteToSDcard = savedInstanceState.getBoolean("firstWriteSDcard");
             sentAckBT_DP = savedInstanceState.getBoolean("sentAckBT");
             isStart = savedInstanceState.getBoolean("isStart");
+            fileName = savedInstanceState.getString("fileName");
 
         } else {
-            //Initialization of dummy data
             tableH = new HashMap<>();
             isStudyStarted = false;
             isDiagnostic = false;
             isFirstWriteToSDcard = true;
             sentAckBT_DP = false;
-
-            //Creating dummy studies
-            /*Study study = new Study("Exp#1", "Palacio", "TR-08", 25, "3 Nov 2015", "18:56:06");
-
-            String tag = "4765876987";
-            String tag1 = "65858758758";
-            String tag2 = "476875674642";
-            String tag3 = "476869797864";
-
-            SimpleLocation location = new SimpleLocation(getActivity());
-            DateFormat df = new SimpleDateFormat("HH:mm:ss");
-            String dt = df.format(Calendar.getInstance().getTime());
-
-            Passenger pass0 = new Passenger(location.getLatitude(), location.getLongitude(), dt, location.getLatitude(),  location.getLongitude(), dt);
-            Passenger pass1 = new Passenger(32358, 6768687, "4:48:59", 553543, 76980980, "22:28:12");
-            Passenger pass2 = new Passenger(75768, 65768, "6:27:32", 65868, -76576586, "01:00:34");
-            Passenger pass3 = new Passenger(76987, 686986987, "28:49:55", -25345323, 76586969, "3:12:12");
-            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag, pass0);
-            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag1, pass1);
-            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag2, pass2);
-            tableH.put(study.getStart_date() + ", " + study.getStart_time() + ", " + tag3, pass3);*/
         }
 
-        location = new SimpleLocation(getActivity());
-        Toast.makeText(getActivity(), "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude(), Toast.LENGTH_LONG).show();
-        LocationManager lManager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+        myGps = new GPS(getActivity());
+
+        //location = new SimpleLocation(getActivity());
         if(!lManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(getActivity(), "GPS is disabled. Please enable GPS to obtain passenger location.", Toast.LENGTH_LONG).show();
+        } else {
+            //Toast.makeText(getActivity(), "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Latitude: " + myGps.getLatitude() + " Longitude: " + myGps.getLongitude(), Toast.LENGTH_LONG).show();
         }
 
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(MyServiceReceiver.BROADCAST_BT);
         filter.addAction(MyServiceReceiver.BROADCAST_ACTION);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         receiver = new MyServiceReceiver();
         getActivity().registerReceiver(receiver, filter);
+        //bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();                                  //****************deleted
 
         setHasOptionsMenu(true);
     }
@@ -182,9 +174,9 @@ public class StartStudyFragment extends Fragment {
         outState.putBoolean("firstWriteSDcard", isFirstWriteToSDcard);
         outState.putBoolean("sentAckBT", sentAckBT_DP);
         outState.putBoolean("isStart", isStart);
+        outState.putString("fileName", fileName);
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -193,6 +185,7 @@ public class StartStudyFragment extends Fragment {
         String routeName = getArguments().getString("route");
         String vT = getArguments().getString("vType");
         String vC = getArguments().getString("vCap");
+        fileName = getArguments().getString("filename");
 
         study = (TextView) myView.findViewById(R.id.tvStudyInfo);
         route = (TextView) myView.findViewById(R.id.tvRouteInfo);
@@ -201,6 +194,10 @@ public class StartStudyFragment extends Fragment {
         TextView date = (TextView) myView.findViewById(R.id.tvDateInfo);
         startB = (Button) myView.findViewById(R.id.buttonStart);
         stopB = (Button) myView.findViewById(R.id.buttonStop);
+        tableL = (TableLayout) myView.findViewById(R.id.table);
+        tableTitle = (TableLayout) myView.findViewById(R.id.tableTitle);
+        batchCount = (TextView) myView.findViewById(R.id.batchCount);
+        this.setTableCols();
 
         startB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -227,9 +224,6 @@ public class StartStudyFragment extends Fragment {
             i = Integer.parseInt(vC);
 
         studyInformation = new Study(sName, routeName, vT, i, s[1].trim(), s[2].trim());
-        passenger = new Passenger();
-        location = new SimpleLocation(this.getActivity());
-
         study.setText(sName);
         route.setText(routeName);
         vehicleType.setText(vT);
@@ -237,6 +231,8 @@ public class StartStudyFragment extends Fragment {
         date.setText(dateTime);
         isEdit = false;
         isStart = false;
+
+        AppService.prepareVerifyStudy(this.getActivity(), HTTP_VERIFY, studyInformation.getRoute());
 
         return myView;
     }
@@ -271,19 +267,24 @@ public class StartStudyFragment extends Fragment {
     }
 
     public void edit() {
-        Toast.makeText(getActivity(), "Study name can only be edited in web application", Toast.LENGTH_SHORT).show();
 
-        routeET.setText(route.getText());
+        if(!isStart) {
+            routeET.setText(route.getText());
+            route.setVisibility(View.GONE);
+            routeET.setVisibility(View.VISIBLE);
+        }
+
+        Toast.makeText(getActivity(), "Study name can only be edited in web application. ", Toast.LENGTH_SHORT).show();
+
+        //routeET.setText(route.getText());
         vehicleTypeET.setText(vehicleType.getText());
         capacityET.setText(capacity.getText());
 
-        study.setVisibility(View.GONE);
-        route.setVisibility(View.GONE);
+        //route.setVisibility(View.GONE);
         vehicleType.setVisibility(View.GONE);
         capacity.setVisibility(View.GONE);
-        startB.setVisibility(View.GONE);
 
-        routeET.setVisibility(View.VISIBLE);
+        //routeET.setVisibility(View.VISIBLE);
         vehicleTypeET.setVisibility(View.VISIBLE);
         capacityET.setVisibility(View.VISIBLE);
 
@@ -298,7 +299,7 @@ public class StartStudyFragment extends Fragment {
 
     public void save() {
 
-        studyInformation.setRoute(routeET.getText().toString());
+        //studyInformation.setRoute(routeET.getText().toString());
         studyInformation.setType(vehicleTypeET.getText().toString());
         String capString = capacityET.getText().toString();
         int cap = 0;
@@ -307,7 +308,7 @@ public class StartStudyFragment extends Fragment {
         studyInformation.setCapacity(cap);
 
         study.setVisibility(View.VISIBLE);
-        route.setText(routeET.getText());
+        //route.setText(routeET.getText());
         route.setVisibility(View.VISIBLE);
         vehicleType.setText(vehicleTypeET.getText());
         vehicleType.setVisibility(View.VISIBLE);
@@ -315,8 +316,6 @@ public class StartStudyFragment extends Fragment {
         capacity.setVisibility(View.VISIBLE);
         startB.setVisibility(View.VISIBLE);
 
-        routeET.setVisibility(View.GONE);
-        routeET.setText("");
         vehicleTypeET.setVisibility(View.GONE);
         vehicleTypeET.setText("");
         capacityET.setVisibility(View.GONE);
@@ -332,7 +331,14 @@ public class StartStudyFragment extends Fragment {
 
         if(isStudyStarted) {
             AppService.prepareEditStudy(this.getActivity(), HTTP_EDIT, studyInformation.getName(), studyInformation.getRoute(), studyInformation.getType(),
-                    studyInformation.getCapacity(), studyInformation.getStart_date(), studyInformation.getStart_time());
+                    studyInformation.getCapacity());
+        } else {
+            studyInformation.setRoute(routeET.getText().toString());
+            route.setText(routeET.getText());
+            routeET.setText("");
+            routeET.setVisibility(View.GONE);
+
+            AppService.prepareVerifyStudy(this.getActivity(), HTTP_VERIFY, studyInformation.getRoute());
         }
     }
 
@@ -359,6 +365,19 @@ public class StartStudyFragment extends Fragment {
         }
     }
 
+    private void showInvalidRouteDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Invalid Route")
+                .setMessage("This is an invalid route. Please enter a valid route before starting the study.")
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface d, int id) {
+                                d.dismiss();
+                            }
+                        });
+        builder.create().show();
+    }
+
     public void startClick() {
         startB.setVisibility(View.GONE);
         stopB.setVisibility(View.VISIBLE);
@@ -379,7 +398,7 @@ public class StartStudyFragment extends Fragment {
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface d, int id) {
-                               stop();
+                                stop();
                             }
                         })
                 .setNegativeButton("Cancel",
@@ -402,8 +421,8 @@ public class StartStudyFragment extends Fragment {
         studyInformation.setEnd_date(s[0].trim());
         studyInformation.setEnd_time(s[1].trim());
 
-        AppService.prepareStopStudy(this.getActivity(), HTTP_STOP, tableH, studyInformation.getName(), studyInformation.getEnd_date(), studyInformation.getEnd_time(),
-                isFirstWriteToSDcard);
+        AppService.prepareStopStudy(this.getActivity(), HTTP_STOP, tableH, studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(),
+                studyInformation.getEnd_date(), studyInformation.getEnd_time(), isFirstWriteToSDcard, fileName);
     }
 
     private void clean() {
@@ -432,15 +451,21 @@ public class StartStudyFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return false;
-        } else if (id == R.id.pencil_icon) {
+        } else*/
+
+        if (id == R.id.pencil_icon) {
             this.edit();
-            if(this.menu != null) {
+            if (this.menu != null) {
                 menu.findItem(R.id.pencil_icon).setVisible(false);
                 menu.findItem(R.id.action_save).setVisible(true);
                 menu.findItem(R.id.action_cancel).setVisible(true);
             }
+            return true;
+        } else if (id == R.id.action_gps) {
+            Toast.makeText(getActivity(), "Latitude: " + myGps.getLatitude() + " Longitude: " + myGps.getLongitude(), Toast.LENGTH_SHORT).show();
+
             return true;
         } else {
             if (id == R.id.action_save) {
@@ -477,7 +502,6 @@ public class StartStudyFragment extends Fragment {
         return studyInformation.getStart_time();
     }
 
-
     public class MyServiceReceiver extends BroadcastReceiver {
         public static final String BROADCAST_ACTION = "Send hash map";
         public static final String BROADCAST_BT = "Obtain data";
@@ -488,12 +512,18 @@ public class StartStudyFragment extends Fragment {
             boolean isStop = intent.getBooleanExtra(STOP_STUDY, false);
             String toastM = intent.getStringExtra(ArcHttpClient.TOAST_MSG);
 
-            if(toastM != null)
-                Toast.makeText(context, toastM, Toast.LENGTH_SHORT).show();
+            if(toastM != null) {
+                if(!toastM.equals("INVALID")) {
+                    Toast.makeText(context, toastM, Toast.LENGTH_SHORT).show();
+                } else {
+                    showInvalidRouteDialog();
+                }
+            }
 
             if(isStudyStarted && isTable) {
                 tableH = (HashMap<String, Passenger>) intent.getSerializableExtra(MAP_DATA);
                 isFirstWriteToSDcard = intent.getBooleanExtra(STUDY_FIRST_WRITE, false);
+                updateTable();
             }
 
             String message = intent.getStringExtra(BT_DATA);
@@ -507,11 +537,169 @@ public class StartStudyFragment extends Fragment {
         }
     }
 
+    private void setTableCols() {
+        TableRow row= new TableRow(getActivity());
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+        row.setPadding(0, 2, 0, 0);
+        row.setBackgroundColor(Color.parseColor("#808080"));
+        row.setWeightSum(100);
+        row.setLayoutParams(lp);
+
+        TextView tv = new TextView(getActivity());
+        TableRow.LayoutParams tvp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 20); //23
+        tv.setText("Tag ID");
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setTypeface(null, Typeface.BOLD);
+        tv.setTextColor(Color.parseColor("#ffffff"));
+        tv.setBackgroundColor(Color.parseColor("#15C8EC"));
+        tvp.setMargins(1, 0, 0, 1);
+        tv.setPadding(5, 5, 5, 5);
+        tv.setLayoutParams(tvp);
+        row.addView(tv, 0);
+
+        TextView tv1 = new TextView(getActivity());
+        TableRow.LayoutParams tvp1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 30); //30
+        tv1.setText("Entry location");
+        tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv1.setTypeface(null, Typeface.BOLD);
+        tv1.setTextColor(Color.parseColor("#ffffff"));
+        tv1.setBackgroundColor(Color.parseColor("#15C8EC"));
+        tvp1.setMargins(1, 0, 0, 1);
+        tv1.setPadding(5, 5, 5, 5);
+        tv1.setLayoutParams(tvp1);
+        row.addView(tv1, 1);
+
+        TextView tv2 = new TextView(getActivity());
+        TableRow.LayoutParams tvp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 10); //3
+        tv2.setText("Entry time");
+        tv2.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv2.setTypeface(null, Typeface.BOLD);
+        tv2.setTextColor(Color.parseColor("#ffffff"));
+        tv2.setBackgroundColor(Color.parseColor("#15C8EC"));
+        tvp2.setMargins(1, 0, 0, 1);
+        tv2.setPadding(5, 5, 5, 5);
+        tv2.setLayoutParams(tvp2);
+        row.addView(tv2, 2);
+
+        TextView tv3 = new TextView(getActivity());
+        TableRow.LayoutParams tvp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 30); //39
+        tv3.setText("Exit location");
+        tv3.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv3.setTypeface(null, Typeface.BOLD);
+        tv3.setTextColor(Color.parseColor("#ffffff"));
+        tv3.setBackgroundColor(Color.parseColor("#15C8EC"));
+        tvp3.setMargins(1, 0, 0, 1);
+        tv3.setPadding(5, 5, 5, 5);
+        tv3.setLayoutParams(tvp3);
+        row.addView(tv3, 3);
+
+        TextView tv4 = new TextView(getActivity());
+        TableRow.LayoutParams tvp4 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 10); //5
+        tv4.setText("Exit time");
+        tv4.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv4.setTypeface(null, Typeface.BOLD);
+        tv4.setTextColor(Color.parseColor("#ffffff"));
+        tv4.setBackgroundColor(Color.parseColor("#15C8EC"));
+        tvp4.setMargins(1, 0, 0, 1);
+        tv4.setPadding(5, 5, 5, 5);
+        tv4.setLayoutParams(tvp4);
+        row.addView(tv4, 4);
+
+        tableTitle.addView(row);
+    }
+
+    private void updateTable() {
+
+        tableL.removeAllViewsInLayout();
+
+        int batch_count = 0;
+        for(String key: tableH.keySet()) {
+            Passenger currentPass = tableH.get(key);
+            String a[] = key.split(",");
+            String passKey = a[2].trim();
+
+            if (currentPass.getExit_time() != null)
+                batch_count++;
+
+            TableRow row = new TableRow(getActivity());
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.CENTER_HORIZONTAL;
+            row.setPadding(0, 2, 0, 0);
+            row.setBackgroundColor(Color.parseColor("#808080"));
+            row.setWeightSum(100);
+            row.setLayoutParams(lp);
+
+            TextView tv = new TextView(getActivity());
+            TableRow.LayoutParams tvp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 15);
+            tv.setText(passKey);
+            tv.setGravity(Gravity.CENTER_HORIZONTAL);
+            tv.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvp.setMargins(1, 0, 0, 1);
+            tv.setPadding(5, 5, 5, 5);
+            tv.setLayoutParams(tvp);
+            row.addView(tv, 0);
+
+            TextView tv1 = new TextView(getActivity());
+            TableRow.LayoutParams tvp1 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 24);
+            tv1.setText(currentPass.getEntry_lat() + ", " + currentPass.getEntry_lon());
+            tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+            tv1.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvp1.setMargins(1, 0, 0, 1);
+            tv1.setPadding(5, 5, 5, 5);
+            tv1.setLayoutParams(tvp1);
+            row.addView(tv1, 1);
+
+            TextView tv2 = new TextView(getActivity());
+            TableRow.LayoutParams tvp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 23);
+            tv2.setText(currentPass.getEntry_time());
+            tv2.setGravity(Gravity.CENTER_HORIZONTAL);
+            tv2.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvp2.setMargins(1, 0, 0, 1);
+            tv2.setPadding(5, 5, 5, 5);
+            tv2.setLayoutParams(tvp2);
+            row.addView(tv2, 2);
+
+            TextView tv3 = new TextView(getActivity());
+            TableRow.LayoutParams tvp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 19);
+
+            if(currentPass.getExit_time() == null)
+                tv3.setText("----------------------------");
+            else
+                tv3.setText(currentPass.getExit_lat() + ", " + currentPass.getExit_lon());
+
+            tv3.setGravity(Gravity.CENTER_HORIZONTAL);
+            tv3.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvp3.setMargins(1, 0, 0, 1);
+            tv3.setPadding(5, 5, 5, 5);
+            tv3.setLayoutParams(tvp3);
+            row.addView(tv3, 3);
+
+            TextView tv4 = new TextView(getActivity());
+            TableRow.LayoutParams tvp4 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 28);
+
+            if(currentPass.getExit_time() == null)
+                tv4.setText("----------");
+            else
+                tv4.setText(currentPass.getExit_time());
+
+            tv4.setGravity(Gravity.CENTER_HORIZONTAL);
+            tv4.setBackgroundColor(Color.parseColor("#ffffff"));
+            tvp4.setMargins(1, 0, 0, 1);
+            tv4.setPadding(5, 5, 5, 5);
+            tv4.setLayoutParams(tvp4);
+            row.addView(tv4, 4);
+
+            tableL.addView(row);
+        }
+
+        batchCount.setText("Complete passenger batch: " + batch_count + "/" + tableH.size());
+    }
+
     private void handleMessage(String message) {
         String action = message.substring(0, 1);
         String tag = message.substring(1);
 
-        //String tag = message;
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Date time = Calendar.getInstance().getTime();
 
@@ -520,15 +708,18 @@ public class StartStudyFragment extends Fragment {
             if(lastScannedTagTime == -1) {
                 lastScannedTagTime = time.getTime();
                 lastScannedTag = tag;
-                AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isFirstWriteToSDcard);
+
+                AppService.preparePassengerInfo(getActivity(), tableH, myGps.getLatitude(), myGps.getLongitude(), df.format(time), tag,
+                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isFirstWriteToSDcard, fileName);
+
             } else {
                 long diff = time.getTime() - lastScannedTagTime;
                 if(diff > TIME_THRESHOLD || !lastScannedTag.equals(tag)) {
                     lastScannedTagTime = time.getTime();
                     lastScannedTag = tag;
-                    AppService.preparePassengerInfo(getActivity(), tableH, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                            studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isFirstWriteToSDcard);
+
+                    AppService.preparePassengerInfo(getActivity(), tableH, myGps.getLatitude(), myGps.getLongitude(), df.format(time), tag,
+                              studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isFirstWriteToSDcard, fileName);
                 }
             }
         } else if(action.equals("1")) {
@@ -543,8 +734,13 @@ public class StartStudyFragment extends Fragment {
                 getActivity().sendBroadcast(localIntent);
                 sentAckBT_DP = true;
             } else {
-                AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, location.getLatitude(), location.getLongitude(), df.format(time), tag,
-                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isDiagnostic);
+                //AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, location.getLatitude(), location.getLongitude(), df.format(time), tag,
+                //        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isDiagnostic, fileName);
+
+                AppService.prepareDiagnosticProtocol(getActivity(), DIAGNOSTIC, myGps.getLatitude(), myGps.getLongitude(), df.format(time), tag,
+                        studyInformation.getName(), studyInformation.getStart_date(), studyInformation.getStart_time(), isDiagnostic, fileName);
+
+                sentAckBT_DP = false;
             }
         }
     }

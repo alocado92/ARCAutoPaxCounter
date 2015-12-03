@@ -24,17 +24,17 @@ import java.util.List;
  */
 public class ArcHttpClient {
 
+    private static final int SEND_TRIES = 5;
     private Context context;
     private HttpURLConnection conn;
     private static final String myURL = "http://arcinnovations.ece.uprm.edu:3000/mobile";
     public static final String TAG = "MyService";
     public static final String TOAST_MSG = "Send toast to UI";
-
     public ArcHttpClient(Context context) {
         this.context = context;
     }
 
-    public boolean post(HashMap<String, Passenger> list, Study study, String action) {
+    public boolean post(HashMap<String,Passenger> list, Study study, String action) {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         boolean dataReceived = false;
@@ -64,13 +64,15 @@ public class ArcHttpClient {
                     json = serializeStopJSON(study, action);
                 } else if (StartStudyFragment.DIAGNOSTIC.equals(action)) {
                     json = serializeDiagnosticJSON(list, action);
+                } else if(StartStudyFragment.HTTP_VERIFY.equals(action)) {
+                    json = serializeVerifyJSON(study, action);
                 } else {
                     //Passenger
-                    json = serializePassengerJSON(list);
+                    json = serializePassengerJSON(list, study);
                 }
 
                 int tries = 0;
-                while (!ackReceived && tries < 5) {
+                while (!ackReceived && tries < SEND_TRIES) {
                     //Write to output stream
                     OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
                     out.write(json);
@@ -85,6 +87,10 @@ public class ArcHttpClient {
                         if (result.equals("OK")) {
                             Log.d(TAG, result);
                             ackReceived = true;
+                        } else if (result.equals("INVALID") && StartStudyFragment.HTTP_VERIFY.equals(action)) {
+                            Log.d(TAG, result);
+                            ackReceived = true;
+                            sendBroadcastToast("INVALID");
                         }
                     } else
                         Log.d(TAG, conn.getResponseMessage());
@@ -119,6 +125,19 @@ public class ArcHttpClient {
         return dataReceived;
     }
 
+    private String serializeVerifyJSON(Study study, String action) {
+        JSONObject jsonObject = new JSONObject();
+        String result = "";
+        try {
+            jsonObject.put("action", action);
+            jsonObject.put("route", study.getRoute());
+            result = jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public String get(HttpURLConnection conn) {
         StringBuilder result = new StringBuilder();
         try {
@@ -145,12 +164,22 @@ public class ArcHttpClient {
         context.sendBroadcast(localIntent);
     }
 
-    private String serializePassengerJSON(HashMap<String, Passenger> list) {
+    private String serializePassengerJSON(HashMap<String, Passenger> list, Study study) {
         JSONArray array = new JSONArray();
+        JSONObject jObj = new JSONObject();
+
+        try {
+            jObj.put("study", study.getName());
+            jObj.put("dateTime", study.getStart_date() + ", " + study.getStart_time());
+            array.put(jObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         for(String key: list.keySet()) {
             Passenger passenger = list.get(key);
             JSONObject jsonObject = new JSONObject();
+
             try {
                 jsonObject.put("tagID", key);
                 jsonObject.put("entry_lat", passenger.getEntry_lat());

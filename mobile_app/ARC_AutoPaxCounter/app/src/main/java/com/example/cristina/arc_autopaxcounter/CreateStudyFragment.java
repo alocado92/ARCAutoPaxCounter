@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by Cristina on 10/18/2015.
  */
@@ -29,6 +31,7 @@ public class CreateStudyFragment extends DialogFragment {
     private EditText route;
     private EditText vehicleType;
     private EditText vehicleCapacity;
+    private EditText fileName;
     private BluetoothDevice bt;
     private OnDataPass dataPass;
     private StartStudyFragment studyFragment;
@@ -49,32 +52,17 @@ public class CreateStudyFragment extends DialogFragment {
         route = (EditText) view.findViewById(R.id.route);
         vehicleType = (EditText) view.findViewById(R.id.vType);
         vehicleCapacity = (EditText) view.findViewById(R.id.vCap);
+        fileName = (EditText) view.findViewById(R.id.filename);
+        fileName.setText(AppService.ARC_SDCARD_DEFAULT_FILENAME);
 
         builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setTitle("Create Study");
-        builder.setMessage("Please fill all input fields to create a new study. Vehicle capacity must be greater than zero.");
+        builder.setMessage("Please fill all input fields to create a new study where the vehicle capacity must be greater than zero. " +
+                "The file name will be stored as a text file (.txt) in the SDcard.");
         builder.setPositiveButton(android.R.string.ok, null);
         builder.setNegativeButton(android.R.string.cancel, null);
         myDialog = builder.create();
-        /*builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                String value = vehicleCapacity.getText().toString();
-
-                if(studyName.getText().toString() != null &&  route.getText().toString() != null & vehicleType.getText().toString() != null &&
-                        (!value.equals("") && Integer.parseInt(value) > 0)) {
-                    goToStudyFragment();
-
-
-                }
-            }
-        });*/
-
-        /*builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                myDialog.dismiss();
-            }
-        });*/
 
         myDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -85,11 +73,16 @@ public class CreateStudyFragment extends DialogFragment {
                     public void onClick(View view) {
                         String value = vehicleCapacity.getText().toString();
 
-                        if (studyName.getText().toString() != null && route.getText().toString() != null & vehicleType.getText().toString() != null &&
-                                (!value.equals("") && Integer.parseInt(value) > 0)) {
-                            goToStudyFragment();
+                        if (studyName.getText().toString() != null && route.getText().toString() != null &&
+                                vehicleType.getText().toString() != null && (!value.equals("") && Integer.parseInt(value) > 0)) {
+                            if(!fileName.getText().toString().matches(".*.txt$")) {
+                                String temp[] = fileName.getText().toString().split(Pattern.quote("."));
+                                if(temp.length < 3) {
+                                   fileName.setText(temp[0] + ".txt");
+                                }
+                            }
 
-                            //Dismiss once everything is OK.
+                            goToStudyFragment();
                             myDialog.dismiss();
                         }
                     }
@@ -107,6 +100,7 @@ public class CreateStudyFragment extends DialogFragment {
         bundle.putString("route", route.getText().toString());
         bundle.putString("vType", vehicleType.getText().toString());
         bundle.putString("vCap", vehicleCapacity.getText().toString());
+        bundle.putString("filename", fileName.getText().toString());
         bundle.putParcelable("BTdevice", bt);
 
         studyFragment = new StartStudyFragment();

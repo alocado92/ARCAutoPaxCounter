@@ -28,7 +28,7 @@ public class BluetoothFragmentDialog extends DialogFragment {
     private TextView tvSearchDevices;
     private View view;
     private ARC_Bluetooth arc_bluetooth;
-    private boolean IS_STUDY_FRAGMENT = true;
+    private boolean isStudyFragment = false;
 
     public static BluetoothFragmentDialog newInstance(String param1) {
         BluetoothFragmentDialog fragment = new BluetoothFragmentDialog();
@@ -45,7 +45,7 @@ public class BluetoothFragmentDialog extends DialogFragment {
         builder.setView(view);
         builder.setTitle(R.string.bluetooth_dialog);
         myDialog = builder.create();
-        arc_bluetooth = new ARC_Bluetooth(getActivity(), IS_STUDY_FRAGMENT, arrayAdapter, myDialog, myListView);
+        arc_bluetooth = new ARC_Bluetooth(getActivity(), isStudyFragment, arrayAdapter, myDialog, myListView);
         return myDialog;
     }
 
@@ -54,6 +54,11 @@ public class BluetoothFragmentDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = this.getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.bluetooth_dialog, null);
+
+        if (getArguments() != null) {
+            isStudyFragment = getArguments().getBoolean("isStartStudyNull");
+        }
+
         progress_bar = (ProgressBar) view.findViewById(R.id.progressBar);
         myListView = (ListView) view.findViewById(R.id.dialoglist);
         tvSearchDevices = (TextView) view.findViewById(R.id.tvBluetoothSearchDevices);

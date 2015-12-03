@@ -6,9 +6,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +39,7 @@ public class ARC_Bluetooth {
 
     private static final int MESSAGE_LENGTH = 12;
     private Context context;
+    private boolean wasPared = false;
     private ConnectedThread connectedThread;
     private BluetoothSocket mmSocket;
     private List<BluetoothDevice> listOfDevices;
@@ -47,13 +51,12 @@ public class ARC_Bluetooth {
         private ListView myListView;
         private MyServiceReceiver receiver;
         public static final String BROADCAST_ACTION_ACK = "Obtain ack";
-        public static final String BROADCAST_ACTION_DISCONNECT = "Disconnect socket";
+        //public static final String BROADCAST_ACTION_DISCONNECT = "Disconnect socket";
         public static final String BT_ACK = "Bluetooth acknowledgement";
         public static final String BT_CLOSE = "close";
         public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");  //Standard SerialPortService ID
 
-        public ARC_Bluetooth(Boolean isStudyFragment) {
-            this.isStudyFragment = isStudyFragment;
+        public ARC_Bluetooth() {
         }
 
         public ARC_Bluetooth(Context context, Boolean isStudyFragment, ArrayAdapter<String> arrayAdapter, Dialog btDialog, ListView myListView) {
@@ -68,12 +71,10 @@ public class ARC_Bluetooth {
             IntentFilter filter = new IntentFilter();
             filter.addCategory(Intent.CATEGORY_DEFAULT);
             filter.addAction(ARC_Bluetooth.BROADCAST_ACTION_ACK);
-            filter.addAction(ARC_Bluetooth.BROADCAST_ACTION_DISCONNECT);
             receiver = new MyServiceReceiver();
             context.registerReceiver(receiver, filter);
         }
 
-        //No
         public void startScan() {
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -91,7 +92,6 @@ public class ARC_Bluetooth {
                 } else {
                     for (BluetoothDevice device : pairedDevices) {
                         // Add the name and address to an array adapter to show in a ListView
-                        //arrayAdapter.add(device.getName() + "\t" + device.getAddress());
                         arrayAdapter.add(device.getName());
                         listOfDevices.add(device);
                     }
@@ -117,16 +117,17 @@ public class ARC_Bluetooth {
                     showToast("Starting discovery");
 
                 } else if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+                    /*if(wasPared) {
+                        arrayAdapter.remove(arrayAdapter.getItem(selectedBT));
+                        wasPared = false;
+                        cancelDiscovery();
+                    }*/
                     showConnected(device);
 
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                    //progress_bar.setVisibility(View.GONE);
-                    //tvSearchDevices.setVisibility(View.GONE);
-                    //myListView.setVisibility(View.VISIBLE);
 
                 } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                     if (!listOfDevices.contains(device)) {
-                        //arrayAdapter.add(device.getName() + "\t" + device.getAddress());
                         arrayAdapter.add(device.getName());
                         listOfDevices.add(device);
                     }
@@ -140,11 +141,13 @@ public class ARC_Bluetooth {
                             showToast("Connecting");
                             if (pairedDevices != null || pairedDevices.size() > 0) {
                                 if (!pairedDevices.contains(d)) {
+                                    cancelDiscovery();
                                     pair(d);
 
                                     Set<BluetoothDevice> pairedD = bluetoothAdapter.getBondedDevices();
                                     while(!pairedD.contains(d)) {
                                         pairedD = bluetoothAdapter.getBondedDevices();
+                                        //wasPared = true;
                                     }
                                 }
                                 connect(listOfDevices.get(selectedBT));
@@ -156,7 +159,6 @@ public class ARC_Bluetooth {
                     final int prevState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
 
                     if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
-                        //showConnected(device);
 
                     } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED) {
                         showToast("Unconnected");
@@ -165,12 +167,11 @@ public class ARC_Bluetooth {
             }
         };
 
-        public void connect(BluetoothDevice bt) {
+    public void connect(BluetoothDevice bt) {
             ConnectThread connectThread = new ConnectThread(bt);
             connectThread.start();
         }
 
-        //No
         private void pair(BluetoothDevice device) {
             try {
                 Method method = device.getClass().getMethod("createBond", (Class[]) null);
@@ -214,16 +215,22 @@ public class ARC_Bluetooth {
             arrayAdapter.remove(dn);
             arrayAdapter.insert(dn + "\t\t" + "(Connected)", selectedBT);
 
-
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     myDialog.dismiss();
-                    Intent intent1 = new Intent(context, MainActivity.class);
-                    intent1.putExtra("BTdevice", device);
-                    context.startActivity(intent1);
+
+                    if(!isStudyFragment) {
+                        Intent intent1 = new Intent(context, MainActivity.class);
+                        intent1.putExtra("BTdevice", device);
+                        context.startActivity(intent1);
+                    }
                 }
             }, 2000);
+        }
+
+        public BroadcastReceiver getmReceiver() {
+            return mReceiver;
         }
 
         //=================================================Private Classes==============================================//
@@ -235,16 +242,12 @@ public class ARC_Bluetooth {
             private final BluetoothDevice mmDevice;
 
             public ConnectThread(BluetoothDevice device) {
+                bluetoothAdapter.cancelDiscovery();
                 // Use a temporary object that is later assigned to mmSocket, because mmSocket is final
-                if(!isStudyFragment) {
-                    bluetoothAdapter.cancelDiscovery();
-                }
-
                 BluetoothSocket tmp = null;
                 mmDevice = device;
                 // Get a BluetoothSocket to connect with the given BluetoothDevice
                 try {
-                    //tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
                     tmp = mmDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID);
                 } catch (IOException e) {
                     showToast("Unable to get bluetooth socket");
@@ -271,7 +274,7 @@ public class ARC_Bluetooth {
                     }
                 }
 
-                if(mmSocket != null && mmSocket.isConnected() && isStudyFragment) {
+                if(mmSocket != null && mmSocket.isConnected()) {
                     connectedThread = new ConnectedThread(mmSocket);
                     connectedThread.start();
                 }
@@ -293,6 +296,7 @@ public class ARC_Bluetooth {
             private final OutputStream mmOutStream;
 
             public ConnectedThread(BluetoothSocket socket) {
+
                 mmSocket = socket;
                 InputStream tmpIn = null;
                 OutputStream tmpOut = null;
@@ -315,12 +319,14 @@ public class ARC_Bluetooth {
                 // Keep listening to the InputStream until an exception occurs
                 while (true) {
                     try {
-                        bytes = mmInStream.read(buffer);
-                        String strReceived = new String(buffer, 0, bytes);
-                        msgReceived += strReceived;
-                        if(!msgReceived.equals("") && msgReceived.length() > MESSAGE_LENGTH) {
-                            parseReceivedMsg(msgReceived);      //use listener to send/receive messages to StartStudy Fragment
-                            msgReceived = "";
+                        if(connectedThread != null) {
+                            bytes = mmInStream.read(buffer);
+                            String strReceived = new String(buffer, 0, bytes);
+                            msgReceived += strReceived;
+                            if(!msgReceived.equals("") && msgReceived.length() > MESSAGE_LENGTH) {
+                                parseReceivedMsg(msgReceived);      //use listener to send/receive messages to StartStudy Fragment
+                                msgReceived = "";
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -341,6 +347,7 @@ public class ARC_Bluetooth {
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);   //ack
+                Toast.makeText(context, "Ack sent to Central Unit", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -374,6 +381,7 @@ public class ARC_Bluetooth {
 
             if(connectedThread != null && close) {
                 connectedThread.cancel();
+                //context.unregisterReceiver(this);  //*******************added
             }
         }
     }

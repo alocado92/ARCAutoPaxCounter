@@ -76,14 +76,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.40"
+            android:layout_weight="0.25"
             android:text="Vehicle capacity"
             android:layout_marginLeft="5dp" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.60"
+            android:layout_weight="0.75"
             android:orientation="horizontal" >
 
             <EditText
@@ -94,6 +94,27 @@
                 android:numeric="integer"
                 />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="File name for data log"
+            android:layout_marginLeft="5dp" />
+
+        <EditText
+            android:id="@+id/filename"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:ems="10"
+            />
     </LinearLayout>
 
 

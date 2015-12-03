@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Settings;
@@ -45,7 +47,7 @@ public class MainActivity extends ActionBarActivity
      */
     private BluetoothFragmentDialog bluetoothF;
     private CreateStudyFragment studyF;
-    int REQUEST_DISCOVERABLE_CODE = 42;
+    public int REQUEST_DISCOVERABLE_CODE = 42;
     private FragmentManager fragmentManager;
     private StartStudyFragment studyFragment;
     private List<Integer> mBuffer = new ArrayList<>();
@@ -85,10 +87,15 @@ public class MainActivity extends ActionBarActivity
         mTitle = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
         this.getBundleValues();
         fragmentManager = getSupportFragmentManager();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        registerReceiver(aReceiver, filter);
     }
 
     private void getBundleValues() {
@@ -154,8 +161,14 @@ public class MainActivity extends ActionBarActivity
             } else if (resultCode == 300) {
                 Toast.makeText(this, "Discoverable mode enabled", Toast.LENGTH_SHORT).show();
                 bluetoothF = new BluetoothFragmentDialog();
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(bluetoothF , null);
+                fragmentManager = getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                if(!study_notC) {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isStartStudyNull", true);
+                    bluetoothF.setArguments(bundle);
+                }
+                ft.add(bluetoothF, null);
                 ft.commitAllowingStateLoss();
             }
         }
@@ -255,7 +268,17 @@ public class MainActivity extends ActionBarActivity
             if(isBluetoothSetup) {
                 bluetoothF = new BluetoothFragmentDialog();
                 if (isDiscoverable) {
-                    bluetoothF.show(fragmentManager, getString(R.string.bluetooth_setup));
+                    if(!study_notC) {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction ft = fragmentManager.beginTransaction();
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("isStartStudyNull", true);
+                        bluetoothF.setArguments(bundle);
+                        ft.add(bluetoothF, null);
+                        ft.commitAllowingStateLoss();
+                    } else {
+                        bluetoothF.show(fragmentManager, getString(R.string.bluetooth_setup));
+                    }
                 }
             }
             else if(isCreateStudy) {
@@ -296,7 +319,7 @@ public class MainActivity extends ActionBarActivity
     /**
      * Logic of fragments when selected
      */
-    private boolean doBluetoothSetup(boolean discoverable) {
+    public boolean doBluetoothSetup(boolean discoverable) {
         boolean isDiscoverable = discoverable;
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if(adapter != null) {
@@ -385,11 +408,22 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
-        Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_DISCONNECT);
+        //send ack 'S' to Bluetooth
+        Intent intent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_ACK);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.putExtra(ARC_Bluetooth.BT_ACK, AppService.BLUETOOTH_ACK_MESSAGE_STOP);
+        intent.putExtra(ARC_Bluetooth.BT_CLOSE, true);
+        intent.putExtra(StartStudyFragment.MAP_FLAG, false);
+        sendBroadcast(intent);
+
+        //close Bluetooth connected thread
+        /*Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_DISCONNECT);
         localIntent.addCategory(Intent.CATEGORY_DEFAULT);
         localIntent.putExtra(ARC_Bluetooth.BT_CLOSE, true);
         localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
-        sendBroadcast(localIntent);
+        sendBroadcast(localIntent);*/
+
+        unregisterReceiver(aReceiver);
         super.onDestroy();
     }
 
@@ -412,12 +446,13 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+
+        /*int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -425,6 +460,28 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    private final BroadcastReceiver aReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                showConnectionLostDialog();
+            }
+        }
+    };
+
+    private void showConnectionLostDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Bluetooth Connection Lost")
+                .setMessage("Bluetooth connection was lost unexpectedly. Please connect to Bluetooth device.")
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface d, int id) {
+                                d.dismiss();
+                            }
+                        });
+        builder.create().show();
     }
 
     @Override

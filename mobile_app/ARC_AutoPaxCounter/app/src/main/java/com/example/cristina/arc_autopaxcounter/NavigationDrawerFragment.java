@@ -268,7 +268,6 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         //Example Action in toolbar trigger Toast
-
         /*if (item.getItemId() == R.id.action_example) {
             Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
