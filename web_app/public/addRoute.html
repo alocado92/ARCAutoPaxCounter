@@ -1,0 +1,97 @@
+<html><head>
+   <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-resource.js"></script>
+    <script src="routeApp.js"></script>
+    <script src="addRoute.js"></script>
+    <link href="addroute.css" rel="stylesheet" type="text/css">
+  </head><body ng-app="route_app">
+  <div class="container" >
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container"ng-controller="routeController as ctrl">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu/home">Home</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container" >
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="section">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-12">
+                    <p>Please enter the desired route name to be created:</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form class="form-horizontal" role="form" ng-submit="ctrl.fetch()">
+
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputPassword3" class="control-label">Search for available stops:</label>
+                </div>
+                <div class="col-sm-10">
+                  <button type="submit"  class="btn btn-default">Fetch Stops</button>
+                </div>
+              </div>
+
+
+
+            </form>
+            <form class="form-horizontal" role="form" ng-submit="ctrl.submit()">
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputrname3" class="control-label">Route name:</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputrname3" placeholder="Route Name" ng-model="ctrl.route_name">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputEmail3" class="control-label">Stop Name:</label>
+                </div>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" id="inputEmail3" placeholder="Stop Name" ng-model="ctrl.name" required>
+                </div>
+                <div class="col-sm-offset-1 col-sm-5">
+                  <button type="submit" ng-click="ctrl.add()" class="btn btn-default col-sm-4">Add Stop to Route</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+      <div class="container" id="stops">
+        <p ng-show='ctrl.canShow'>{{1+1}}</p>
+      </div>
+    </div>
+    </div>
+    
+  </div>
+</div>
+</body></html>
