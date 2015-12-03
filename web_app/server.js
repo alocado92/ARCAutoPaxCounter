@@ -846,11 +846,11 @@ app.post('/mobile', function (req,res){
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
 
-	  		var timequery = 'Select Date(start_time) as "final_date",MAX(exit_time) as "final_time", trip_ID from Passenger natural join Takes natural join Trip where end_time is null';
+	  		var timequery = 'Select TIMESTAMP(Date(start_time),MAX(exit_time)) as "final_date", trip_ID from Passenger natural join Takes natural join Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
 //bregar
 					var date = rows[0].final_date;
-					var time = rows[0].final_time
+					//var time = rows[0].final_time
 					var ID = rows[0].trip_ID;
 					var end_query = 'Update Trip SET ? WHERE ?';
 	  				connection.query( query,para, function (err, rows) {
@@ -860,8 +860,8 @@ app.post('/mobile', function (req,res){
 			   			id = rows.insertId;
 			   			console.log(id);
 			   			console("date: "+date);
-			   			console("time: "+time);
-			   			connection.query(end_query, [{end_time: date+time},{trip_ID: ID}], function (err,rows){
+			   			//console("time: "+time);
+			   			connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
 			   				connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
 			   			//manipulate rows
 				   			r_id = rows[0].route_ID;
