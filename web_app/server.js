@@ -498,6 +498,11 @@ app.get('/remind', function (req,res){
 	res.sendFile("public/forgot.html", {"root": __dirname});
 
 });
+
+app.get('/routes', function (req,res){
+	res.sendFile("public/addRoute.html", {"root": __dirname});
+
+});
 app.get('/newUser', function (req,res){
 	
 	if(sess != null && sess.is_admin == 1){
