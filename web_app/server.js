@@ -846,7 +846,7 @@ app.post('/mobile', function (req,res){
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
 
-	  		var timequery = 'Select CONCAT(Date(start_time),' ',MAX(exit_time)) as "final_date", trip_ID from Passenger natural join Takes natural join Trip where end_time is null';
+	  		var timequery = 'Select CONCAT(Date(start_time)," ",MAX(exit_time)) as "final_date", trip_ID from Passenger natural join Takes natural join Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
 //bregar
 					var date = rows[0].final_date;
