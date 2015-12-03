@@ -467,7 +467,7 @@ app.post('/login', function (req, res){
 	   			is_admin = rows[0].is_admin;
 	   			name = rows[0].f_name;
 
-	   			connection.release();
+	   			
 	   			console.log(exists);
 				if(exists){
 					console.log('User session will be created here');
@@ -481,6 +481,7 @@ app.post('/login', function (req, res){
 					//kick out
 					console.log('Kick out');
 				}
+				connection.release();
 		  		});
 	   		// And done with the connection.
 	   		console.log(exists);
