@@ -49,7 +49,7 @@
                     }
                 }
                 data1 = {stops: data, name: vm.route_name}
-            $http.post("/addRoute", data1, {headers: {'Content-Type': 'application/json'} })
+            $http.post("/addRoutes", data1, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
                         console.log(response.data.redirect);
                         window.location = response.data.redirect;

@@ -1202,6 +1202,50 @@ app.get('/admins',function (req,res){
 	    	// Don't use the connection here, it has been returned to the pool.
 });
 });
+app.post('/fetchRoute', function (req ,res){
+	pool.getConnection(function (err, connection){
+		connection.query('select stop_ID, stop_latitude, stop_longitude, name from Stop',function (err, rows){
+			var result = [];
+			console.log("Finished with Stop");
+			for(var i=0; i< rows.length; i++){
+				result.push({name: rows[i].name, latitude: rows[i].stop_latitude, longitude: rows[i].stop_longitude, id: rows[i].stop_ID});
+			}
+			console.log('Sending Result: ' + JSON.stringify(result));
+			res.send(result);
+			connection.release();
+		});
+	});
+});
+
+app.post('/addRoutes', function (req,res){
+	var stops = req.body.stops;
+	var route_name = req.body.name;
+	console.log('Stops to be tied to route: '+ JSON.stringify(stops));
+	console.log('Route name for new route: '+ route_name);
+	pool.getConnection(function (err, connection){
+
+		connection.query('Insert into Route SET ?',{route_name: route_name}, function (err,rows){
+			var id = rows.insertId;
+			console('Id of inserted Route = '+ id);
+
+			for(var j=0; j< stops.length; j++){
+				console.log("Inserting into Linked_to stop_ID: "+ id +" and route_ID: "+stops[j].stop_ID);
+
+				var s_ID = stops[j].stop_ID;
+
+				connection.query('INSERT INTO Linked_to SET ?', {stop_ID: s_ID, route_ID: id}, function (err, rows){
+					if(i = stops.length -1){
+						res.send({redirect: '/home'});
+						connection.release();
+					}
+				}); 
+			}
+		});
+	});
+
+
+
+});
 app.post('/view1', function (req,res){
 	console.log(req.body);
 	var datas = '{"data": [' + '{"name": "1", "IN": 25, "OUT": 24},' + '{"name": "2", "IN": 25, "OUT": 24},' +'{"name": "3", "IN": 25, "OUT": 24}]}';
