@@ -848,8 +848,9 @@ app.post('/mobile', function (req,res){
 
 	  		var timequery = 'Select Date(start_time) as final_date, trip_ID from Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
-//bregar
-					var date = rows[0].final_date;
+//bregar		
+					if(rows){
+						var date = rows[0].final_date;
 					console.log(date);
 
 					//var time = rows[0].final_time
@@ -894,6 +895,43 @@ app.post('/mobile', function (req,res){
 	  				});
 			   				
 			   			});
+					}
+					else{
+						connection.query( query,para, function (err, rows) {
+	   			//manipulate rows
+	   			
+			   			console.log('Insert new trip successful');
+			   			id = rows.insertId;
+			   			console.log(id);
+			   			//console.log("date: "+date);
+			   			connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
+			   			//manipulate rows
+				   			r_id = rows[0].route_ID;
+				   			console.log('fetch route_ID successful ' + r_id);
+
+				   			var query1 = 'Insert into Belongs SET ?';
+					  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
+					  		var para1 = {trip_ID: id,route_ID: r_id };
+					  		connection.query( query1,para1, function (err, rows) {
+				   			//manipulate rows
+				   			/*if(!rows){
+				   				res.send('INVALID');
+				   			}
+				   			else{
+				   				res.send('OK');
+				   			}*/
+				   				console.log('Insert new belongs successful');
+				   			
+				   			
+				  			});
+			   			
+			  			});
+			   			//console("time: "+time);
+			   			
+			   			
+	  				});
+					}
+					
 	  				
 	  			});
 	  		
