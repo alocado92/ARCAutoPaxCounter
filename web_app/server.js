@@ -833,6 +833,7 @@ app.post('/mobile', function (req,res){
 	//Parse which transaction mobile is sending
 	switch(option){
 		case 'create':
+
 			var route = req.body.route;
 			var begin_date = req.body.dateTime;
 			var t_name = req.body.study;
@@ -844,36 +845,48 @@ app.post('/mobile', function (req,res){
 			var r_id = 0;
 			pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( query,para, function (err, rows) {
-	   			//manipulate rows
-	   			
-	   			console.log('Insert new trip successful');
-	   			id = rows.insertId;
-	   			console.log(id);
 
-	   			connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
+	  		var timequery = 'Select Date(start_time) as "final_date",MAX(exit_time) as "final_time", trip_ID from Passenger natural join Takes natural join Trip where end_time is null';
+	  			connection.query(timequery, function (err,rows){
+//bregar
+					var date = rows[0].final_date;
+					var time = rows[0].final_time
+					var ID = trip_ID;
+					var end_query = 'Update Trip SET ? WHERE ?';
+	  				connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
-	   			r_id = rows[0].route_ID;
-	   			console.log('fetch route_ID successful ' + r_id);
+	   			
+			   			console.log('Insert new trip successful');
+			   			id = rows.insertId;
+			   			console.log(id);
+			   			console("New end time: " date.toString()+time.toString());
+			   			connection.query(end_query, [{end_time: date.toString()+time.toString()},{trip_ID: ID}], function (err,rows){
+			   				connection.query( 'Select route_ID from Route where (LOWER(route_name) = "'+route+'" OR route_name = "'+route+'")', function (err, rows) {
+			   			//manipulate rows
+				   			r_id = rows[0].route_ID;
+				   			console.log('fetch route_ID successful ' + r_id);
 
-	   			var query1 = 'Insert into Belongs SET ?';
-	  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
-	  		var para1 = {trip_ID: id,route_ID: r_id };
-	  		connection.query( query1,para1, function (err, rows) {
-	   			//manipulate rows
-	   			/*if(!rows){
-	   				res.send('INVALID');
-	   			}
-	   			else{
-	   				res.send('OK');
-	   			}*/
-	   			console.log('Insert new belongs successful');
-	   			
-	   			
-	  		});
-	   			
-	  		});
-	  		});
+				   			var query1 = 'Insert into Belongs SET ?';
+					  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
+					  		var para1 = {trip_ID: id,route_ID: r_id };
+					  		connection.query( query1,para1, function (err, rows) {
+				   			//manipulate rows
+				   			/*if(!rows){
+				   				res.send('INVALID');
+				   			}
+				   			else{
+				   				res.send('OK');
+				   			}*/
+				   				console.log('Insert new belongs successful');
+				   			
+				   			
+				  			});
+			   			
+			  			});
+			   			});
+			   			
+	  				});
+	  			});
 	  		
 
 	  		//connection.release();
@@ -905,7 +918,7 @@ app.post('/mobile', function (req,res){
 
 		pool.getConnection(function(err, connection) {
 	  		// Use the connection
-	  		connection.query( 'Select trip_ID from Trip where (end_time is NULL AND name="'+name+'")', function (err, rows) {
+	  		connection.query( 'Select trip_ID from Trip where (end_time is NULL AND name="'+study_name+'")', function (err, rows) {
 	   			//manipulate rows
 	   			if(rows)
 	   			{
@@ -983,6 +996,7 @@ app.post('/mobile', function (req,res){
 				var insert_scans = [];
 				var loop = 1;
 				var lim = req.body.length;
+				var study_name = req.body[0].study;
 				pool.getConnection(function (err, connection){
 				console.log("Request length: "+req.body.length);
 				//for(var i=0; i<req.body.length;i++){
@@ -1013,10 +1027,10 @@ app.post('/mobile', function (req,res){
 										ling_ling += "stop_ID = "+rows[i].stop_ID + " OR ";
 									}
 								}
-								console.log('ling_ling: '+ling_ling);
+								//console.log('ling_ling: '+ling_ling);
 								connection.query('select name, stop_latitude, stop_longitude from Stop where ('+ ling_ling+')', function (err, rows){
 
-									console.log("Rows after inner query "+rows);
+									//console.log("Rows after inner query "+rows);
 									if(rows.length < 1){
 										console.log('There are no active trips. Please add an active trip in order to register passengers');
 									}
@@ -1033,7 +1047,7 @@ app.post('/mobile', function (req,res){
 											    {latitude: lat1, longitude: log1}
 											);
 											console.log("dist: "+dist);
-											if(dist <= 7){
+											if(dist <= 10){
 												console.log("name: "+ rows[j].name);
 												orig_name = rows[j].name;
 												break;
@@ -1044,7 +1058,7 @@ app.post('/mobile', function (req,res){
 											    {latitude: test.exit_lat, longitude: test.exit_log},
 											    {latitude: rows[j].stop_latitude, longitude: rows[j].stop_longitude}
 											);
-											if(dist <= 7){
+											if(dist <= 10){
 												dest_name = rows[j].name;
 												break;
 											}
@@ -1060,7 +1074,7 @@ app.post('/mobile', function (req,res){
 								    		var pass_id = rows.insertId;
 								    		//console.log("i = "+il);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
-								    		connection.query('Select trip_ID from Trip where end_time is null', function (err,rows){
+								    		connection.query('Select trip_ID from Trip where end_time is null AND name ="'+study_name+'"', function (err,rows){
 								    			console.log('Trip ID: '+ rows[0].trip_ID);
 								    			console.log('Passenger ID: '+ pass_id);
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
