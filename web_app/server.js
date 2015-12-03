@@ -883,7 +883,7 @@ app.post('/mobile', function (req,res){
 				   				res.send('OK');
 				   			}*/
 				   				console.log('Insert new belongs successful');
-				   			
+				   			res.send('OK');
 				   			
 				  			});
 			   			
@@ -901,7 +901,7 @@ app.post('/mobile', function (req,res){
 	  		//connection.release();
 	  		
 	   		// And done with the connection.
-	   		res.send('OK');
+	   		
 	   		connection.release();
 	    });
 		break;
