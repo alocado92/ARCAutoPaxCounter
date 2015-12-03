@@ -1094,7 +1094,7 @@ app.post('/mobile', function (req,res){
 								    		console.log('Pass ID = '+pass_id);
 								    		console.log('Study name: '+ study_name);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
-								    		connection.query('"Select trip_ID from Trip where end_time is null AND ?',{name: study_name}, function (err,rows){
+								    		connection.query('Select trip_ID from Trip where end_time is null AND ?',{name: study_name}, function (err,rows){
 								    			console.log(pass_ID);
 								    			console.log('Trip ID: '+ rows[0].trip_ID);
 								    			console.log('Passenger ID: '+ pass_id);
