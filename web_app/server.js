@@ -851,7 +851,7 @@ app.post('/mobile', function (req,res){
 //bregar
 					var date = rows[0].final_date;
 					var time = rows[0].final_time
-					var ID = trip_ID;
+					var ID = rows[0].trip_ID;
 					var end_query = 'Update Trip SET ? WHERE ?';
 	  				connection.query( query,para, function (err, rows) {
 	   			//manipulate rows
