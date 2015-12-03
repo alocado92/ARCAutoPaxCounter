@@ -924,6 +924,10 @@ app.post('/mobile', function (req,res){
 				});
 			});
 		break;
+		case 'edit':
+			res.send('OK');
+			
+		break;
 		case 'stop':
 		var end_date = req.body.dateTime;
 		query = 'update Trip SET ? where ?';
@@ -1089,6 +1093,7 @@ app.post('/mobile', function (req,res){
 								    		//console.log("i = "+il);
 								    		console.log("successfully inserted passenger with id: "+rows.insertId);
 								    		connection.query('Select trip_ID from Trip where end_time is null AND name ='+study_name, function (err,rows){
+								    			console.log(pass_ID);
 								    			//console.log('Trip ID: '+ rows[0].trip_ID);
 								    			//console.log('Passenger ID: '+ pass_id);
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
@@ -1159,12 +1164,12 @@ app.post('/fetchRoute', function (req ,res){
 	pool.getConnection(function (err, connection){
 		connection.query('select stop_ID, stop_latitude, stop_longitude, name from Stop',function (err, rows){
 			var result = [];
-
+			console.log("Finished with Stop");
 			for(var i=0; i< rows.length; i++){
-				result.push({name: rows[0].name, latitude: rows[0].stop_latitude, longitude: rows[0].stop_longitude, id: rows[0].stop_ID});
+				result.push({name: rows[i].name, latitude: rows[i].stop_latitude, longitude: rows[i].stop_longitude, id: rows[i].stop_ID});
 			}
-
-			res.send({data: result});
+			console.log('Sending Result: ' JSON)
+			res.send(result);
 			connection.release();
 		});
 	});
