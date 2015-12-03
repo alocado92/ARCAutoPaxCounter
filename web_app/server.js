@@ -967,7 +967,7 @@ app.post('/mobile', function (req,res){
 
 			var query = 'Update from Trip SET ? where ?';
 			var para = [{vehicle_type: change_type},{name: change_study, start_time: time}];
-			getConnection(function (err, connection){
+			pool.getConnection(function (err, connection){
 				connection.query(query,para, function (err,rows){
 					
 					//change vehicle
