@@ -10,7 +10,7 @@
     <script src="routeApp.js"></script>
     <script src="addRoute.js"></script>
     <link href="addroute.css" rel="stylesheet" type="text/css">
-  </head><body>
+  </head><body ng-app="route_app">
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -31,6 +31,7 @@
         </div>
       </div>
     </div>
+    <div class="container" ng-controller="routeController as ctrl">
     <div class="section">
       <div class="container">
         <div class="row">
@@ -44,6 +45,20 @@
                 </div>
               </div>
             </div>
+            <form class="form-horizontal" role="form">
+
+              <div class="form-group">
+                <div class="col-sm-2">
+                  <label for="inputPassword3" class="control-label">Search for available stops:</label>
+                </div>
+                <div class="col-sm-10">
+                  <button type="submit" ng-click="ctrl.fetch()" class="btn btn-default">Fetch Stops</button>
+                </div>
+              </div>
+
+
+
+            </form>
             <form class="form-horizontal" role="form" ng-submit="ctrl.submit()">
               <div class="form-group">
                 <div class="col-sm-2">
@@ -53,20 +68,13 @@
                   <input type="text" class="form-control" id="inputrname3" placeholder="Route Name" ng-model="ctrl.route_name">
                 </div>
               </div>
-              <div class="form-group">
-                <div class="col-sm-2">
-                  <label for="inputPassword3" class="control-label">Search for available stops:</label>
-                </div>
-                <div class="col-sm-10">
-                  <button type="submit" ng-click="ctrl.fetch()" class="btn btn-default">Fetch Stops</button>
-                </div>
-              </div>
+              
               <div class="form-group">
                 <div class="col-sm-2">
                   <label for="inputEmail3" class="control-label">Stop Name:</label>
                 </div>
                 <div class="col-sm-2">
-                  <input type="text" class="form-control" id="inputEmail3" placeholder="Stop Name" ng-model="ctrl.route" required>
+                  <input type="text" class="form-control" id="inputEmail3" placeholder="Stop Name" ng-model="ctrl.name" required>
                 </div>
                 <div class="col-sm-offset-1 col-sm-5">
                   <button type="submit" ng-click="ctrl.add()" class="btn btn-default col-sm-4">Add Stop to Route</button>
@@ -79,9 +87,9 @@
     </div>
     <div class="section">
       <div class="container" id="stops">
-        <p>{{ctrl.s}}</p>
+        <p ng-show='ctrl.canShow'>{{ctrl.stop}}</p>
       </div>
     </div>
-  
+  </div>
 
 </body></html>
