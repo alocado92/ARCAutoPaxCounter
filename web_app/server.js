@@ -926,7 +926,7 @@ app.post('/mobile', function (req,res){
 		break;
 		case 'edit':
 			res.send('OK');
-			
+
 		break;
 		case 'stop':
 		var end_date = req.body.dateTime;
@@ -1168,7 +1168,7 @@ app.post('/fetchRoute', function (req ,res){
 			for(var i=0; i< rows.length; i++){
 				result.push({name: rows[i].name, latitude: rows[i].stop_latitude, longitude: rows[i].stop_longitude, id: rows[i].stop_ID});
 			}
-			console.log('Sending Result: ' JSON)
+			console.log('Sending Result: ' JSON.stringify(result));
 			res.send(result);
 			connection.release();
 		});
