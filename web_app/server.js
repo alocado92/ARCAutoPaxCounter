@@ -848,7 +848,8 @@ app.post('/mobile', function (req,res){
 
 	  		var timequery = 'Select Date(start_time) as final_date, trip_ID from Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
-//bregar		
+//bregar			
+					console.log('Dame el row:' + rows[0]);
 					if(rows){
 						var date = rows[0].final_date;
 					console.log(date);
