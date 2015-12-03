@@ -942,7 +942,7 @@ app.post('/mobile', function (req,res){
 	   			//manipulate rows
 	   			
 	   			console.log('Stop study update successful');
-	   			//res.send('OK');
+	   			res.send('OK');
 	   			connection.release();
 	  		});
 	  		});
@@ -971,13 +971,15 @@ app.post('/mobile', function (req,res){
 						console.log('On to delete from Trip with name: '+ study_name);
 						connection.query('Delete from Trip where name = "'+study_name+'"', function (err,rows){
 							console.log('Delete Trip should be successful');
+							res.send('OK');
+							connection.release();
 						});
 					});
 				});
 			});
 		break;
 		case 'diagnostic':
-		//res.send('OK');
+		res.send('OK');
 	  		
 
 		break;
@@ -1093,6 +1095,7 @@ app.post('/mobile', function (req,res){
 					    	
 						}
 						else{
+							res.send('OK');
 							connection.release();
 						}
 					}
