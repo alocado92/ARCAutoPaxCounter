@@ -87,7 +87,10 @@
       </div>
       <div class="section">
       <div class="container" id="stops">
-        <p ng-show='ctrl.canShow'>{{1+1}}</p>
+        <p ng-show='ctrl.canShow'>
+          <tr ng-repeat="stops in ctrl.stop">
+            <td> {{stops.name}} </td> <td> {{ stops.lat }} </td> <td> {{ stops.long }} </td>
+                </tr></p>
       </div>
     </div>
     </div>
