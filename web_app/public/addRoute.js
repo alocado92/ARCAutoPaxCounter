@@ -9,9 +9,7 @@
             vm.stops = [];
             vm.stop_name = [];
     		vm.results = [];
-            var data = {
-                start_time: vm.start_time,
-                end_time: vm.end_time
+            
             
       vm.fetch = function(){
 
