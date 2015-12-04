@@ -25,12 +25,12 @@
 
       // calling our submit function.
         vm.submit = function() {
-        		var data = {route_name: vm.route_name};
+        		var data = {route_name: vm.route, stop_name: vm.sname, latitude: vm.lat, longitude: vm.longi};
 
                 
             $http.post("/addStop", data, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
-                        console.log(response.data.redirect);
+                        
                         window.location = response.data.redirect;
                         
                     });

@@ -1214,6 +1214,40 @@ app.post('/fetchStops', function (req, res){
 		});
 	});
 });
+
+
+
+
+
+app.post('/addStop', function (req,res){
+		var routename = req.body.route_name;
+		var stop = req.body.stop_name;
+		var latitude = req.body.latitude;
+		var longitude = req.body.longitude;
+
+		pool.getConnection(function (err, connection){
+
+			connection.query('select route_ID from Route where ?',{route_name: routename}, function (err,rows){
+				var rID = rows[0].route_ID;
+				console.log('Found Route with ID: '+ rID);
+				connection.query('insert into Stop SET ?',{stop_latitude: latitude, stop_longitude: longitude, name: stop}, function (err, rows){
+					var stopID = rows.insertId;
+
+					console.log('Created Stop with ID: ' + stopID);
+					connection.query('insert into Linked_to SET ?',{stop_ID: stopID, route_ID: rID}, function (err, rows){
+						console.log('Finished linking Route to created stop: YAY');
+						res.send({redirect: '/stops'});
+						connection.release();
+					});
+
+				});
+			});
+		});
+});
+
+
+
+
 app.post('/fetchRoute', function (req ,res){
 	pool.getConnection(function (err, connection){
 		connection.query('select stop_ID, stop_latitude, stop_longitude, name from Stop',function (err, rows){
