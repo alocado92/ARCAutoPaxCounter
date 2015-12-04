@@ -1211,7 +1211,7 @@ app.post('/fetchRoute', function (req ,res){
 				result.push({name: rows[i].name, latitude: rows[i].stop_latitude, longitude: rows[i].stop_longitude, id: rows[i].stop_ID});
 			}
 			console.log('Sending Result: ' + JSON.stringify(result));
-			res.send({data: JSON.stringify(result))});
+			res.send({data: JSON.stringify(result)});
 			connection.release();
 		});
 	});
