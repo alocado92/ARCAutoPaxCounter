@@ -1220,7 +1220,7 @@ app.post('/fetchStops', function (req, res){
 
 
 app.post('/addStop', function (req,res){
-		var routename = req.body.route_name;
+		var routename = req.body.route_name.name;
 		var stop = req.body.stop_name;
 		var latitude = req.body.latitude;
 		var longitude = req.body.longitude;
