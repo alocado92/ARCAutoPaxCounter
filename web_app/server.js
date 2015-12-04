@@ -744,7 +744,7 @@ app.post('/add', function (req,res){
 	   			var mailOptions = {
 
 				    from: 'arc.innovations.group@gmail.com', // sender address
-				    to: 'alexis.figueroa4@upr.edu' , // list of receivers
+				    to: email , // list of receivers
 				    subject: 'Welcome to the ARC AutoPaxCounter Web Experience', // Subject line
 				    text: "Hi "+fname+",\n\nYour account credentials for the AutoPaxCounter system are as follows. Username:"+ username+" and Password = "+password+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n\nBest Regards,\n\nARC Dev Team." 
 				    
@@ -799,7 +799,7 @@ app.post('/add', function (req,res){
 		   			var mailOptions = {
 
 					    from: 'arc.innovations.group@gmail.com', // sender address
-					    to: 'alexis.figueroa4@upr.edu' , // list of receivers
+					    to: email , // list of receivers
 					    subject: 'Your forgotten credentials', // Subject line
 					    text: "Hi User,\n your account credentials for the AutoPaxCounter system is as follows. Username:"+ user+" and Password = "+tempPass+". Use your username and updated password to access your AutoPaxCounter account at http://arcinnovations.ece.uprm.edu:3000/.\n Best Regards,\n ARC Dev Team." 
 					    
@@ -1218,28 +1218,18 @@ app.post('/fetchRoute', function (req ,res){
 });
 
 app.post('/addRoutes', function (req,res){
-	var stops = req.body.stops;
-	var route_name = req.body.name;
-	console.log('Stops to be tied to route: '+ JSON.stringify(stops));
+	//var stops = req.body.stops;
+	var route_name = req.body.route_name;
+	//console.log('Stops to be tied to route: '+ JSON.stringify(stops));
 	console.log('Route name for new route: '+ route_name);
 	pool.getConnection(function (err, connection){
 
 		connection.query('Insert into Route SET ?',{route_name: route_name}, function (err,rows){
-			var id = rows.insertId;
-			console('Id of inserted Route = '+ id);
-
-			for(var j=0; j< stops.length; j++){
-				console.log("Inserting into Linked_to stop_ID: "+ id +" and route_ID: "+stops[j].stop_ID);
-
-				var s_ID = stops[j].stop_ID;
-
-				connection.query('INSERT INTO Linked_to SET ?', {stop_ID: s_ID, route_ID: id}, function (err, rows){
-					if(i = stops.length -1){
-						res.send({redirect: '/home'});
-						connection.release();
-					}
-				}); 
-			}
+			
+			console.log('Inserted Route with name: '+route_name +' and ID: '+ rows.insertId);
+				
+			res.send({redirect: '/home'});
+			connection.release();
 		});
 	});
 
