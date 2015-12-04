@@ -17,7 +17,7 @@
                             $http.post("/fetchRoute", data1, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
                        // var responses = JSON.stringify(response.stops);
-                       var res = JSON.parese(response.data.data);
+                       var res = JSON.parse(response.data.data);
                         console.log('Response: '+res);
                         for(var i=0;i<res.length; i++){
                                 vm.stop.push({name: res[i].name, lat: res[i].latitude, long: res[i].longitude, num : res[i].id});
