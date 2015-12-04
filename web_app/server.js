@@ -1208,7 +1208,7 @@ app.get('/admins',function (req,res){
 });
 app.post('/fetchStops', function (req, res){
 	pool.getConnection(function (err, connection){
-		connection.query('select name from Stop',function (err,rows){
+		connection.query('select route_name from Route',function (err,rows){
 			res.send(rows);
 			connection.release();
 		});

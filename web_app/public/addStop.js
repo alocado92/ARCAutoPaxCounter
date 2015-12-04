@@ -18,7 +18,7 @@
             $http.post("/fetchStops", data, {headers: {'Content-Type': 'application/json'} })
                 .then(function (response){
                     for(var i =0; i<response.data.length;i++){
-                        vm.parada.push({name: response.data[i].name});
+                        vm.parada.push({name: response.data[i].route_name});
                     }
                 });
         };
