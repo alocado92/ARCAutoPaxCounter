@@ -17,11 +17,12 @@
                             $http.post("/fetchRoute", data1, {headers: {'Content-Type': 'application/json'} })
                     .then(function (response) {
                        // var responses = JSON.stringify(response.stops);
-                       var res = response.data;
+                       var res = JSON.parese(response.data.data);
                         console.log('Response: '+res);
                         for(var i=0;i<res.length; i++){
-                                vm.stop.push({name: response.data[i].name, lat: response.data[i].latitude, long: response.data[i].longitude, num : response.data[i].id});
+                                vm.stop.push({name: res[i].name, lat: res[i].latitude, long: res[i].longitude, num : res[i].id});
                         }
+                        
                         vm.canShow = true;
                         
                     });
