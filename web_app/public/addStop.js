@@ -12,6 +12,7 @@
     		vm.results = [];
             vm.route_name = '';
             vm.parada = [];
+            vm.route = '';
             
         vm.init = function (){
             var data ={foo: ""};

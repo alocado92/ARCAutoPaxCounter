@@ -49,13 +49,13 @@
             <p contenteditable="true">Please select a route among the dropdown menu and fill the required parameters to add a new stop to that route.</p><div class="section">
               <div class="container">
                 <div class="row">
-                  
+                   <select id="routeOptions" ng-model="ctrl.route" required data-ng-init="ctrl.init()">
+                    <option selected="" ng-repeat="routes in ctrl.parada" value="route.name">{{routes.name}}</option>
+                  </select>
                 </div>
                 <div class="row">
                   <div class="col-md-12">
-                    <select id="routeOptions" ng-model="ctrl.route" required data-ng-init="ctrl.init()">
-                    <option selected="" ng-repeat="routes in ctrl.parada" value="route.name">{{routes.name}}</option>
-                  </select>
+                   
                     <form class="form-horizontal" role="form" ng-subit="ctrl.submit()">
 
                       <div class="form-group">

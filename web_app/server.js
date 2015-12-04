@@ -1224,7 +1224,7 @@ app.post('/addStop', function (req,res){
 		var stop = req.body.stop_name;
 		var latitude = req.body.latitude;
 		var longitude = req.body.longitude;
-
+		console.log('Stop to be added:'+stop);
 		pool.getConnection(function (err, connection){
 
 			connection.query('select route_ID from Route where ?',{route_name: routename}, function (err,rows){
