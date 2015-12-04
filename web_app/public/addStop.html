@@ -50,7 +50,7 @@
               <div class="container">
                 <div class="row">
                    <select id="routeOptions" ng-model="ctrl.route" required data-ng-init="ctrl.init()">
-                    <option selected="" ng-repeat="routes in ctrl.parada" value="route.name">{{routes.name}}</option>
+                    <option selected="" ng-repeat="routes in ctrl.parada" value="{{routes.name}}">{{routes.name}}</option>
                   </select>
                 </div>
                 <div class="row">
