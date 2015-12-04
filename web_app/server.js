@@ -500,7 +500,17 @@ app.get('/remind', function (req,res){
 
 });
 app.get('/stops', function (req,res){
-	res.sendFile("public/addStop.html", {"root": __dirname});
+	
+	if(sess.is_admin == 1){
+		res.sendFile("public/addStop.html", {"root": __dirname});
+	}
+	else if(sess != null && sess.is_admin != 1){
+		console.log('You are not admin. Get away.');
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 
 });
 app.get('/newUser', function (req,res){
@@ -829,7 +839,17 @@ app.get('/', function (req,res){
 });
 app.get('/addRoute', function (req,res){
 	
-	res.sendFile("public/addRoute.html", {"root": __dirname});
+	
+	if(sess != null && sess.is_admin == 1){
+		res.sendFile("public/addRoute.html", {"root": __dirname});
+	}
+	else if(sess != null && sess.is_admin != 1){
+		console.log('You are not admin. Get away.');
+	}
+	else{
+		req.session = null;
+		res.redirect('/');
+	}
 });
 
 app.post('/mobile', function (req,res){
