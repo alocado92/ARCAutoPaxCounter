@@ -6,7 +6,7 @@
 
     		var vm = this;
             vm.name = '';
-            vm.stops = [];
+            vm.stop = [];
             vm.stop_name = [];
     		vm.results = [];
             
