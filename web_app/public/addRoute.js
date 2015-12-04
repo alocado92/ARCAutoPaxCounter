@@ -15,7 +15,7 @@
 
       // calling our submit function.
         vm.submit = function() {
-        		var data = [route_name: vm.route_name];
+        		var data = {route_name: vm.route_name};
 
                 
             $http.post("/addRoutes", data, {headers: {'Content-Type': 'application/json'} })
