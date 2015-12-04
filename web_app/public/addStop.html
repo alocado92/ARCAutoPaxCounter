@@ -10,7 +10,7 @@
     <link href="addStop.css" rel="stylesheet" type="text/css">
     <script src="stopApp.js"></script>
     <script src="addStop.js"></script>
-  </head><body>
+  </head><body ng-app="stop_app">
     
     
     <div class="navbar navbar-default navbar-fixed-top">
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="section">
+    <div class="section" ng-controller="stopController as ctrl">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
