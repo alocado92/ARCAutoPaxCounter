@@ -499,6 +499,10 @@ app.get('/remind', function (req,res){
 	res.sendFile("public/forgot.html", {"root": __dirname});
 
 });
+app.get('/stops', function (req,res){
+	res.sendFile("public/addStop.html", {"root": __dirname});
+
+});
 app.get('/newUser', function (req,res){
 	console.log(sess.is_admin);
 	if(sess.is_admin == 1){
@@ -1201,6 +1205,14 @@ app.get('/admins',function (req,res){
 	    	res.sendStatus(200);
 	    	// Don't use the connection here, it has been returned to the pool.
 });
+});
+app.post('/fetchStops', function (req, res){
+	pool.getConnection(function (err, connection){
+		connection.query('select name from Stop',function (err,rows){
+			res.send(rows);
+			connection.release();
+		});
+	});
 });
 app.post('/fetchRoute', function (req ,res){
 	pool.getConnection(function (err, connection){
