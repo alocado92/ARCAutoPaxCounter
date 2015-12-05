@@ -1313,7 +1313,7 @@ app.post('/dropdown', function (req,res){
 			for(var i=0; i<rows.length; i++){
 				if (i < rows.length -1) {
 					result+= rows[i].route_name+',';
-				};
+				}
 				else{
 					result+= rows[i];
 				}
