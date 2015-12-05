@@ -1315,7 +1315,7 @@ app.post('/dropdown', function (req,res){
 					result+= rows[i].route_name+',';
 				}
 				else{
-					result+= rows[i].route_name;
+					result+= rows[i].route_name+' ';
 				}
 			}
 			res.send(result);
