@@ -1303,6 +1303,26 @@ app.post('/addRoutes', function (req,res){
 
 
 });
+
+app.post('/dropdown', function (req,res){
+	pool.getConnection(function (err,connection){
+
+		connection.query('select route_name from Route', function (err,rows){
+			var result ='';
+
+			for(var i=0; i<rows.length; i++){
+				if (i < rows.length -1) {
+					result+= rows[i].route_name+',';
+				};
+				else{
+					result+= rows[i];
+				}
+			}
+			res.send(result);
+			connection.release()
+		});
+	});
+});
 app.post('/view1', function (req,res){
 	console.log(req.body);
 	var datas = '{"data": [' + '{"name": "1", "IN": 25, "OUT": 24},' + '{"name": "2", "IN": 25, "OUT": 24},' +'{"name": "3", "IN": 25, "OUT": 24}]}';
