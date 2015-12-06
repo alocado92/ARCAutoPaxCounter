@@ -11,8 +11,6 @@
     <script src="stopApp.js"></script>
     <script src="addStop.js"></script>
   </head><body ng-app="stop_app">
-    
-    
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -22,7 +20,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-           <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
+          <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
         </div>
         <div class="collapse navbar-collapse" id="navbar-ex-collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -36,8 +34,15 @@
     <div class="section">
       <div class="container">
         <div class="row">
+          
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row">
           <div class="col-md-12">
-            <p>Please select a route from the following dropdown menu:</p>
+            <h1 class="text-center">Stop Creation</h1>
           </div>
         </div>
       </div>
@@ -46,24 +51,22 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <p contenteditable="true">Please select a route among the dropdown menu and fill the required parameters to add a new stop to that route.</p><div class="section">
+            <p contenteditable="true" class="text-center">Please select a route among the dropdown menu and fill the required parameters
+              to add a new stop to that route.</p>
+            <div class="section">
               <div class="container">
                 <div class="row">
-                   <select id="routeOptions"  ng-options="routes.name for routes in ctrl.parada " ng-model="ctrl.route" required data-ng-init="ctrl.init()">
-                    
-                  </select>
+                  <select id="routeOptions" ng-options="routes.name for routes in ctrl.parada " ng-model="ctrl.route" required="" data-ng-init="ctrl.init()"></select>
                 </div>
                 <div class="row">
                   <div class="col-md-12">
-                   
                     <form class="form-horizontal" role="form" ng-submit="ctrl.submit()">
-
                       <div class="form-group">
                         <div class="col-sm-2">
                           <label for="inputname" class="control-label">Stop name</label>
                         </div>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputname" ng-model="ctrl.sname" required>
+                          <input type="text" class="form-control" id="inputname" ng-model="ctrl.sname" required="">
                         </div>
                       </div>
                       <div class="form-group">
@@ -71,7 +74,7 @@
                           <label for="inputname2" class="control-label">Stop Latitude</label>
                         </div>
                         <div class="col-sm-10">
-                          <input type="number" step="any" class="form-control" id="inputname2" required ng-model="ctrl.lat">
+                          <input type="number" step="any" class="form-control" id="inputname2" required="" ng-model="ctrl.lat">
                         </div>
                       </div>
                       <div class="form-group">
@@ -79,7 +82,7 @@
                           <label for="inputname3" class="control-label">Stop Longitude</label>
                         </div>
                         <div class="col-sm-10">
-                          <input type="number" step="any" class="form-control" id="inputname3" ng-model="ctrl.longi" required>
+                          <input type="number" step="any" class="form-control" id="inputname3" ng-model="ctrl.longi" required="">
                         </div>
                       </div>
                       <div class="form-group">

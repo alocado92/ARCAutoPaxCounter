@@ -22,20 +22,15 @@
           </button>
           <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
         </div>
-       
       </div>
     </div>
-    <div class="section">
+    <div class="section"><div class="container"><div class="row"><div class="col-md-12"><h1 class="text-center" contenteditable="true">Forgot Credentials?</h1></div></div></div></div><div class="section">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center">Please enter a valid email address to verify your credentials.
-            </h1>
-
+            <h3 class="text-center">Please enter a valid email address to verify your credentials.</h3>
           </div>
-
         </div>
-        
       </div>
     </div>
     <div class="section">
@@ -43,18 +38,15 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-md-offset-3 col-md-6" ng-controller="forgotController as ctrl">
-            <form role="form" ng-submit="ctrl.forgot()">
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="email" class="form-control" placeholder="Enter your email" ng-model="ctrl.email">
-                  <button type="submit" class="btn btn-primary">Send</button>
-                  <a class="text-right" href="http://arcinnovations.ece.uprm.edu:3000"style="padding: 20px">Cancel</a>
+              <form role="form" ng-submit="ctrl.forgot()">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Enter your email" ng-model="ctrl.email">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                    <a class="text-right" href="http://arcinnovations.ece.uprm.edu:3000" style="padding: 20px">Cancel</a>
+                  </div>
                 </div>
-              </div>
-            </form>
-            {{ctrl.email}}
-          </div>
-            
+              </form>{{ctrl.email}}</div>
           </div>
         </div>
       </div>

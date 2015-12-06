@@ -1,87 +1,88 @@
 <html><head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-route.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-resource.js"></script>
-        <link href="Untitled.css" rel="stylesheet" type="text/css">
-        <script src="./editApp.js"></script>
-        <script src="./edit_user.js"></script>
-    </head><body ng-app="edit_app">
-        <div class="container" ng-controller="editController as ctrl">
-            <div class="navbar navbar-default navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
-                    </div>
-                    <div class="collapse navbar-collapse" id="navbar-ex-collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="http://arcinnovations.ece.uprm.edu:3000/home">Home</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="section">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-offset-1 col-md-12">
-                            <h1 class="text-center">Edit User</h1><h3 class="text-center">Please enter target user's email address.</h3>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-md-offset-1 text-center">
-                            <form role="form" ng-submit="ctrl.fetchUser()">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" ng-model="ctrl.email" class="form-control" placeholder="Enter target email" required="">
-                                        <button type="submit" class="btn btn-default">Search User</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="section">
-                <div class="container" ng-show="ctrl.canShow">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <p>User: {{ctrl.fname }} {{ctrl.lname}}</p>
-                            <p>Email: {{ctrl.email}}</p>
-                            <p>Admin?: {{ctrl.isAdmin}}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form class="form-horizontal text-right" role="form" ng-submit="ctrl.editUser()">
-                                <div class="form-group">
-                                    <div class="col-sm-2">
-                                        <label for="inputPassword3" class="control-label ">Grant Admin rights?</label>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <input type="text" class="form-control" id="company" ng-model="ctrl.admin" placeholder="Yes or No" required="">
-                                        <div class="col-sm-offset-2 col-sm-10">
-                                            <button type="submit" class="btn btn-default">Edit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-resource.js"></script>
+    <link href="Untitled.css" rel="stylesheet" type="text/css">
+    <script src="./editApp.js"></script>
+    <script src="./edit_user.js"></script>
+  </head><body ng-app="edit_app">
+    <div class="container" ng-controller="editController as ctrl">
+      <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
+          </div>
+          <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a href="http://arcinnovations.ece.uprm.edu:3000/home">Home</a>
+              </li>
+            </ul>
+          </div>
         </div>
-    
+      </div>
+      <div class="section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-offset-1 col-md-12">
+              <h1 class="text-center">Edit User</h1>
+              <h3 class="text-center">Please enter target user's email address.</h3>
+            </div>
+          </div>
+          <div class="row text-center">
+            <div class="col-md-6 col-md-offset-1 text-center">
+              <form role="form" ng-submit="ctrl.fetchUser()">
+                <div class="form-group" style="width: 60%; margin: 0px auto;">
+                  <div class="input-group">
+                    <input type="text" ng-model="ctrl.email" class="form-control" placeholder="Enter target email" required="">
+                    <button type="submit" class="btn btn-default">Search User</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="container" ng-show="ctrl.canShow">
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <p>User: {{ctrl.fname }} {{ctrl.lname}}</p>
+              <p>Email: {{ctrl.email}}</p>
+              <p>Admin?: {{ctrl.isAdmin}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <form class="form-horizontal text-right" role="form" ng-submit="ctrl.editUser()">
+                <div class="form-group">
+                  <div class="col-sm-2">
+                    <label for="inputPassword3" class="control-label ">Grant Admin rights?</label>
+                  </div>
+                  <div class="col-sm-2">
+                    <input type="text" class="form-control" id="company" ng-model="ctrl.admin" placeholder="Yes or No" required="">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-default">Edit</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
 
 </body></html>
