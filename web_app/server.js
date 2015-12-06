@@ -834,7 +834,7 @@ app.post('/add', function (req,res){
 		});
 	});
 app.get('/', function (req,res){
-	req.session = null;
+	req.session.destroy()
 	res.sendFile("public/login.html", {"root": __dirname});
 });
 app.get('/addRoute', function (req,res){
