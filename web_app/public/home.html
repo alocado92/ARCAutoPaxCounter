@@ -14,18 +14,17 @@
     <script src="home.js"></script>
     <script type="text/javascript">
       // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.1', {'packages': ['corechart']});
-      google.load("visualization", "1.1", {packages:["bar"]});
-      google.load("visualization", "1", {packages:["table"]});
-      
+              google.load('visualization', '1.1', {'packages': ['corechart']});
+              google.load("visualization", "1.1", {packages:["bar"]});
+              google.load("visualization", "1", {packages:["table"]});
     </script>
     <style>
       .right {
-          float: right;
-          width: 300px;
-          border:3px solid #8AC007;
-          padding: 10px;
-      }
+                  float: right;
+                  width: 300px;
+                  border:3px solid #8AC007;
+                  padding: 10px;
+              }
     </style>
   </head><body ng-app="home_app">
     <div class="navbar navbar-default navbar-static-top">
@@ -41,27 +40,26 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-ex-collapse">
           <ul class="nav navbar-nav navbar-right">
-             <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/export">Export Data</a>
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/export">Export Data</a>
             </li>
-            <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/newUser">Add User</a>
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/newUser">Add User</a>
             </li>
-            <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/editUser">Edit User</a>
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/editUser">Edit User</a>
             </li>
-            <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/deleteUser">Delete User</a>
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/deleteUser">Delete User</a>
             </li>
-            <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/editTrip"> Edit Trip</a>
-
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/editTrip"> Edit Trip</a>
             </li>
-             <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/addRoute">Add Route</a>
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/addRoute">Add Route</a>
             </li>
-             <li >
-             <a href="http://arcinnovations.ece.uprm.edu:3000/stops">Add Stop</a>
+            <li>
+              <a href="http://arcinnovations.ece.uprm.edu:3000/stops">Add Stop</a>
             </li>
             <li>
               <a href="http://arcinnovations.ece.uprm.edu:3000/">Logout</a>
@@ -71,18 +69,27 @@
       </div>
     </div>
     <div class="section" ng-controller="homeController as ctrl">
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-center" contenteditable="true">Welcome, {{ctrl.session.name}}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    
       <div class="container">
         <div class="col-md-6">
           <div class="row">
             <div class="col-md-3">
               <label class="control-label" for="date1">Start Date</label>
-              <input type="datetime-local" id="date1" ng-model="ctrl.date1" required>
+              <input type="datetime-local" id="date1" ng-model="ctrl.date1" required="">
               <div class="btn-group btn-group-md " id="graph_type1">
                 <label class="control-label" for="GraphOptions">Graph type options</label>
-               <select id="GraphOptions" ng-model="ctrl.gtype" required>
-                  <option value="1" selected>Origin-Destination Matrix</option>
+                <select id="GraphOptions" ng-model="ctrl.gtype" required="">
+                  <option value="1" selected="">Origin-Destination Matrix</option>
                   <option value="2">Passenger Net Flow</option>
-                  
                 </select>
               </div>
             </div>
@@ -90,40 +97,34 @@
           <div class="row">
             <div class="col-md-3">
               <label class="control-label" for="date2">End Date</label>
-              <input type="datetime-local" id="date2" ng-model="ctrl.date2" required>
-            
+              <input type="datetime-local" id="date2" ng-model="ctrl.date2" required="">
               <div class="btn-group btn-group-md" id="route1">
                 <label class="control-label" for="routeOptions">Route Options</label>
-                <select id="routeOptions" ng-model="ctrl.route" required>
-                  <option value="Terrace" selected>Terrace</option>
+                <select id="routeOptions" ng-model="ctrl.route" required="">
+                  <option value="Terrace" selected="">Terrace</option>
                   <option value="Civil">Civil</option>
                   <option value="Interna">Interna</option>
                   <option value="Palacio">Palacio</option>
                   <option value="Darlington">Darlington</option>
                 </select>
-                <form name="viewForm1" ng-submit="ctrl.createView()" >
+                <form name="viewForm1" ng-submit="ctrl.createView()">
                   <button type="submit" class="btn btn-primary">Create View</button>
                 </form>
               </div>
             </div>
           </div>
-         <!--   {{ctrl.route}}
-          {{ctrl.date1}}
-          {{ctrl.date2}}
-          {{ctrl.gtype}}-->
+          <!-- {{ctrl.route}} {{ctrl.date1}} {{ctrl.date2}} {{ctrl.gtype}}-->
         </div>
         <div class="col-md-6">
           <div class="row">
             <div class="col-md-3">
               <label class="control-label" for="date3">Start Date</label>
-              <input type="datetime-local" id="date3" ng-model="ctrl.date3" required>
-            
-              <div class="btn-group btn-group-md" id="graph_type2" >
+              <input type="datetime-local" id="date3" ng-model="ctrl.date3" required="">
+              <div class="btn-group btn-group-md" id="graph_type2">
                 <label class="control-label" for="GraphOptions2">Graph type options</label>
-                <select id="GraphOptions2" ng-model="ctrl.gtype2" required>
-                  <option value="1" selected>Origin-Destination Matrix</option>
+                <select id="GraphOptions2" ng-model="ctrl.gtype2" required="">
+                  <option value="1" selected="">Origin-Destination Matrix</option>
                   <option value="2">Passenger Net Flow</option>
-                  
                 </select>
               </div>
             </div>
@@ -131,12 +132,11 @@
           <div class="row">
             <div class="col-md-3">
               <label class="control-label" for="date4">End Date</label>
-              <input type="datetime-local" id="date4"ng-model="ctrl.date4" required>
-            
+              <input type="datetime-local" id="date4" ng-model="ctrl.date4" required="">
               <div class="btn-group btn-group-md" id="route2">
                 <label class="control-label" for="RouteOptions2">Route Options</label>
-                <select id="routeOptions2" ng-model="ctrl.route2" required>
-                  <option value="Terrace" selected>Terrace</option>
+                <select id="routeOptions2" ng-model="ctrl.route2" required="">
+                  <option value="Terrace" selected="">Terrace</option>
                   <option value="Civil">Civil</option>
                   <option value="Interna">Interna</option>
                   <option value="Palacio">Palacio</option>
@@ -145,19 +145,15 @@
                 <form name="viewForm2" ng-submit="ctrl.createView2()">
                   <button type="submit" class="btn btn-primary">Create View</button>
                 </form>
-
               </div>
             </div>
           </div>
-         <!--   {{ctrl.route2}}
-          {{ctrl.date3}}
-          {{ctrl.date4}}
-          {{ctrl.gtype2}}-->
+          <!-- {{ctrl.route2}} {{ctrl.date3}} {{ctrl.date4}} {{ctrl.gtype2}}-->
         </div>
       </div>
     </div>
     <div class="section">
-      <div class="container"  >
+      <div class="container">
         <div class="row">
           <div class="col-md-6" id="chart1" style="width:50%;height:50%"></div>
           <div class="col-md-6" id="chart2" style="width:50%;height:50%;"></div>
