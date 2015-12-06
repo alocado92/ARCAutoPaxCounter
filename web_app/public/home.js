@@ -83,7 +83,7 @@
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
             else if(vm.gtype == '2'){
-                table.push(['Stop','Origin','Destination']);
+                table.push(['Stop','OUT','IN']);
             for (var i=0;i<res.data.length;i++){
                 console.log(res.data[i].stop);
               table.push([res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination]);
@@ -93,8 +93,8 @@
             var options = { title: 'Passenger Net Flow vs Stops',
            // Required for Material Bar Charts.
           series: {
-            0: { axis: 'Origin' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'Destination' } // Bind series 1 to an axis named 'brightness'.
+            0: { axis: 'OUT' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'IN' } // Bind series 1 to an axis named 'brightness'.
           }
         };
         var chart = new google.visualization.ColumnChart(document.getElementById("chart1"));
@@ -159,7 +159,7 @@
                       table3.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
         	else if(vm.gtype2 == '2'){
-                table.push(['Stop','Origin','Destination']);
+                table.push(['Stop','OUT','IN']);
             for (var i=0;i<res.data.length;i++){
                 console.log(res.data[i].stop);
               table.push([res.data[i].stop.toString(),res.data[i].origin,res.data[i].destination]);
@@ -169,8 +169,8 @@
             var options2 = { title: 'Passenger Net Flow vs Stops',
            // Required for Material Bar Charts.
           series: {
-            0: { axis: 'Origin' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'Destination' } // Bind series 1 to an axis named 'brightness'.
+            0: { axis: 'OUT' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'IN' } // Bind series 1 to an axis named 'brightness'.
           }
         };
         var chart = new google.visualization.ColumnChart(document.getElementById("chart2"));
