@@ -1304,7 +1304,7 @@ app.post('/addRoutes', function (req,res){
 
 });
 
-app.post('/dropdown', function (req,res){
+app.get('/dropdown', function (req,res){
 	pool.getConnection(function (err,connection){
 
 		connection.query('select route_name from Route', function (err,rows){
@@ -1323,6 +1323,7 @@ app.post('/dropdown', function (req,res){
 		});
 	});
 });
+
 app.post('/view1', function (req,res){
 	console.log(req.body);
 	var datas = '{"data": [' + '{"name": "1", "IN": 25, "OUT": 24},' + '{"name": "2", "IN": 25, "OUT": 24},' +'{"name": "3", "IN": 25, "OUT": 24}]}';
