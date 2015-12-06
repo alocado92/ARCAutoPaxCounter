@@ -508,7 +508,7 @@ app.get('/stops', function (req,res){
 		console.log('You are not admin. Get away.');
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 
@@ -522,7 +522,7 @@ app.get('/newUser', function (req,res){
 		console.log('You are not admin. Get away.');
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -533,7 +533,7 @@ app.get('/export', function (req,res){
 	}
 	
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -546,7 +546,7 @@ app.get('/editUser', function (req,res){
 		console.log('You are not admin. Get away.');
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -559,7 +559,7 @@ app.get('/editTrip', function (req,res){
 		console.log('You are not admin. Get away.');
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -572,7 +572,7 @@ app.get('/deleteUser', function (req,res){
 		console.log('You are not admin. Get away.');
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -613,7 +613,7 @@ app.get('/logout',function (req,res){
 	}
 	
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -834,7 +834,7 @@ app.post('/add', function (req,res){
 		});
 	});
 app.get('/', function (req,res){
-	delete req.session;
+	delete sess;
 	res.sendFile("public/login.html", {"root": __dirname});
 });
 app.get('/addRoute', function (req,res){
@@ -847,7 +847,7 @@ app.get('/addRoute', function (req,res){
 		console.log('You are not admin. Get away.');
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
@@ -1206,7 +1206,7 @@ app.get('/home', function (req,res){
 		res.sendFile("public/home.html", {"root": __dirname});
 	}
 	else{
-		delete req.session;
+		delete sess;
 		res.redirect('/');
 	}
 });
