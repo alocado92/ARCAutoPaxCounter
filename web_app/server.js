@@ -1319,7 +1319,7 @@ app.get('/dropdown', function (req,res){
 				}
 			}
 			res.send(result);
-			connection.release()
+			connection.release();
 		});
 	});
 });
