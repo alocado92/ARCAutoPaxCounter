@@ -13,34 +13,34 @@
     </head><body ng-app="edit_app">
         <div class="container" ng-controller="editController as ctrl">
             <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
-          </div>
-          <div class="collapse navbar-collapse" id="navbar-ex-collapse">
-            <ul class="nav navbar-nav navbar-right">
-              <li>
-                <a href="http://arcinnovations.ece.uprm.edu:3000/home">Home</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <img src="logo.jpg" alt="ARC" style="width:256px;height:50px;">
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="http://arcinnovations.ece.uprm.edu:3000/home">Home</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div class="section">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-offset-1 col-md-12">
-                            <h1 class="text-left">Please enter target user's email address.</h1>
+                            <h1 class="text-center">Edit User</h1><h3 class="text-center">Please enter target user's email address.</h3>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-offset-1 col-md-6">
+                        <div class="col-md-6 col-md-offset-1 text-center">
                             <form role="form" ng-submit="ctrl.fetchUser()">
                                 <div class="form-group">
                                     <div class="input-group">
@@ -56,7 +56,7 @@
             <div class="section">
                 <div class="container" ng-show="ctrl.canShow">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 text-center">
                             <p>User: {{ctrl.fname }} {{ctrl.lname}}</p>
                             <p>Email: {{ctrl.email}}</p>
                             <p>Admin?: {{ctrl.isAdmin}}</p>
@@ -64,10 +64,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <form class="form-horizontal" role="form" ng-submit="ctrl.editUser()">
+                            <form class="form-horizontal text-right" role="form" ng-submit="ctrl.editUser()">
                                 <div class="form-group">
                                     <div class="col-sm-2">
-                                        <label for="inputPassword3" class="control-label ">Admin?</label>
+                                        <label for="inputPassword3" class="control-label ">Grant Admin rights?</label>
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" id="company" ng-model="ctrl.admin" placeholder="Yes or No" required="">

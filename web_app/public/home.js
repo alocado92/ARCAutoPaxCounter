@@ -17,7 +17,7 @@
                 edate: vm.date2
             };
             console.log(data);
-            $http.post("/graph1", data, {headers: {'Content-Type': 'application/json'} })
+            $http.post("/graph2", data, {headers: {'Content-Type': 'application/json'} })
         .then(function (response) {
             console.log('Dimelo: '+response.data);
             
@@ -27,7 +27,7 @@
             var data2 = new google.visualization.DataTable();
                       // Add columns
 
-            if (vm.gtype2 == '1'){
+            if (vm.gtype == '1'){
                   data2.addColumn('string', 'Origin/Destination');
                       for(var d=0;d<stop.length;d++){
                         data2.addColumn('number', stop[d].toString());
@@ -82,7 +82,7 @@
                       var table2 = new google.visualization.Table(document.getElementById('chart1'));
                       table2.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
             }
-            else if(vm.gtype2 == '2'){
+            else if(vm.gtype == '2'){
                 table.push(['Stop','Origin','Destination']);
             for (var i=0;i<res.data.length;i++){
                 console.log(res.data[i].stop);
@@ -100,7 +100,7 @@
         var chart = new google.visualization.ColumnChart(document.getElementById("chart1"));
         chart.draw(graphData, options);
             }
-            else if (vm.gtype2 == '3'){
+            else if (vm.gtype == '3'){
 
             }
             else {
