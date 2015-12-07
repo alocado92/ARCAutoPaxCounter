@@ -14,17 +14,17 @@
     <script src="home.js"></script>
     <script type="text/javascript">
       // Load the Visualization API and the piechart package.
-              google.load('visualization', '1.1', {'packages': ['corechart']});
-              google.load("visualization", "1.1", {packages:["bar"]});
-              google.load("visualization", "1", {packages:["table"]});
+                      google.load('visualization', '1.1', {'packages': ['corechart']});
+                      google.load("visualization", "1.1", {packages:["bar"]});
+                      google.load("visualization", "1", {packages:["table"]});
     </script>
     <style>
       .right {
-                  float: right;
-                  width: 300px;
-                  border:3px solid #8AC007;
-                  padding: 10px;
-              }
+                          float: right;
+                          width: 300px;
+                          border:3px solid #8AC007;
+                          padding: 10px;
+                      }
     </style>
   </head><body ng-app="home_app">
     <div class="navbar navbar-default navbar-static-top">
@@ -69,17 +69,16 @@
       </div>
     </div>
     <div class="section" ng-controller="homeController as ctrl">
-    <div class="section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h1 class="text-center" >Welcome to the ARC AutoPaxCounter Landing Page</h1>
-            <h3 class="text-center" >Please fill any of the input sections to create a visualization.</h3>
+      <div class="section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="text-center">Welcome to the ARC AutoPaxCounter Landing Page</h1>
+              <h3 class="text-center">Please fill any of the input sections to create a visualization.</h3>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
       <div class="container">
         <div class="col-md-6">
           <div class="row">
@@ -109,7 +108,7 @@
                   <option value="Darlington">Darlington</option>
                 </select>
                 <form name="viewForm1" ng-submit="ctrl.createView()">
-                  <button type="submit" class="btn btn-primary">Create View</button>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Create View</button>
                 </form>
               </div>
             </div>
@@ -144,7 +143,7 @@
                   <option value="Darlington">Darlington</option>
                 </select>
                 <form name="viewForm2" ng-submit="ctrl.createView2()">
-                  <button type="submit" class="btn btn-primary">Create View</button>
+                  <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Create View</button>
                 </form>
               </div>
             </div>

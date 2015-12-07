@@ -1,7 +1,5 @@
-<html >
-  
-  <head>
-     <meta charset="utf-8">
+<html><head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -12,11 +10,9 @@
     <link href="Untitled.css" rel="stylesheet" type="text/css">
     <script src="./tripApp.js"></script>
     <script src="./edit_trip.js"></script>
-  </head>
-  
-  <body ng-app="trip_app" >
+  </head><body ng-app="trip_app">
     <div class="container" ng-controller="tripController as ctrl">
-    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
@@ -36,59 +32,55 @@
           </div>
         </div>
       </div>
-    <div class="section" >
-      <div class="container">
-        <div class="row">
-          <div class="col-md-offset-1 col-md-12">
-            <h1 class="text-left">Please enter target trip name.</h1>
+      <div class="section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-offset-1 col-md-12">
+              <h1 class="text-left">Please enter target trip name.</h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-offset-1 col-md-6">
+              <form role="form" ng-submit="ctrl.fetchTrip()">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text" ng-model="ctrl.name" class="form-control" placeholder="Enter target trip name" required="">
+                    <button type="submit" class="btn btn-default" style="margin-top: 10px;">Search Trip</button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-offset-1 col-md-6">
-            <form role="form" ng-submit="ctrl.fetchTrip()">
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" ng-model="ctrl.name"class="form-control" placeholder="Enter target trip name" required>
-                  
-                  <button type="submit" class="btn btn-default">Search Trip</button>
-                
+      </div>
+      <div class="section">
+        <div class="container" ng-show="ctrl.canShow">
+          <div class="row">
+            <div class="col-md-12">
+              <p>Trip: {{ctrl.name }}</p>
+              <p>Start Time: {{ctrl.start}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <form class="form-horizontal" role="form" ng-submit="ctrl.editTrip()">
+                <div class="form-group">
+                  <div class="col-sm-2">
+                    <label for="inputPassword3" class="control-label ">New Name</label>
+                  </div>
+                  <div class="col-sm-2">
+                    <input type="text" class="form-control" id="company" ng-model="ctrl.new_name" placeholder="name" required="">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-default" style="margin-top: 10px;">Edit</button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="section" >
-      <div class="container"ng-show="ctrl.canShow">
-        <div class="row">
-          <div class="col-md-12">
-            <p>  Trip: {{ctrl.name }} </p>
-            <p> Start Time: {{ctrl.start}}</p>
-            
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <form class="form-horizontal" role="form" ng-submit="ctrl.editTrip()">
-              <div class="form-group">
-                <div class="col-sm-2">
-                  <label for="inputPassword3" class="control-label ">New Name</label>
-                </div>
-                <div class="col-sm-2">
-                  <input type="text" class="form-control" id="company" ng-model="ctrl.new_name"placeholder="name" required>
-                  <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-default">Edit</button>
-                </div>
-                </div>
-              </div>
-              
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  </body>
+  
 
-</html>
+</body></html>
