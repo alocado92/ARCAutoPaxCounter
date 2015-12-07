@@ -213,7 +213,7 @@ app.post('/graph2', function (req, res){
 					result.push({stop: rows[k].name, origin: 0, destination: 0});
 				}
 
-				var query = "SELECT COUNT(origin_stop) as 'net_origin', origin_stop, COUNT(dest_stop) as 'net_dest', dest_stop FROM Passenger natural join Takes natural join Trip natural join Belongs natural join Route WHERE route_name = '" + route+"' AND start_time >= '"+date_begin+"' AND end_time <= '"+date_end+"' GROUP By origin_stop" ;
+				var query = "SELECT COUNT(origin_stop) as 'net_origin', origin_stop, COUNT(dest_stop) as 'net_dest', dest_stop FROM Passenger natural join Takes natural join Trip natural join Belongs natural join Route WHERE route_name = '" + route+"' AND start_time >= '"+date_begin+"' AND end_time <= '"+date_end+"' GROUP By origin_stop, dest_stop" ;
 				
 				connection.query(query, function (err,rows){
 					if (rows.length >0){
