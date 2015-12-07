@@ -225,13 +225,13 @@ app.post('/graph2', function (req, res){
 							for(var b=0;b<rows.length;b++){
 								if(rows[b].origin_stop == result[a].stop){
 									result[a].origin += rows[b].net_origin;
-									break;
+									//break;
 								}
 							}
 							for(var c=0;c<rows.length;c++){
 								if(rows[c].dest_stop == result[a].stop){
 									result[a].destination += rows[c].net_dest;
-									break;
+									//break;
 								}
 							}
 						}
