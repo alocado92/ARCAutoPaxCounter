@@ -205,54 +205,32 @@ app.post('/graph2', function (req, res){
 
 	}
 	else if (type == '2'){
-		//graph_type = '';
-		console.log('Route: '+route);
-		
-		pool.getConnection(function (err,connection){
-			console.log('Route: '+route);
-			console.log('Date Begin: ' +date_begin);
-			console.log('Date End: '+date_end);
-			var where = ' (route_name= "'+ route.toString() +'" AND start_time >= "'+ date_begin.toString()+'" AND end_time <= "' + date_end.toString()+'")';
-			console.log('Where: '+where);
-			var query = 'select distinct dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
-			var route1 = route;
-			console.log('Route 1: '+route1);
-			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
+		pool.getConnection(function (err, connection){
+			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route},function (err,rows){
 				var result = [];
 				console.log('Size of row: '+rows.length);
 				for(var k=0; k<rows.length; k++){
 					result.push({stop: rows[k].name, origin: 0, destination: 0});
 				}
-				console.log('Query: '+ query);
-				connection.query(query, function (err, rows){
-					console.log('Size of row: '+ rows.length);
-				if(rows.length > 0){
-					var stops = '';
-					for (var i=0; i< rows.length; i++){
-						if(i == rows.length-1){
-							stops += " dest_stop = '"+rows[i].dest_stop+"'";
-						}
-						else{
-							stops += "dest_stop = '"+rows[i].dest_stop + "' OR ";
-						}
 
-					}
-					console.log('Content of Stops: '+stops);
-					var query2 = 'SELECT COUNT(origin_stop) as "Net_Traffic_Origin", origin_stop, COUNT(dest_stop) as "Net_Traffic_Dest", dest_stop FROM Passenger WHERE ('+stops+') GROUP By (origin_stop)';
-					connection.query(query2, function (err, rows){
-						console.log('Route name in query2: '+route);
+				var query = "SELECT COUNT(origin_stop) as 'net_origin', origin_stop, COUNT(dest_stop) as 'net_dest', dest_stop FROM Passenger natural join Takes natural join Trip natural join Belongs natural join Route WHERE route_name = '" + route+"' AND start_time >= '"+date_begin+"' AND end_time <= '"+date_end+"' GROUP By origin_stop, dest_stop" ;
+				
+				connection.query(query, function (err,rows){
+					if (rows.length >0){
+
+						console.log('Route name in query: '+route);
 						console.log('Rows length: '+rows.length);
 
 						for(var a=0;a<result.length;a++){
 							for(var b=0;b<rows.length;b++){
 								if(rows[b].origin_stop == result[a].stop){
-									result[a].origin += rows[b].Net_Traffic_Origin;
+									result[a].origin += rows[b].net_origin;
 									break;
 								}
 							}
 							for(var c=0;c<rows.length;c++){
 								if(rows[c].dest_stop == result[a].stop){
-									result[a].destination += rows[c].Net_Traffic_Dest;
+									result[a].destination += rows[c].net_dest;
 									break;
 								}
 							}
@@ -260,14 +238,12 @@ app.post('/graph2', function (req, res){
 						console.log(result);
 						res.send({data: result});
 						connection.release();
-
-						
-					});
-				}
-				else{
-					res.send({data: result});
-				}
-			});
+					}
+					else{
+						res.send({data: result});
+						connection.release();
+					}
+				});
 			});
 		});
 	}
