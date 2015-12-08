@@ -23,6 +23,7 @@ unsigned int counter = 0;
 //********************************
 //          Function
 //********************************
+//Initialize all ports
 void rfidInit(){
     P4SEL = RFID;                           //P4.5 = PM_UCA1RXD/TXD   ----> P3.4
     UCA1CTL1 |= UCSWRST;                    //Put state machine in reset
@@ -37,6 +38,7 @@ void rfidInit(){
 //********************************
 //          Interrupt
 //********************************
+//When rfid sensor receive a tag ID
 #pragma vector = USCI_A1_VECTOR
 __interrupt void USCI_A1_ISR(void){
     uint8_t cardTemp;

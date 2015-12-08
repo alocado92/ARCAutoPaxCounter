@@ -21,12 +21,13 @@ uint8_t ledBuff[16][64];
 bool clkFlag;
 
 //Buffer Index
-int ledBuffrow = 7;
-int ledBuffcolumn = 63;
+int ledBuffrow = 7;			//Row
+int ledBuffcolumn = 63;		//Column
 
 //********************************
 //          Functions
 //********************************
+//Initialize ports and create the initial message 'Welcome' and initial color 'Blue'
 void ledCntrlInit(){
     P6DIR |= (R1 + G1 + B1 + R2 + G2 + B2);
     P3DIR |= (aAddr + bAddr + cAddr + OE + LAT);

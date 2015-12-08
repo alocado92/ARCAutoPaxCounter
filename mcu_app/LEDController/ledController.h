@@ -19,6 +19,7 @@
 //********************************
 //          Definitions
 //********************************
+//Ports
 #define R1				BIT0
 #define G1				BIT1
 #define B1				BIT2

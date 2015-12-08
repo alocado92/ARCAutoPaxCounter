@@ -20,6 +20,7 @@ uint8_t command2;
 //********************************
 //          Functions
 //********************************
+//Initialize all ports
 void masterInterfaceInit(){
 	P1DIR &= ~(BIT2 + BIT3 + BIT4); 	//For message
 	P4DIR &= ~(BIT0 + BIT1 + BIT2);		//For color

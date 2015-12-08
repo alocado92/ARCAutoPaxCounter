@@ -14,7 +14,6 @@
 //********************************
 //		Global Variables
 //********************************
-uint8_t bluetoothMessage[MESSAGESIZE];
 int flagRX = FALSE;
 int flagRXDiag;
 int flagRXStop = FALSE;
@@ -24,6 +23,7 @@ unsigned int counterBlue = 0;
 //********************************
 //			Function
 //********************************
+//Initialize all ports.
 void bluetoothInit(){
 	P3SEL = (RX + TX);						//P3.3,4 = PM_UCA0RXD/TXD
 	UCA0CTL1 |= UCSWRST;					//Put state machine in reset
@@ -39,6 +39,7 @@ void bluetoothInit(){
 //********************************
 //          Interrupt
 //********************************
+//When UART is interrupt by mobile app
 #pragma vector = USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void){
 	switch(__even_in_range(UCA0IV, 4)){

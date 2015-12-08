@@ -17,6 +17,7 @@
 int seconds = 0;                            //Seconds counter
 int returnFlag = 0;
 int welcomeFlag = 0;
+
 //********************************
 //		Global Variables
 //********************************
@@ -25,12 +26,14 @@ uint8_t shownMessage = WELCOME;             //Message currently shown
 //********************************
 //			Function
 //********************************
+//Start timer, set for 1 second
 void messageSwitchTimer(){
     TA1CCR0 = 32768;                        // 1 second
     TA1CTL = TASSEL_1 + MC_1 + TACLR;       // ACLK, Up Mode, TA0 Clear
     TA1CCTL0 |= CCIE;                       // Interrupt Enable
 }
 
+//Stop timer
 void messageSwitchStopTimer(){
 	TA1CTL = TACLR + MC_0;
 	seconds = 0;

@@ -16,6 +16,7 @@
 //********************************
 //			Function
 //********************************
+//Initialize all ports
 void diagnosticButtonInit(){
     P2DIR &= ~BUTTON;                // P2.0 Photodiode
     P2IE |= BUTTON;                  // P2.0 interrupt enabled
@@ -26,6 +27,7 @@ void diagnosticButtonInit(){
 //********************************
 //          Interrupt
 //********************************
+//When button is pressed
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void){
 	flagDiag = TRUE;

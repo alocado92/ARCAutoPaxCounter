@@ -14,16 +14,18 @@
 //          Variables
 //********************************
 //Color scheme for each message
+//Message: Welcome/color: blue; Message: Return tag/color: red; etc.
 const uint8_t colorM[7] = {BLUE1, RED, GREEN, GREEN, RED, GREEN, BLUE1};
 int assembleFlag = 0;
 int sendLedFlag = 0;
 
 uint8_t command1;
 uint8_t command2;
+
 //********************************
 //          Functions
 //********************************
-//Initialize Ports
+//Initialize all ports
 void ledCtrlInit(){
 	//For message
     P3DIR |= BIT0 + BIT1 + BIT2;
@@ -31,8 +33,6 @@ void ledCtrlInit(){
     //For interrupt
     P2OUT &= TRIGGER;
     P2DIR |= TRIGGER;
-
-
 }
 
 /*
@@ -47,6 +47,7 @@ void ledCtrlInit(){
  * 6 ---> OPEN
  * 7 ---> CAPSTONE
  */
+//Create the messange to be display
 void assembleCommand(uint8_t message){
 	assembleFlag = 1;
 	sendLedFlag = 0;
@@ -55,7 +56,7 @@ void assembleCommand(uint8_t message){
 	sendledCommand(command1, command2);
 }
 
-//Send Command
+//Send message by interrupt to LED controller microprocessor
 void sendledCommand(uint8_t command1, uint8_t command2){
 	assembleFlag = 0;
 	sendLedFlag = 1;

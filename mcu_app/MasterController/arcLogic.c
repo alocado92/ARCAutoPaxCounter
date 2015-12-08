@@ -1,6 +1,6 @@
 /*
  * arcLogic.c
- * Purpose:
+ * Purpose: Manage all the logic of the system
  *  Created on: Nov 5, 2015
  *      Author: Rosedanny Ortiz
  */
@@ -31,6 +31,7 @@ unsigned int counterRXFalse = 0;
 unsigned int flagTagEnterDiag = FALSE;
 unsigned int flagTagExitDiag = FALSE;
 unsigned int flagFinish = FALSE;
+
 //********************************
 //          Functions
 //********************************
@@ -54,69 +55,44 @@ void arcLogicInit(){
 void rfidOperation(){
 	int index = getIndex(rfidCard);
 	int newIndex;
+	//ID already exist in buffer
 	if(index != NOEXIST && getStatus(index) == LIVE){
 		idStatus[index] = DEAD;
 		if(flagDiag == FALSE){
 			counterDiagFalse++;
 			//Send through bluetooth
-			UCA0TXBUF = '0';
+			UCA0TXBUF = '0';	//Send Regular passenger
 			sendTagID(index);
-			if(flagRX == FALSE){
-				UCA0TXBUF = '0';
-				sendTagID(index);
-			}
-			else if (flagRX == TRUE){
-				flagRX = FALSE;
-			}
 		}
 		else if(flagDiag == TRUE){
 			counterDiagTrue++;
 			flagTagExitDiag = TRUE;
 			//Send through bluetooth
 			flagDiag = FALSE;
-			UCA0TXBUF = '1';
+			UCA0TXBUF = '1';	//Send Diagnostic passenger
 			sendTagID(index);
-			if(flagRX == FALSE){
-				UCA0TXBUF = '1';
-				sendTagID(index);
-			}
-			else if (flagRX == TRUE){
-				flagRX = FALSE;
-			}
 			diagnosticProtocol();
 		}
 	}
+	//new ID
 	else{
 		newIndex = addID(index, rfidCard);
 		if(flagDiag == FALSE){
 			counterDiagFalse++;
-			UCA0TXBUF = '0';
+			UCA0TXBUF = '0';	//Send Regular passenger
 			sendTagID(newIndex);
-			if(flagRX == FALSE){
-				UCA0TXBUF = '0';
-				sendTagID(newIndex);
-			}
-			else if (flagRX == TRUE){
-				flagRX = FALSE;
-			}
 		}
 		else if(flagDiag == TRUE){
 			counterDiagTrue++;
 			flagTagEnterDiag = TRUE;
-			UCA0TXBUF = '1';
+			UCA0TXBUF = '1';	//Send Diagnostic passenger
 			sendTagID(newIndex);
-			if(flagRX == FALSE){
-				UCA0TXBUF = '1';
-				sendTagID(newIndex);
-			}
-			else if (flagRX == TRUE){
-				flagRX = FALSE;
-			}
 			diagnosticProtocol();
 		}
 	}
 }
 
+//Send tag ID to mobile app
 void sendTagID(int index){
 	int i;
 	//Send through bluetooth
@@ -124,10 +100,9 @@ void sendTagID(int index){
 		while(!(UCA0IFG & UCTXIFG));
 	    UCA0TXBUF = id[index][i];
 	}
-
 }
 
-
+//Get index of tag ID from buffer
 //PAXNUM = 5 for now
 int getIndex(uint8_t idPax[IDLEN]){
 	int i;
@@ -146,6 +121,7 @@ int getIndex(uint8_t idPax[IDLEN]){
 	return NOEXIST;
 }
 
+//Get tag ID status from status buffer
 uint8_t getStatus(int index){
 	if(index == NOEXIST || index >= PAXNUM){
 		return ERROR;
@@ -155,6 +131,7 @@ uint8_t getStatus(int index){
 	}
 }
 
+//Add new ID tag to the buffer
 int addID(int index, uint8_t idPax[IDLEN]){
 	int storeIndex;
 	if(index == NOEXIST){
@@ -177,6 +154,7 @@ int addID(int index, uint8_t idPax[IDLEN]){
 	return storeIndex;
 }
 
+//Diagnostic protocol when button is pressed
 void diagnosticProtocol(){
 	if(flagDiag2 == TRUE){
 		flagDiag2 = FALSE;

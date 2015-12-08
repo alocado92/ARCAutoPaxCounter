@@ -13,6 +13,7 @@
 //********************************
 //			Function
 //********************************
+//Initialize all ports
 void photodiodeInit(){
     P1DIR &= ~CONTAINER;                // P1.4 Photodiode
     P1IE |= CONTAINER;                  // P1.4 interrupt enabled
@@ -23,6 +24,7 @@ void photodiodeInit(){
 //********************************
 //          Interrupt
 //********************************
+//When photodiode is interrupt
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void){
 	startSound();
