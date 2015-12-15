@@ -22,7 +22,7 @@ var log = bunyan.createLogger({
 	name: 'ARC AutoPaxCounter',
 	streams: [{
         path: './log/login.log',
-        // `type: 'file'` is implied
+        // `type: 'file'` is imply.
     }]
 });
 var distance = require('google-distance');
