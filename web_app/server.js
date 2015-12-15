@@ -32,12 +32,7 @@ var session = require('express-session');
 //API Key for on-remote server testing
 distance.apiKey = 'AIzaSyCLWYwZfhXxvlaBHRTEEt40KooXr62LuxY';
 
-//API Key for local server testing
-/*distance.apiKey = 'AIzaSyC7ZVsNOFln4BjoOK998A2pODHq70QzDOY';
-*/
-//mysql create pool
-//var trip = '';
-//var pool = mysql.pool;
+
 app.use(session({
   cookieName: 'session',
   secret: 'capstone alexis nestor xandel cristina rosedany',
@@ -50,10 +45,7 @@ app.use(bodyParser.urlencoded({
    extended: true 
 }));
 var allowCrossDomain = function(req, res, next) {
-	//res.header('Access-Control-Allow-Origin', '*');
-	//res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-	//res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-	//res.setHeader('Content-disposition', 'attachment; filename=data.json');
+	
 
 	// intercept OPTIONS method
 	if ('OPTIONS' == req.method) {
@@ -78,7 +70,7 @@ app.post('/download', function (req,res){
 		connection.query(query, function (err, rows){
 			var result = [];
 			for(var i=0;i<rows.length;i++){
-				result.push({entry_time: rows[i].entry_time, entry_latitude: rows[i].entry_latitude, entry_longitude: rows[i].entry_longitude, exit_time: rows[i].exit_time, exit_latitude: rows[i].exit_latitude, exit_longitude: rows[i].exit_longitude, distance: rows[i].distance, dest_stop: rows[i].dest_stop, origin_stop: rows[i].origin_stop, study_name: rows[i].study_name, start_time: rows[i].start_time, end_time: rows[i].end_time, route_name: rows[i].route_name});
+				result.push({entry_time: rows[i].entry_time, entry_latitude: rows[i].entry_latitude, entry_longitude: rows[i].entry_longitude, exit_time: rows[i].exit_time, exit_latitude: rows[i].exit_latitude, exit_longitude: rows[i].exit_longitude, distance_meters: rows[i].distance, dest_stop: rows[i].dest_stop, origin_stop: rows[i].origin_stop, study_name: rows[i].study_name, start_time: rows[i].start_time, end_time: rows[i].end_time, route_name: rows[i].route_name});
 			}
 			console.log('Results: '+result);
 			var file = './public/data.json';
@@ -90,30 +82,7 @@ app.post('/download', function (req,res){
 		});
 	});
 });
-app.get('/user', function (req, res) {
-	var check = '';
-	distance.get(
-  {
-     origins: [18.2098309+', '+-67.1399166],
-  destinations: [18.2098309+', '+-67.1399136],
-    mode: 'driving',
-    units: 'imperial'
-  },
-  function(err, data) {
-    if (err) return console.log(err);
-    console.log(data);
-    if (data.distanceValue >= 100000){
-    	check = 'True';
 
-    }
-    else {
-    	check = 'False';
-    }
-    res.sendStatus(check);
-});
-  
- 
-});
 app.post('/graph2', function (req, res){
 	var type = req.body.graph;
 	var date_begin = req.body.sdate;
@@ -121,26 +90,25 @@ app.post('/graph2', function (req, res){
 	var route = req.body.route;
 	console.log('Route: '+route);
 	var graph_type ='';
-
+// Origin-Destination Matrix has been selected
 	if(type == '1'){
 		//graph_type = '';
 		console.log('Route: '+route);
-
+		//call the database
 		pool.getConnection(function (err, connection){
 			var where_time = ' start_time >= "'+ date_begin+'" AND end_time <= "' + date_end+'")';
 			var route1 = route;
+			//retrieve all stops that belong to the route parameter
 			connection.query('Select name from Stop natural join Linked_to natural join Route where ? ORDER By (name)',{route_name: route1.toString()}, function (err, rows){
 				var result = [];
 				var stops_name =[]
+
 				for(var i=0;i<rows.length;i++){
 					var fila = [];
 					stops_name.push(rows[i].name);
-					/*for(var j=0;rows.length;j++){
-						fila.push(0);
-					}*/
-					//result.push(fila);
+					
 				}
-				//console.log('Initialized result: '+result);
+				
 				console.log('Sdate: '+ date_begin);
 				console.log('Edate: '+ date_end);
 				console.log('Route name: '+route1);
@@ -169,19 +137,9 @@ app.post('/graph2', function (req, res){
 									parada_id += "dest_stop = '"+rows[i].passenger_ID + "' OR ";
 								}	
 							}
-							/*console.log('Parada_id: '+parada_id);
-							console.log('Parada_id1: '+parada_id1);
-							console.log('Pass_id: '+pass_id);*/
+							//Fetch the count of all passengers with a particular set of origin-destination stops and group them up as they match.
 							connection.query('SELECT COUNT(origin_stop) as "Origin", origin_stop, dest_stop FROM Passenger WHERE ('+pass_id+')  Group By (dest_stop) ORDER By (origin_stop)', function (err, rows){
-								/*for(var a=0;a<stops_name.length;a++){
-									for(var b=0; b<stops_name.length;b++){
-										if(stops_name[a] == rows[b].origin_stop){
-											if(stops_name[b]==rows[b].dest_stop){
-												result[a][b] = rows[b].Origin;
-											}
-										}
-									}
-								}*/if(typeof rows != 'undefined'){
+								if(typeof rows != 'undefined'){
 								console.log('Rows length c: '+rows.length);
 								for(var c=0; c<rows.length;c++){
 									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
@@ -192,6 +150,7 @@ app.post('/graph2', function (req, res){
 								connection.release();}
 								else{
 									console.log('Unmatched query');
+									//sends results data to fron-tend for processing
 									res.send({data: result, stops: stops_name});
 								connection.release();
 								}
@@ -204,15 +163,18 @@ app.post('/graph2', function (req, res){
 		});
 
 	}
+	//Passenger Net Flow has been selected
 	else if (type == '2'){
 		pool.getConnection(function (err, connection){
+			// Selects all stops from a selected route
 			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route},function (err,rows){
 				var result = [];
 				console.log('Size of row: '+rows.length);
+				// Initializes result matrix to 0 for all stops in a route
 				for(var k=0; k<rows.length; k++){
 					result.push({stop: rows[k].name, origin: 0, destination: 0});
 				}
-
+				// Queries the database for the count of all passengers that enter or exit each stop in a particular route
 				var query = "SELECT COUNT(origin_stop) as 'net_origin', origin_stop, COUNT(dest_stop) as 'net_dest', dest_stop FROM Passenger natural join Takes natural join Trip natural join Belongs natural join Route WHERE route_name = '" + route+"' AND start_time >= '"+date_begin+"' AND end_time <= '"+date_end+"' GROUP By origin_stop, dest_stop" ;
 				
 				connection.query(query, function (err,rows){
@@ -236,6 +198,7 @@ app.post('/graph2', function (req, res){
 							}
 						}
 						console.log(result);
+						//sends result data to front-end for processing
 						res.send({data: result});
 						connection.release();
 					}
@@ -254,177 +217,14 @@ app.post('/graph2', function (req, res){
 	var query = '';
 	
 });
-app.post('/graph1', function (req, res){
-	var type = req.body.graph;
-	var date_begin = req.body.sdate;
-	var date_end = req.body.edate;
-	var route = req.body.route;
-	console.log('Route: '+route);
-	var graph_type ='';
 
-	if(type == '1'){
-		//graph_type = '';
-		console.log('Route: '+route);
-
-		pool.getConnection(function (err, connection){
-			var where_time = ' start_time >= "'+ date_begin+'" AND end_time <= "' + date_end+'")';
-			var route1 = route;
-			connection.query('Select name from Stop natural join Linked_to natural join Route where ? ORDER By (name)',{route_name: route1.toString()}, function (err, rows){
-				var result = [];
-				var stops_name =[]
-				for(var i=0;i<rows.length;i++){
-					var fila = [];
-					stops_name.push(rows[i].name);
-					/*for(var j=0;rows.length;j++){
-						fila.push(0);
-					}*/
-					//result.push(fila);
-				}
-				//console.log('Initialized result: '+result);
-				console.log('Sdate: '+ date_begin);
-				console.log('Edate: '+ date_end);
-				console.log('Route name: '+route1);
-				connection.query('select passenger_ID from Passenger NATURAL JOIN Takes NATURAL JOIN Trip NATURAL JOIN Belongs NATURAL JOIN Route where start_time >= "'+date_begin+'" AND end_time <= "'+date_end+'" AND route_name= "' +route1+'"',function (err,rows){
-						var pass_id = '';
-						console.log('Rows length: '+rows);
-						for (var i=0; i< rows.length; i++){
-							if(i == rows.length-1){
-								pass_id += " passenger_ID = '"+rows[i].passenger_ID+"'";
-							}
-							else{
-								pass_id += "passenger_ID = '"+rows[i].passenger_ID + "' OR ";
-							}	
-						}
-						console.log('Content of pass_ID: '+pass_id);
-						connection.query('select name from Stop NATURAL JOIN Linked_to NATURAL JOIN Route where route_name ="'+route1+'"',function (err,rows){
-							var parada_id = '';
-							var parada_id1 = '';
-							for (var i=0; i< rows.length; i++){
-								if(i == rows.length-1){
-									parada_id += " origin_stop = '"+rows[i].passenger_ID+"'";
-									parada_id1 += " dest_stop = '"+rows[i].passenger_ID+"'";
-								}
-								else{
-									parada_id += "origin_stop = '"+rows[i].passenger_ID + "' OR ";
-									parada_id += "dest_stop = '"+rows[i].passenger_ID + "' OR ";
-								}	
-							}
-							/*console.log('Parada_id: '+parada_id);
-							console.log('Parada_id1: '+parada_id1);
-							console.log('Pass_id: '+pass_id);*/
-							connection.query('SELECT COUNT(origin_stop) as "Origin", origin_stop, dest_stop FROM Passenger WHERE ('+pass_id+')  Group By (dest_stop) ORDER By (origin_stop)', function (err, rows){
-								/*for(var a=0;a<stops_name.length;a++){
-									for(var b=0; b<stops_name.length;b++){
-										if(stops_name[a] == rows[b].origin_stop){
-											if(stops_name[b]==rows[b].dest_stop){
-												result[a][b] = rows[b].Origin;
-											}
-										}
-									}
-								}*/if(typeof rows != 'undefined'){
-								console.log('Rows length c: '+rows.length);
-								for(var c=0; c<rows.length;c++){
-									result.push({count:rows[c].Origin, origin: rows[c].origin_stop, dest: rows[c].dest_stop});
-								}
-								console.log('Rows: '+ rows.length);
-								console.log('Finished result[0]: '+result[0].count);
-								res.send({data: result, stops: stops_name});
-								connection.release();}
-								else{
-									console.log('Unmatched query');
-									res.send({data: result, stops: stops_name});
-								connection.release();
-								}
-							});
-
-							
-						});	
-				});
-			});
-		});
-
-	}
-	else if (type == '2'){
-		//graph_type = '';
-		console.log('Route: '+route);
-		
-		pool.getConnection(function (err,connection){
-			console.log('Route: '+route);
-			console.log('Date Begin: ' +date_begin);
-			console.log('Date End: '+date_end);
-			var where = ' (route_name= "'+ route.toString() +'" AND start_time >= "'+ date_begin+'" AND end_time <= "' + date_end+'")';
-			console.log('Where: '+where);
-			var query = 'select distinct dest_stop from Passenger natural join Takes natural join Trip natural join Belongs natural join Route where '+where;
-			var route1 = route;
-			console.log('Route 1: '+route1);
-			connection.query('Select name from Stop natural join Linked_to natural join Route where ?',{route_name: route1.toString()}, function (err, rows){
-				var result = [];
-				console.log('Size of row: '+rows.length);
-				for(var k=0; k<rows.length; k++){
-					result.push({stop: rows[k].name, origin: 0, destination: 0});
-				}
-				console.log('Query: '+ query);
-				connection.query(query, function (err, rows){
-					console.log('Size of row: '+ rows.length);
-				if(rows.length > 0){
-					var stops = '';
-					for (var i=0; i< rows.length; i++){
-						if(i == rows.length-1){
-							stops += " dest_stop = '"+rows[i].dest_stop+"'";
-						}
-						else{
-							stops += "dest_stop = '"+rows[i].dest_stop + "' OR ";
-						}
-
-					}
-					console.log('Content of Stops: '+stops);
-					var query2 = 'SELECT COUNT(origin_stop) as "Net_Traffic_Origin", origin_stop, COUNT(dest_stop) as "Net_Traffic_Dest", dest_stop FROM Passenger WHERE ('+stops+') GROUP By (origin_stop)';
-					connection.query(query2, function (err, rows){
-						console.log('Route name in query2: '+route);
-						console.log('Rows length: '+rows.length);
-
-						for(var a=0;a<result.length;a++){
-							for(var b=0;b<rows.length;b++){
-								if(rows[b].origin_stop == result[a].stop){
-									result[a].origin += 1;
-									break;
-								}
-							}
-							for(var c=0;c<rows.length;c++){
-								if(rows[c].dest_stop == result[a].stop){
-									result[a].destination += 1;
-									break;
-								}
-							}
-						}
-						console.log(result);
-						res.send({data: result});
-						connection.release();
-
-						
-					});
-				}
-				else{
-					res.send({data: result});
-				}
-			});
-			});
-		});
-	}
-	else {
-		//graph_type = '';
-	}
-
-	var query = '';
-	
-});
 
 
 var sess;
-
+//login route handler
 app.post('/login', function (req, res){
 	sess = req.session;
-	console.log('wassap');
+	
 	var exists;
 	var username = req.body.uName;
 	var password = req.body.pword;
@@ -434,7 +234,7 @@ app.post('/login', function (req, res){
 	var mail='';
 	log.info({User: username,Pass: hashed},'successful login detected!');
 	pool.getConnection(function(err, connection) {
-	  		// Use the connection
+	  		// looks for a matching user
 	  		connection.query( 'select count(email) as userCount, f_name, email, is_admin from User where username ="'+username+'" AND password ="'+hashed+'"', function (err, rows) {
 	   			//manipulate rows
 	   			console.log('Connected to db, expecting a 1 for matched user. Received a: '+rows[0].userCount);
@@ -443,7 +243,7 @@ app.post('/login', function (req, res){
 	   			is_admin = rows[0].is_admin;
 	   			name = rows[0].f_name;
 
-	   			
+	   			//if user is matched, a session is created. if not, nothing occurs.
 	   			console.log(exists);
 				if(exists){
 					console.log('User session will be created here');
@@ -514,7 +314,7 @@ app.get('/export', function (req,res){
 	}
 });
 app.get('/editUser', function (req,res){
-	//res.sendFile("public/edit_user.html", {"root": __dirname});
+	
 	if(sess != null && sess.is_admin == 1){
 		res.sendFile("public/edit_user.html", {"root": __dirname});
 	}
@@ -527,7 +327,7 @@ app.get('/editUser', function (req,res){
 	}
 });
 app.get('/editTrip', function (req,res){
-	//res.sendFile("public/edit_trip.html", {"root": __dirname});
+	
 	if(sess != null && sess.is_admin == 1){
 		res.sendFile("public/edit_trip.html", {"root": __dirname});
 	}
@@ -540,7 +340,7 @@ app.get('/editTrip', function (req,res){
 	}
 });
 app.get('/deleteUser', function (req,res){
-	//res.sendFile("public/delete_user.html", {"root": __dirname});
+	
 	if(sess != null && sess.is_admin == 1){
 		res.sendFile("public/delete_user.html", {"root": __dirname});
 	}
@@ -579,7 +379,7 @@ app.post('/fetch', function (req,res){
 	  		});
 	   		// And done with the connection.
 	    });
-	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
+	
 	
 });
 app.get('/logout',function (req,res){
@@ -618,7 +418,7 @@ app.post('/fetch_trip', function (req,res){
 	  		});
 	   		// And done with the connection.
 	    });
-	//data = {email: email, fname: fname, lname: lname, isAdmin: isAdmin};
+	
 	
 });
 
@@ -747,7 +547,7 @@ app.post('/add', function (req,res){
 				        connection.release();
 				    }
 				});
-	   			//connection.release();
+	   		
 	  		});
 	   		// And done with the connection.
 	    });
@@ -761,7 +561,7 @@ app.post('/add', function (req,res){
 		var email = req.body.email;
 		var exists = 0;
 		var user = '';
-		//var tempPass = 'epicMealTime';
+		
 		var transporter = nodemailer.createTransport({
 	    service: 'Gmail',
 		    auth: 
@@ -831,9 +631,7 @@ app.get('/addRoute', function (req,res){
 app.post('/mobile', function (req,res){
 	
 	console.log(req.body);
-	/*if(req.body){
-		res.send('OK');
-	}*/
+	
 	var option = req.body.action;
 	
 	//Parse which transaction mobile is sending
@@ -854,16 +652,15 @@ app.post('/mobile', function (req,res){
 
 	  		var timequery = 'Select DATE_ADD(start_time, INTERVAL 23 HOUR) as final_date, trip_ID from Trip where end_time is null';
 	  			connection.query(timequery, function (err,rows){
-//bregar			
+			
 					console.log('Dame el row:' + rows[0]);
 					if(typeof rows[0] !== 'undefined'){
 						var date = rows[0].final_date;
 					console.log(date);
 
-					//var time = rows[0].final_time
+					
 					var ID = rows[0].trip_ID;
-					//var datetime = new Date(Date.parse(JSON.stringify(rows[0].final_date))).addHours(23);
-					//console.log(datetime);
+					
 
 					var end_query = 'Update Trip SET ? WHERE ?';
 					connection.query(end_query, [{end_time: date},{trip_ID: ID}], function (err,rows){
@@ -920,20 +717,14 @@ app.post('/mobile', function (req,res){
 					  		console.log('trip_ID: '+id +' route_ID: '+ r_id);
 					  		var para1 = {trip_ID: id,route_ID: r_id };
 					  		connection.query( query1,para1, function (err, rows) {
-				   			//manipulate rows
-				   			/*if(!rows){
-				   				res.send('INVALID');
-				   			}
-				   			else{
-				   				res.send('OK');
-				   			}*/
+				   			
 				   				console.log('Insert new belongs successful');
 				   			
 				   			
 				  			});
 			   			
 			  			});
-			   			//console("time: "+time);
+			   		
 			   			
 			   			
 	  				});
@@ -943,7 +734,7 @@ app.post('/mobile', function (req,res){
 	  			});
 	  		
 
-	  		//connection.release();
+	  		
 	  		
 	   		// And done with the connection.
 	   		res.send('OK');
@@ -1040,7 +831,7 @@ app.post('/mobile', function (req,res){
 			});
 		break;
 		case 'diagnostic':
-		//res.send('OK');
+		
 	  		pool.getConnection(function (err,connection){
 	  			connection.query('Select * from Trip', function (err, rows){
 	  				res.send('OK');
@@ -1050,8 +841,7 @@ app.post('/mobile', function (req,res){
 
 		break;
 		default:
-			//console.log('Something went wrong with the options');
-			//res.send('OK');
+			//passenger data is to be inserted into database
 				var passengers =[];
 				var stops = [];
 				var distances = [];
@@ -1062,22 +852,19 @@ app.post('/mobile', function (req,res){
 				var lim = req.body.length;
 				pool.getConnection(function (err, connection){
 				console.log("Request length: "+req.body.length);
-				//for(var i=0; i<req.body.length;i++){
-					//console.log("req.body[i].entry_lat: "+ req.body[i].entry_lat);
+				
 					function next(){
 					if(loop < lim){
 					var test = req.body[loop];
 					console.log("ENtry lat: "+ test.entry_lat);
-					//passengers.push(req.body[i]);
-					//var il = i;
+					
 					var count = 1;
 					
 					
 							var dest_name = '';
 							var orig_name = '';
 							connection.query('Select stop_ID from Stop natural join Linked_to natural join Route natural join Belongs inner join Trip where end_time is null', function (err, rows){
-								//console.log("il: "+ il);
-								//test.body[il]
+								
 								console.log("test.body.log: "+ test.entry_log);
 								
 								console.log("Rows after initial query "+rows);
@@ -1142,8 +929,7 @@ app.post('/mobile', function (req,res){
 								    			console.log('Passenger ID: '+ pass_id);
 								    			var relation = {passenger_ID: pass_id, trip_ID: rows[0].trip_ID};
 								    			connection.query('Insert into Takes SET ?', relation , function (err, rows){
-								    				/*count++;
-								    				if(count >= lim){}*/
+								    				
 								    					loop++;
 								    				next();
 								    			});
@@ -1261,9 +1047,9 @@ app.post('/fetchRoute', function (req ,res){
 });
 
 app.post('/addRoutes', function (req,res){
-	//var stops = req.body.stops;
+	
 	var route_name = req.body.route_name;
-	//console.log('Stops to be tied to route: '+ JSON.stringify(stops));
+	
 	console.log('Route name for new route: '+ route_name);
 	pool.getConnection(function (err, connection){
 
@@ -1300,12 +1086,7 @@ app.get('/dropdown', function (req,res){
 	});
 });
 
-app.post('/view1', function (req,res){
-	console.log(req.body);
-	var datas = '{"data": [' + '{"name": "1", "IN": 25, "OUT": 24},' + '{"name": "2", "IN": 25, "OUT": 24},' +'{"name": "3", "IN": 25, "OUT": 24}]}';
-	console.log("Sending data to graph: "+ datas);
-	res.send(datas);
-});
+
 
 var server = app.listen(3000, function () {
   var host = server.address().address;
