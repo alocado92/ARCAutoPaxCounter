@@ -51,7 +51,6 @@ public class ARC_Bluetooth {
         private ListView myListView;
         private MyServiceReceiver receiver;
         public static final String BROADCAST_ACTION_ACK = "Obtain ack";
-        //public static final String BROADCAST_ACTION_DISCONNECT = "Disconnect socket";
         public static final String BT_ACK = "Bluetooth acknowledgement";
         public static final String BT_CLOSE = "close";
         public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");  //Standard SerialPortService ID
@@ -92,8 +91,10 @@ public class ARC_Bluetooth {
                 } else {
                     for (BluetoothDevice device : pairedDevices) {
                         // Add the name and address to an array adapter to show in a ListView
-                        arrayAdapter.add(device.getName());
-                        listOfDevices.add(device);
+                        if(!wasPared) {
+                            arrayAdapter.add(device.getName());
+                            listOfDevices.add(device);
+                        }
                     }
                 }
             }
@@ -117,17 +118,13 @@ public class ARC_Bluetooth {
                     showToast("Starting discovery");
 
                 } else if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-                    /*if(wasPared) {
-                        arrayAdapter.remove(arrayAdapter.getItem(selectedBT));
-                        wasPared = false;
-                        cancelDiscovery();
-                    }*/
-                    showConnected(device);
+                    if(!wasPared)
+                        showConnected(device);
 
                 } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 
                 } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                    if (!listOfDevices.contains(device)) {
+                    if (!listOfDevices.contains(device) && !wasPared) {
                         arrayAdapter.add(device.getName());
                         listOfDevices.add(device);
                     }
@@ -139,7 +136,7 @@ public class ARC_Bluetooth {
                             BluetoothDevice d = listOfDevices.get(selectedBT);
                             Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
                             showToast("Connecting");
-                            if (pairedDevices != null || pairedDevices.size() > 0) {
+                            if (pairedDevices != null) {
                                 if (!pairedDevices.contains(d)) {
                                     cancelDiscovery();
                                     pair(d);
@@ -147,7 +144,7 @@ public class ARC_Bluetooth {
                                     Set<BluetoothDevice> pairedD = bluetoothAdapter.getBondedDevices();
                                     while(!pairedD.contains(d)) {
                                         pairedD = bluetoothAdapter.getBondedDevices();
-                                        //wasPared = true;
+                                        wasPared = true;
                                     }
                                 }
                                 connect(listOfDevices.get(selectedBT));
@@ -159,6 +156,7 @@ public class ARC_Bluetooth {
                     final int prevState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
 
                     if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
+                        showConnected(device);
 
                     } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED) {
                         showToast("Unconnected");
@@ -219,6 +217,8 @@ public class ARC_Bluetooth {
                 @Override
                 public void run() {
                     myDialog.dismiss();
+                    if(((MainActivity)context).getStudy_notC())
+                        ((MainActivity)context).showInstructions();
 
                     if(!isStudyFragment) {
                         Intent intent1 = new Intent(context, MainActivity.class);
@@ -381,7 +381,6 @@ public class ARC_Bluetooth {
 
             if(connectedThread != null && close) {
                 connectedThread.cancel();
-                //context.unregisterReceiver(this);  //*******************added
             }
         }
     }

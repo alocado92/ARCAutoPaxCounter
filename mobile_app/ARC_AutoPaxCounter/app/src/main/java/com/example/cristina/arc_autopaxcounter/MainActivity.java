@@ -25,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +52,8 @@ public class MainActivity extends ActionBarActivity
     public int REQUEST_DISCOVERABLE_CODE = 42;
     private FragmentManager fragmentManager;
     private StartStudyFragment studyFragment;
-    private List<Integer> mBuffer = new ArrayList<>();
     private boolean isGPSenabled;
-
-    //ACTION
-
+    private LinearLayout instructions;
 
     //edit study view
     private boolean isEditStudy = false;
@@ -79,6 +78,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        instructions = (LinearLayout) findViewById(R.id.instructions);
+
         if(savedInstanceState != null) {
             bt = savedInstanceState.getParcelable("BTdevice");
         }
@@ -96,6 +97,11 @@ public class MainActivity extends ActionBarActivity
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(aReceiver, filter);
+
+        List getSDpath = ExternalStorage.getSdCardPaths(this, false);
+        if(getSDpath == null) {
+            showSDcardDialog();
+        }
     }
 
     private void getBundleValues() {
@@ -122,6 +128,9 @@ public class MainActivity extends ActionBarActivity
         } else if(study_CS_notStop)
             mNavigationDrawerFragment.changeDrawerOptions(study_CS_notStop, getStudy_CS_notStop_menu());
 
+        if(study_notC)
+            showInstructions();
+
         super.onResume();
     }
 
@@ -134,7 +143,6 @@ public class MainActivity extends ActionBarActivity
     }
 
     private String[] getStudy_C_notS_menu() {
-
         if(!isGPSenabled)
             return  new String[]{getString(R.string.start_study), getString(R.string.edit_study), getString(R.string.discard_study), getString(R.string.bluetooth_setup), getString(R.string.enable_gps)};
         else
@@ -158,7 +166,10 @@ public class MainActivity extends ActionBarActivity
             // Instead, the result code is the duration (seconds) of discoverability or a negative number if the user answered "NO".
             if (resultCode == 0) {
                 Toast.makeText(this, "Can't proceed until Bluetooth is discoverable", Toast.LENGTH_SHORT).show();
+                if(study_notC)
+                    showInstructions();
             } else if (resultCode == 300) {
+                    hideInstructions();
                 Toast.makeText(this, "Discoverable mode enabled", Toast.LENGTH_SHORT).show();
                 bluetoothF = new BluetoothFragmentDialog();
                 fragmentManager = getSupportFragmentManager();
@@ -174,6 +185,8 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         fragmentManager = getSupportFragmentManager();
@@ -185,6 +198,8 @@ public class MainActivity extends ActionBarActivity
         boolean isManageGPS = false;
         boolean isDiscardDialog = false;
         boolean isStopDialog = false;
+
+        hideInstructions();
 
         if(study_notC) {
             switch (position) {
@@ -289,11 +304,15 @@ public class MainActivity extends ActionBarActivity
                     FragmentTransaction ft = fragmentManager.beginTransaction();
                     studyF.setArguments(bundle);
                     ft.replace(R.id.container, studyF).commit();
-                } else
+                } else {
                     Toast.makeText(this, "Must setup Bluetooth connection before creating new study", Toast.LENGTH_SHORT).show();
+                    if(study_notC)
+                        showInstructions();
+                }
             } else if(isManageGPS || isDiscardDialog || isStopDialog) {
                ;
             }
+
         } else {
             if(!isEditStudy && !isStartStudy) {
                 // update the main content by replacing fragments
@@ -347,12 +366,16 @@ public class MainActivity extends ActionBarActivity
                             public void onClick(DialogInterface d, int id) {
                                 startActivity(new Intent(action));
                                 d.dismiss();
+                                if(study_notC)
+                                    showInstructions();
                             }
                         })
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface d, int id) {
                                 d.cancel();
+                                if(study_notC)
+                                    showInstructions();
                             }
                         });
         builder.create().show();
@@ -416,13 +439,6 @@ public class MainActivity extends ActionBarActivity
         intent.putExtra(StartStudyFragment.MAP_FLAG, false);
         sendBroadcast(intent);
 
-        //close Bluetooth connected thread
-        /*Intent localIntent = new Intent(ARC_Bluetooth.BROADCAST_ACTION_DISCONNECT);
-        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        localIntent.putExtra(ARC_Bluetooth.BT_CLOSE, true);
-        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
-        sendBroadcast(localIntent);*/
-
         unregisterReceiver(aReceiver);
         super.onDestroy();
     }
@@ -447,6 +463,8 @@ public class MainActivity extends ActionBarActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
+
+        //Use if a settings menu is desired
         /*int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -484,6 +502,19 @@ public class MainActivity extends ActionBarActivity
         builder.create().show();
     }
 
+    private void showSDcardDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No SDcard found")
+                .setMessage("Please insert an SDcard to save passenger's travel data from study.")
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface d, int id) {
+                                d.dismiss();
+                            }
+                        });
+        builder.create().show();
+    }
+
     @Override
     public void onDataPass(Boolean isCreated, Fragment studyFrag) {
         if(isCreated) {
@@ -493,6 +524,18 @@ public class MainActivity extends ActionBarActivity
             studyFragment = (StartStudyFragment) studyFrag;
             mNavigationDrawerFragment.changeDrawerOptions(isCreated, getStudy_C_notS_menu());
         }
+    }
+
+    public boolean getStudy_notC() {
+        return study_notC;
+    }
+
+    public void showInstructions() {
+        instructions.setVisibility(View.VISIBLE);
+    }
+
+    public void hideInstructions() {
+        instructions.setVisibility(View.GONE);
     }
 
     /**

@@ -41,6 +41,7 @@ public class BluetoothFragmentDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
         builder.setTitle(R.string.bluetooth_dialog);
@@ -77,6 +78,7 @@ public class BluetoothFragmentDialog extends DialogFragment {
 
     @Override
     public void onResume() {
+        ((MainActivity)getActivity()).hideInstructions();
         arc_bluetooth.startScan();
         super.onResume();
     }
@@ -84,6 +86,9 @@ public class BluetoothFragmentDialog extends DialogFragment {
     @Override
     public void onDestroy() {
         arc_bluetooth.unregisterR();
+
+        if(((MainActivity)getActivity()).getStudy_notC())
+            ((MainActivity)getActivity()).showInstructions();
         super.onDestroy();
     }
 }

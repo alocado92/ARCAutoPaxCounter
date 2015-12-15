@@ -22,6 +22,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="pencil_icon">Edit</string>
+    <string name="server_icon">Server</string>
     <string name="gps_icon" >Gps</string>
     <string name="app_name_logo">AutoPaxCounter</string>
 

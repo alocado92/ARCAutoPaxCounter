@@ -15,6 +15,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,8 +67,8 @@ public class ArcHttpClient {
                     json = serializeStopJSON(study, action);
                 } else if (StartStudyFragment.DIAGNOSTIC.equals(action)) {
                     json = serializeDiagnosticJSON(list, action);
-                } else if(StartStudyFragment.HTTP_VERIFY.equals(action)) {
-                    json = serializeVerifyJSON(study, action);
+                } else if(StartStudyFragment.HTTP_VERIFY.equals(action) || StartStudyFragment.HTTP_VERIFY_SERVER.equals(action)) {
+                    json = serializeVerifyJSON(study, StartStudyFragment.HTTP_VERIFY);
                 } else {
                     //Passenger
                     json = serializePassengerJSON(list, study);
@@ -88,7 +91,7 @@ public class ArcHttpClient {
                             Log.d(TAG, result);
                             ackReceived = true;
                         } else if (result.equals("INVALID") && StartStudyFragment.HTTP_VERIFY.equals(action)) {
-                            Log.d(TAG, result);
+                                Log.d(TAG, result);
                             ackReceived = true;
                             sendBroadcastToast("INVALID");
                         }
@@ -99,17 +102,29 @@ public class ArcHttpClient {
                 if (tries > 5) {
                     //Could not receive ack from server
                     dataReceived = false;
-                    sendBroadcastToast("No ack received from web app");
+
+                    if(StartStudyFragment.HTTP_VERIFY_SERVER.equals(action))
+                        sendBroadcastToast("Server status: DOWN");
+                    else
+                        sendBroadcastToast("No ack received from web app");
                 } else {
                     dataReceived = true;
-                    sendBroadcastToast("Ack received from web app");
+
+                    if(StartStudyFragment.HTTP_VERIFY_SERVER.equals(action))
+                        sendBroadcastToast("Server status: UP");
+                    else
+                        sendBroadcastToast("Ack received from web app");
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 if(!ackReceived) {
                     dataReceived = false;
-                    sendBroadcastToast("No ack received from web app");
+
+                    if(StartStudyFragment.HTTP_VERIFY_SERVER.equals(action))
+                        sendBroadcastToast("Server status: DOWN");
+                    else
+                        sendBroadcastToast("No ack received from web app");
                 }
                 e.printStackTrace();
             } catch (Exception e) {
@@ -120,9 +135,33 @@ public class ArcHttpClient {
             }
         } else {
             sendBroadcastToast("No internet connection");
-
         }
         return dataReceived;
+    }
+
+    public String get(HttpURLConnection conn) {
+        StringBuilder result = new StringBuilder();
+        try {
+            InputStreamReader in = new InputStreamReader(conn.getInputStream(), "utf-8");
+            BufferedReader reader = new BufferedReader(in);
+            String line;
+            while((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            reader.close();
+            Log.d(TAG, result.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+
+    public void sendBroadcastToast(String message) {
+        Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
+        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        localIntent.putExtra(TOAST_MSG, message);
+        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
+        context.sendBroadcast(localIntent);
     }
 
     private String serializeVerifyJSON(Study study, String action) {
@@ -138,40 +177,15 @@ public class ArcHttpClient {
         return result;
     }
 
-    public String get(HttpURLConnection conn) {
-        StringBuilder result = new StringBuilder();
-        try {
-            InputStreamReader in = new InputStreamReader(conn.getInputStream(), "utf-8");
-            BufferedReader reader = new BufferedReader(in);
-            String line;
-            while((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-
-            reader.close();
-            Log.d(TAG, result.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result.toString();
-    }
-
-    private void sendBroadcastToast(String message) {
-        Intent localIntent = new Intent(StartStudyFragment.MyServiceReceiver.BROADCAST_ACTION);
-        localIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        localIntent.putExtra(TOAST_MSG, message);
-        localIntent.putExtra(StartStudyFragment.MAP_FLAG, false);
-        context.sendBroadcast(localIntent);
-    }
-
     private String serializePassengerJSON(HashMap<String, Passenger> list, Study study) {
         JSONArray array = new JSONArray();
         JSONObject jObj = new JSONObject();
 
         try {
             jObj.put("study", study.getName());
-            jObj.put("dateTime", study.getStart_date() + ", " + study.getStart_time());
+            jObj.put("dateTime", parseDate(study.getStart_date()) + ", " + study.getStart_time());
             array.put(jObj);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -205,7 +219,7 @@ public class ArcHttpClient {
             jsonObject.put("route", study.getRoute());
             jsonObject.put("type", study.getType());
             jsonObject.put("capacity", study.getCapacity());
-            jsonObject.put("dateTime", study.getStart_date() + ", " + study.getStart_time());
+            jsonObject.put("dateTime", parseDate(study.getStart_date()) + ", " + study.getStart_time());
             result = jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -219,7 +233,7 @@ public class ArcHttpClient {
         try {
             jsonObject.put("action", action);
             jsonObject.put("study", study.getName());
-            jsonObject.put("dateTime", study.getEnd_date() + ", " + study.getEnd_time());
+            jsonObject.put("dateTime", parseDate(study.getEnd_date()) + ", " + study.getEnd_time());
             result = jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -236,6 +250,7 @@ public class ArcHttpClient {
             jsonObject.put("route", study.getRoute());
             jsonObject.put("type", study.getType());
             jsonObject.put("capacity", study.getCapacity());
+            jsonObject.put("dateTime", parseDate(study.getStart_date()) + ", " + study.getStart_time());
             result = jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -275,6 +290,67 @@ public class ArcHttpClient {
                 e.printStackTrace();
             }
         }
+        return result;
+    }
+
+    private String parseDate(String date) {
+        String line[] = date.split(" ");
+        String result = line[2] + "-";
+
+        switch (line[1]) {
+            case "Jan":
+                result += "01";
+                break;
+
+            case "Feb":
+                result += "02";
+                break;
+
+            case "Mar":
+                result += "03";
+                break;
+
+            case "Apr":
+                result += "04";
+                break;
+
+            case "May":
+                result += "05";
+                break;
+
+            case "Jun":
+                result += "06";
+                break;
+
+            case "Jul":
+                result += "07";
+                break;
+
+            case "Aug":
+                result += "08";
+                break;
+
+            case "Sep":
+                result += "09";
+                break;
+
+            case "Oct":
+                result += "10";
+                break;
+
+            case "Nov":
+                result += "11";
+                break;
+
+            case "Dec":
+                result += "12";
+        }
+
+        if(line[0].length() < 2) {
+            result += "-0" + line[0];
+        } else
+            result += "-" + line[0];
+
         return result;
     }
 }

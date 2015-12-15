@@ -14,6 +14,168 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <LinearLayout
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:weightSum="100"
+            android:id="@+id/instructions">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/layoutImage"
+                android:weightSum="100"
+                android:layout_weight="30"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="0dp"
+                    android:layout_weight="60"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/logo_big" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/layoutText"
+                android:layout_weight="10"
+                android:weightSum="100"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:maxLines="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Welcome to AutoPaxCounter! To start a study follow the steps below:"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="13"
+                android:weightSum="100"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:maxLines="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="1) Go to the menu on the top left corner and setup the Bluetooth connection. Connect to HC-06."
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="10"
+                android:weightSum="100"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:maxLines="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="2) Go to the menu and create a new study."
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="10"
+                android:weightSum="100"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="60"
+                    android:maxLines="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="3) Click 'START'."
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="10"
+                android:weightSum="100"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="60"
+                    android:maxLines="10"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="DONE!"
+                    android:textSize="32dp"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </FrameLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
@@ -23,6 +185,7 @@
          android:layout_gravity="left" instead. -->
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
+
     <fragment
         android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/navigation_drawer_width"

@@ -19,6 +19,12 @@
         android:visible="false"
         android:title="@string/pencil_icon"/>
 
+    <item android:id="@+id/server_icon"
+        android:icon="@drawable/server_icon"
+        app:showAsAction="ifRoom"
+        android:visible="true"
+        android:title="@string/server_icon"/>
+
     <item android:id="@+id/action_gps"
         android:icon="@drawable/gps_on_white"
         android:title="@string/gps_icon"
